@@ -1,0 +1,9 @@
+.vs/
+.idea/
+Binaries/
+Intermediate/
+
+*.sln
+*.vcxproj
+*.filters
+*.user
