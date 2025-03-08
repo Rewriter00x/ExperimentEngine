@@ -21,3 +21,6 @@
 #include "System/Miscellaneous/IntegerTypes.h"
 
 #include "System/Log/Log.h"
+
+#include "System/Macro/CoreMacro.h"
+#include "System/Macro/Assert.h"

@@ -22,7 +22,11 @@ project "ExperimentEngine"
 	}
 
 	filter "system:windows"
+		defines "EXP_WINDOWS"
 		systemversion "latest"
+
+	filter "system:macosx"
+		defines "EXP_MACOS"
 
 	filter "configurations:Debug"
 		defines "EXP_DEBUG"

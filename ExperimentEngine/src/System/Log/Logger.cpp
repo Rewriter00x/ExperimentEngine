@@ -53,5 +53,10 @@ namespace Exp::Logger
 		}
 
 		va_end(args);
+
+		if (Verbosity == Log::LogVerbosity::Fatal)
+		{
+			// request shutdown
+		}
 	}
 }
