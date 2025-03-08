@@ -1,0 +1,14 @@
+#pragma once
+
+#include <stdint.h>
+
+#define DEFINE_TYPE_REMOVE_T(x) using x = ##x##_t
+
+DEFINE_TYPE_REMOVE_T(uint8);
+DEFINE_TYPE_REMOVE_T(uint16);
+DEFINE_TYPE_REMOVE_T(uint32);
+DEFINE_TYPE_REMOVE_T(uint64);
+DEFINE_TYPE_REMOVE_T(int8);
+DEFINE_TYPE_REMOVE_T(int16);
+DEFINE_TYPE_REMOVE_T(int32);
+DEFINE_TYPE_REMOVE_T(int64);

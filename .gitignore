@@ -2,6 +2,10 @@
 .idea/
 Binaries/
 Intermediate/
+Log/
+
+# will replace when asset manager always logs in one folder
+!Experimentengine/src/System/Log
 
 *.sln
 *.vcxproj
