@@ -1,10 +1,11 @@
 #pragma once
 
 #ifdef EXP_ENABLE_ASSERTS
-	#ifdef EXP_WINDOWS
+	#if defined(EXP_WINDOWS)
 		#define EXP_DEBUGBREAK() __debugbreak()
-	//#elifdef EXP_MACOS
-		//#define EXP_DEBUGBREAK() asm {trap}
+	#elif defined(EXP_MACOS)
+        #include <csignal>
+		#define EXP_DEBUGBREAK() raise(SIGTRAP)
 	#endif
 #else
 	#define EXP_DEBUGBREAK()

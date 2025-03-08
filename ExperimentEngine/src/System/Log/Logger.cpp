@@ -27,7 +27,8 @@ namespace Exp::Logger
 		std::filesystem::path path = LogFilePath;
 		std::filesystem::create_directories(path);
 		path /= LogFileName;
-		fopen_s(&LogFile, path.string().c_str(), "w");
+		LogFile = fopen(path.string().c_str(), "w");
+        EXP_ASSERT(LogFile);
 	}
 
 	void Shutdown()

@@ -7,7 +7,12 @@ Log/
 # will replace when asset manager always logs in one folder
 !Experimentengine/src/System/Log
 
+*.DS_Store
+
 *.sln
 *.vcxproj
 *.filters
 *.user
+
+*.xcworkspace
+*.xcodeproj

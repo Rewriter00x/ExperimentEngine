@@ -27,6 +27,10 @@ project "ExperimentEngine"
 
 	filter "system:macosx"
 		defines "EXP_MACOS"
+		xcodebuildsettings
+		{
+			["GCC_PREFIX_HEADER"] = "src/exppch.h",
+		}
 
 	filter "configurations:Debug"
 		defines "EXP_DEBUG"

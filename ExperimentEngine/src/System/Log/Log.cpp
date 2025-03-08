@@ -12,9 +12,9 @@ namespace Exp::Log
 
 	void Shutdown()
 	{
+        EXP_LOG(Info, "Logger shutdown");
+        
 		Logger::Shutdown();
-
-		EXP_LOG(Info, "Logger shutdown");
 	}
 }
 

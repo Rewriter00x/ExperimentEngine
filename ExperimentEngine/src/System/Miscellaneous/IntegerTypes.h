@@ -2,7 +2,7 @@
 
 #include <stdint.h>
 
-#define DEFINE_TYPE_REMOVE_T(x) using x = ##x##_t
+#define DEFINE_TYPE_REMOVE_T(x) using x = x##_t
 
 DEFINE_TYPE_REMOVE_T(uint8);
 DEFINE_TYPE_REMOVE_T(uint16);

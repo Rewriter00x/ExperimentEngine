@@ -11,4 +11,4 @@ namespace Exp
 	}
 }
 
-#define EXP_LOG(v, x, ...) ::Exp::Logger::LogString(::Exp::Log::LogVerbosity::v, x, __VA_ARGS__)
+#define EXP_LOG(v, x, ...) ::Exp::Logger::LogString(::Exp::Log::LogVerbosity::v, x, ##__VA_ARGS__)
