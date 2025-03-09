@@ -17,7 +17,7 @@ namespace Exp::Logger
 	static const std::filesystem::path LogFilePath = "Log";
 	static const std::string LogFileName = "Log.log"; // TODO: use asset manager
 
-	inline FILE* LogFile;
+	static FILE* LogFile;
 
 	static inline void SetLogColor(int color) { std::cout << "\033[" << color << "m"; }
 	static inline void ResetLogColor() { SetLogColor(0); }
@@ -36,6 +36,7 @@ namespace Exp::Logger
 		ResetLogColor();
 
 		fclose(LogFile);
+		LogFile = nullptr;
 	}
 
 	void LogString(Log::LogVerbosity Verbosity, const char* fmt, ...)
