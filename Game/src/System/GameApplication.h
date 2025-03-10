@@ -4,5 +4,9 @@
 
 class GameApplication : public Exp::Application
 {
+public:
+	GameApplication(const std::string& name = "");
+	~GameApplication() = default;
+
 };
 

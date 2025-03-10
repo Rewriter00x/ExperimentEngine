@@ -19,6 +19,7 @@
 #undef _CRT_SECURE_NO_WARNINGS
 
 #include "Engine/System/Miscellaneous/IntegerTypes.h"
+#include "Engine/System/Miscellaneous/PtrTypes.h"
 
 #include "Engine/System/Log/Log.h"
 

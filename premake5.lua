@@ -16,10 +16,12 @@ workspace "ExperimentEngine"
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 IncludeDirs = {}
-IncludeDirs["GLFW"] = "ExperimentEngine/Dependencies/GLFW/GLFW/include"
+IncludeDirs["GLFW"] = "%{wks.location}/ExperimentEngine/Dependencies/GLFW/GLFW/include"
+IncludeDirs["glad"] = "%{wks.location}/ExperimentEngine/Dependencies/glad/glad/include"
 
 group "Dependencies"
 include "ExperimentEngine/Dependencies/GLFW"
+include "ExperimentEngine/Dependencies/glad"
 group ""
 
 include "ExperimentEngine"

@@ -6,4 +6,5 @@ int main(int argc, char* argv[]);
 namespace Exp
 {
 	class Application;
+	class Window;
 }

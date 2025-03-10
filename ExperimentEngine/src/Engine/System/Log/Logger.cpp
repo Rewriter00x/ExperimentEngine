@@ -3,6 +3,8 @@
 
 #include <cstdarg>
 
+#include "Engine/System/Application.h"
+
 namespace Exp::Logger
 {
 	static const std::unordered_map<Log::LogVerbosity, int> VerbosityColorMap
@@ -47,6 +49,7 @@ namespace Exp::Logger
 		SetLogColor(VerbosityColorMap.at(Verbosity));
 		std::vprintf(fmt, args);
 		std::printf("\n");
+		ResetLogColor();
 
 		if (Verbosity != Log::LogVerbosity::Info)
 		{
@@ -58,7 +61,7 @@ namespace Exp::Logger
 
 		if (Verbosity == Log::LogVerbosity::Fatal)
 		{
-			// request shutdown
+			Application::Get().RequestShutdown();
 		}
 	}
 }

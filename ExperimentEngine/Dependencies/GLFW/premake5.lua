@@ -1,5 +1,4 @@
 project "GLFW"
-    location "GLFW"
     kind "StaticLib"
     language "C"
     staticruntime "on"

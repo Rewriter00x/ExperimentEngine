@@ -20,11 +20,13 @@ project "ExperimentEngine"
 	{
 		"src",
 		"%{IncludeDirs.GLFW}",
+		"%{IncludeDirs.glad}",
 	}
 
 	links
 	{
 		"GLFW",
+		"glad",
 	}
 
 	filter "system:windows"

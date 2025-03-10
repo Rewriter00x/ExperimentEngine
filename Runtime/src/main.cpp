@@ -2,7 +2,11 @@
 
 int main(int argc, char* argv[])
 {
-	Exp::Application* app = CreateApplication();
+	Exp::Application::Init();
+
+	Exp::Application* app = CreateApplication("Runtime");
 	app->Run();
 	delete app;
+
+	Exp::Application::Shutdown();
 }
