@@ -1,0 +1,3 @@
+[submodule "Experimentengine/Dependencies/GLFW/GLFW"]
+	path = Experimentengine/Dependencies/GLFW/GLFW
+	url = https://github.com/glfw/glfw

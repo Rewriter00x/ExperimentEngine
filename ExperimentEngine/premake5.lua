@@ -19,6 +19,12 @@ project "ExperimentEngine"
 	includedirs
 	{
 		"src",
+		"%{IncludeDirs.GLFW}",
+	}
+
+	links
+	{
+		"GLFW",
 	}
 
 	filter "system:windows"
