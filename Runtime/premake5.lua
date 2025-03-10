@@ -30,6 +30,15 @@ project "Runtime"
 	filter "system:macosx"
 		defines "EXP_MACOS"
 
+		-- sadly there are dynamic links so I need to link them in every executable
+        links
+        {
+            "Cocoa.framework",
+            "IOKit.framework",
+            "CoreFoundation.framework",
+            "QuartzCore.framework",
+        }
+
 	filter "configurations:Debug"
 		defines "EXP_DEBUG"
 		runtime "Debug"

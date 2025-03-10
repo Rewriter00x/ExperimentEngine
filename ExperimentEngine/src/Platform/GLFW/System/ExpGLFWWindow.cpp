@@ -2,6 +2,7 @@
 #include "ExpGLFWWindow.h"
 
 #include "Engine/System/Application.h"
+
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 
@@ -23,7 +24,7 @@ namespace Exp
 
 		glfwSetWindowUserPointer(m_NativeWindow, this);
 
-		ExpGLFWWindow::SetVSync(true);
+        glfwSwapInterval(1); // enable vsync
 
 		glfwSetWindowCloseCallback(m_NativeWindow, [](GLFWwindow* window)
 			{

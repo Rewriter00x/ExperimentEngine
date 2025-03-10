@@ -21,10 +21,10 @@ project "glad"
     filter "system:windows"
         systemversion "latest"
 
-    filter { "system:windows", "configurations:Debug" }
+    filter "configurations:Debug"
         runtime "Debug"
         symbols "on"
 
-    filter { "system:windows", "configurations:Release" }
+    filter "configurations:Release"
         runtime "Release"
         optimize "on"

@@ -57,10 +57,48 @@ project "GLFW"
             "_CRT_SECURE_NO_WARNINGS",
         }
 
-    filter { "system:windows", "configurations:Debug" }
+    filter "system:macosx"
+        files
+        {
+            "GLFW/src/cocoa_init.m",
+            "GLFW/src/cocoa_joystick.m",
+            "GLFW/src/cocoa_joystick.h",
+            "GLFW/src/cocoa_monitor.m",
+            "GLFW/src/cocoa_time.h",
+            "GLFW/src/cocoa_time.c",
+            "GLFW/src/cocoa_window.m",
+            "GLFW/src/posix_thread.c",
+            "GLFW/src/posix_thread.h",
+            "GLFW/src/posix_time.c",
+            "GLFW/src/posix_time.h",
+            "GLFW/src/posix_module.c",
+            "GLFW/src/nsgl_context.m",
+            "GLFW/src/egl_context.c",
+            "GLFW/src/osmesa_context.c",
+        }
+
+        -- sadly there are dynamic links so I need to link them in every executable
+        links
+        {
+            "Cocoa.framework",
+            "IOKit.framework",
+            "CoreFoundation.framework",
+            "QuartzCore.framework",
+        }
+
+        defines
+        {
+            "_GLFW_COCOA",
+        }
+
+    filter { "system:macosx", "files:**.m" }
+        buildoptions { "-x objective-c" }
+
+
+    filter "configurations:Debug"
         runtime "Debug"
         symbols "on"
 
-    filter { "system:windows", "configurations:Release" }
+    filter "configurations:Release"
         runtime "Release"
         optimize "on"

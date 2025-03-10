@@ -2,6 +2,7 @@
 #include "Application.h"
 
 #include "Window.h"
+
 #include "Platform/PlatformDependenciesInitializer.h"
 
 namespace Exp
@@ -25,8 +26,11 @@ namespace Exp
 
 	void Application::RequestShutdown()
 	{
-		m_Running = false;
-		EXP_LOG(Log, "Shutdown requested");
+        if (m_Running)
+        {
+            m_Running = false;
+            EXP_LOG(Log, "Shutdown requested");
+        }
 	}
 
 	void Application::Run()
