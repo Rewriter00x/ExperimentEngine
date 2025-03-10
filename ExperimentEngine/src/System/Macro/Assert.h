@@ -16,4 +16,5 @@
 #define EXP_ASSERT_MSG(x, m) if (!(x)) { EXP_LOG(Fatal, "Assertion failed at %s:%d: %s", std::filesystem::path(__FILE__).filename().string().c_str(), __LINE__, m); EXP_DEBUGBREAK(); }
 #else
 #define EXP_ASSERT(x)
+#define EXP_ASSERT_MSG(x, m)
 #endif
