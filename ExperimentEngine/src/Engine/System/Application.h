@@ -11,8 +11,15 @@ namespace Exp
 		Application();
 		virtual ~Application();
 
+		Application(const Application&) = delete;
+		Application& operator=(const Application&) = delete;
+
+		inline static Application& Get() { return *s_Instance; }
+
 	private:
 		void Run();
+
+		inline static Application* s_Instance = nullptr;
 
 		friend int ::main(int argc, char* argv[]);
 

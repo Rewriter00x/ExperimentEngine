@@ -5,6 +5,9 @@ namespace Exp
 {
 	Application::Application()
 	{
+		EXP_ASSERT_MSG(!s_Instance, "Trying to create second instance of Application");
+		s_Instance = this;
+
 		Log::Init();
 
 		EXP_LOG(Log, "Application init");

@@ -5,7 +5,7 @@ Intermediate/
 Log/
 
 # will replace when asset manager always logs in one folder
-!Experimentengine/src/System/Log
+!Experimentengine/src/Engine/System/Log
 
 *.DS_Store
 
