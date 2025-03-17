@@ -4,6 +4,7 @@
 #include "Window.h"
 
 #include "Platform/PlatformDependenciesInitializer.h"
+#include "Platform/PlatformUtils.h"
 
 namespace Exp
 {
@@ -15,6 +16,8 @@ namespace Exp
 		WindowProps props;
 		props.Title = name.empty() ? "Experiment Engine" : name;
 		m_Window = Window::Create(props);
+
+		m_LastFrameTime = PlatformUtils::GetTime();
 
 		EXP_LOG(Log, "Application init");
 	}
@@ -37,7 +40,12 @@ namespace Exp
 	{
 		while (m_Running)
 		{
-			m_Window->OnUpdate(0.f);
+			const float time = PlatformUtils::GetTime();
+			const float deltaSeconds = time - m_LastFrameTime;
+
+			m_Window->OnUpdate(deltaSeconds);
+
+			m_LastFrameTime = time;
 		}
 	}
 

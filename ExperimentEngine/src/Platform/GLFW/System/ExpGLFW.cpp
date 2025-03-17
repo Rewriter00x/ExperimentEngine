@@ -25,4 +25,9 @@ namespace Exp::ExpGLFW
 	{
 		glfwTerminate();
 	}
+
+	float GetTime()
+	{
+		return (float)glfwGetTime();
+	}
 }

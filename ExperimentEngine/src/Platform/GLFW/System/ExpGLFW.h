@@ -6,5 +6,7 @@ namespace Exp
 	{
 		void Init();
 		void Shutdown();
+
+		float GetTime();
 	}
 };

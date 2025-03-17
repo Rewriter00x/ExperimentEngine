@@ -28,6 +28,8 @@ namespace Exp
 
 		Unique<Window> m_Window;
 
+		float m_LastFrameTime = 0.f;
+
 		bool m_Running = true;
 
 		friend int ::main(int argc, char* argv[]);
