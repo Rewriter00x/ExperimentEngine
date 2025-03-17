@@ -16,6 +16,9 @@ namespace Exp
 
 		void RequestShutdown();
 
+		inline void AddEventListener(void* obj, EventType eventType, const EventDispatcher::EventFn& function) { m_EventDispatcher.AddEventListener(obj, eventType, function); }
+		void DispatchEvent(const Event& e) const;
+
 		inline static Application& Get() { return *s_Instance; }
 
 	private:
@@ -24,7 +27,11 @@ namespace Exp
 		static void Init();
 		static void Shutdown();
 
+		void OnWindowClosed(const WindowCloseEvent& event);
+
 		inline static Application* s_Instance = nullptr;
+
+		EventDispatcher m_EventDispatcher;
 
 		Unique<Window> m_Window;
 

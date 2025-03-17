@@ -19,6 +19,8 @@ namespace Exp
 
 		m_LastFrameTime = PlatformUtils::GetTime();
 
+		ADD_EVENT_LISTENER(this, WindowClose, OnWindowClosed);
+
 		EXP_LOG(Log, "Application init");
 	}
 
@@ -34,6 +36,18 @@ namespace Exp
             m_Running = false;
             EXP_LOG(Log, "Shutdown requested");
         }
+	}
+
+	void Application::DispatchEvent(const Event& e) const
+	{
+		if (const auto* map = m_EventDispatcher.GetEventListeners(e.GetEventType()))
+		{
+			const auto it = map->find((void*)this);
+			if (it != map->end())
+			{
+				it->second(e);
+			}
+		}
 	}
 
 	void Application::Run()
@@ -59,5 +73,10 @@ namespace Exp
 	{
 		PlatformDependenciesInitializer::Shutdown();
 		Log::Shutdown();
+	}
+
+	void Application::OnWindowClosed(const WindowCloseEvent& event)
+	{
+		RequestShutdown();
 	}
 }

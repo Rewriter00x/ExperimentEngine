@@ -29,7 +29,9 @@ namespace Exp
 		glfwSetWindowCloseCallback(m_NativeWindow, [](GLFWwindow* window)
 			{
 				ExpGLFWWindow* expWindow = static_cast<ExpGLFWWindow*>(glfwGetWindowUserPointer(window));
-				Application::Get().RequestShutdown();
+
+				WindowCloseEvent event;
+				Application::Get().DispatchEvent(event);
 			});
 	}
 

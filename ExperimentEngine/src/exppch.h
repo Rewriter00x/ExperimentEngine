@@ -25,3 +25,8 @@
 
 #include "Engine/System/Macro/CoreMacro.h"
 #include "Engine/System/Macro/Assert.h"
+
+#include "Engine/Events/Event.h"
+#include "Engine/Events/EventDispatcher.h"
+
+#include "Engine/Events/WindowEvents.h"
