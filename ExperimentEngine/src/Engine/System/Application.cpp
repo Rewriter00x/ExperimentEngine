@@ -8,6 +8,18 @@
 
 namespace Exp
 {
+	static bool DispatchEventForObject(const Event& e, const void* obj, const std::unordered_map<const void*, EventDispatcher::EventFn>* map)
+	{
+		const auto it = map->find(obj);
+		if (it != map->end())
+		{
+			it->second(e);
+			return true;
+		}
+
+		return false;
+	}
+
 	Application::Application(const std::string& name)
 	{
 		EXP_ASSERT_MSG(!s_Instance, "Trying to create second instance of Application");
@@ -42,11 +54,8 @@ namespace Exp
 	{
 		if (const auto* map = m_EventDispatcher.GetEventListeners(e.GetEventType()))
 		{
-			const auto it = map->find((void*)this);
-			if (it != map->end())
-			{
-				it->second(e);
-			}
+			DispatchEventForObject(e, this, map);
+			DispatchEventForObject(e, m_Window.get(), map);
 		}
 	}
 

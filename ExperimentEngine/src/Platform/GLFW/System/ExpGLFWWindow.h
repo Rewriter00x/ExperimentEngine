@@ -17,6 +17,8 @@ namespace Exp
 		virtual void SetVSync(bool enabled) override;
 
 	private:
+		void InitEvents() const;
+
 		GLFWwindow* m_NativeWindow = nullptr;
 
 		WindowProps m_WindowProps;

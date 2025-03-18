@@ -24,10 +24,10 @@ namespace Exp
 
 		void AddEventListener(void* obj, EventType eventType, const EventFn& function);
 
-		const std::unordered_map<void*, EventFn>* GetEventListeners(EventType Type) const;
+		const std::unordered_map<const void*, EventFn>* GetEventListeners(EventType Type) const;
 
 	private:
-		std::unordered_map<EventType, std::unordered_map<void*, EventFn>> m_Listeners;
+		std::unordered_map<EventType, std::unordered_map<const void*, EventFn>> m_Listeners;
 
 	};
 }

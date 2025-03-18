@@ -26,7 +26,12 @@
 #include "Engine/System/Macro/CoreMacro.h"
 #include "Engine/System/Macro/Assert.h"
 
+#include "Engine/System/KeyCodes.h"
+#include "Engine/System/MouseCodes.h"
+
 #include "Engine/Events/Event.h"
 #include "Engine/Events/EventDispatcher.h"
 
+#include "Engine/Events/KeyEvents.h"
+#include "Engine/Events/MouseEvents.h"
 #include "Engine/Events/WindowEvents.h"
