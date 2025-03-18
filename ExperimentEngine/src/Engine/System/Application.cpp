@@ -54,8 +54,8 @@ namespace Exp
 	{
 		if (const auto* map = m_EventDispatcher.GetEventListeners(e.GetEventType()))
 		{
-			DispatchEventForObject(e, this, map);
-			DispatchEventForObject(e, m_Window.get(), map);
+			if (DispatchEventForObject(e, this, map)) return;
+			if (DispatchEventForObject(e, m_Window.get(), map)) return;
 		}
 	}
 
