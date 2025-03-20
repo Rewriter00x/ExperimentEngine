@@ -13,6 +13,11 @@ namespace Exp
 		, m_WindowProps(props)
 	{
 		EXP_LOG(Info, "Creating window %s (%d:%d)", props.Title.c_str(), props.Width, props.Height);
+        
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
 		m_NativeWindow = glfwCreateWindow(props.Width, props.Height, props.Title.c_str(), nullptr, nullptr);
 		EXP_ASSERT_MSG(m_NativeWindow, "Failed to create GLFW window!");
@@ -27,10 +32,15 @@ namespace Exp
         glfwSwapInterval(1); // enable vsync
 
 		InitEvents();
+        
+        static_assert(std::is_same_v<decltype(m_DefaultVAO), GLuint>, "Type mismatch for m_DefaultVAO");
+        glGenVertexArrays(1, &m_DefaultVAO);
+        glBindVertexArray(m_DefaultVAO);
 	}
 
 	ExpGLFWWindow::~ExpGLFWWindow()
 	{
+        glDeleteVertexArrays(1, &m_DefaultVAO);
 		glfwDestroyWindow(m_NativeWindow);
 	}
 
