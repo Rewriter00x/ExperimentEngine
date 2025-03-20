@@ -13,8 +13,7 @@ project "Game"
 		"src/**.cpp",
 	}
 
-	includedirs
-	{
+	local includeList = {
 		"%{wks.location}/ExperimentEngine/src",
 		"%{IncludeDirs.glm}",
 	}
@@ -28,8 +27,12 @@ project "Game"
 		defines "EXP_WINDOWS"
 		systemversion "latest"
 
+		includedirs (includeList)
+
 	filter "system:macosx"
 		defines "EXP_MACOS"
+
+		externalincludedirs (includeList)
 
 	filter "configurations:Debug"
 		defines "EXP_DEBUG"

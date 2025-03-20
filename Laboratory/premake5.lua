@@ -13,8 +13,7 @@ project "Laboratory"
 		"src/**.cpp",
 	}
 
-	includedirs
-	{
+	local includeList = {
 		"%{wks.location}/ExperimentEngine/src",
 		"%{IncludeDirs.imgui}",
 		"%{IncludeDirs.glm}",
@@ -29,8 +28,12 @@ project "Laboratory"
 		defines "EXP_WINDOWS"
 		systemversion "latest"
 
+		includedirs (includeList)
+
 	filter "system:macosx"
 		defines "EXP_MACOS"
+
+		externalincludedirs (includeList)
 
 		-- sadly there are dynamic links so I need to link them in every executable
         links

@@ -16,8 +16,7 @@ project "ExperimentEngine"
 		"src/**.cpp",
 	}
 
-	includedirs
-	{
+	local includeList = {
 		"src",
 		"%{IncludeDirs.GLFW}",
 		"%{IncludeDirs.glad}",
@@ -36,12 +35,16 @@ project "ExperimentEngine"
 		defines "EXP_WINDOWS"
 		systemversion "latest"
 
+		includedirs (includeList)
+
 	filter "system:macosx"
 		defines "EXP_MACOS"
 		xcodebuildsettings
 		{
 			["GCC_PREFIX_HEADER"] = "src/exppch.h",
 		}
+
+		externalincludedirs (includeList)
 
 	filter "configurations:Debug"
 		defines "EXP_DEBUG"
