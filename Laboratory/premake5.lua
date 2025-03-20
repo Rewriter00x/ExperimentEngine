@@ -16,6 +16,8 @@ project "Laboratory"
 	includedirs
 	{
 		"%{wks.location}/ExperimentEngine/src",
+		"%{IncludeDirs.imgui}",
+		"%{IncludeDirs.glm}",
 	}
 
 	links

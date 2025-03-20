@@ -19,6 +19,8 @@ namespace Exp
 		inline void AddEventListener(void* obj, EventType eventType, const EventDispatcher::EventFn& function) { m_EventDispatcher.AddEventListener(obj, eventType, function); }
 		void DispatchEvent(const Event& e) const;
 
+		inline const Unique<Window>& GetWindow() const { return m_Window; }
+
 		inline static Application& Get() { return *s_Instance; }
 
 	private:

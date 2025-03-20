@@ -1,7 +1,9 @@
 #include "exppch.h"
 #include "Application.h"
 
+#include "imgui.h"
 #include "Window.h"
+#include "Engine/ImGui/ExpImGui.h"
 
 #include "Platform/PlatformDependenciesInitializer.h"
 #include "Platform/PlatformUtils.h"
@@ -29,6 +31,8 @@ namespace Exp
 		props.Title = name.empty() ? "Experiment Engine" : name;
 		m_Window = Window::Create(props);
 
+		ExpImGui::Init();
+
 		m_LastFrameTime = PlatformUtils::GetTime();
 
 		ADD_EVENT_LISTENER(this, WindowClose, OnWindowClosed);
@@ -39,6 +43,8 @@ namespace Exp
 	Application::~Application()
 	{
 		EXP_LOG(Log, "Application shutdown");
+
+		ExpImGui::Shutdown();
 	}
 
 	void Application::RequestShutdown()
@@ -67,6 +73,13 @@ namespace Exp
 			const float deltaSeconds = time - m_LastFrameTime;
 
 			m_Window->OnUpdate(deltaSeconds);
+
+			ExpImGui::BeginNewFrame();
+
+			bool open = true;
+			ImGui::ShowDemoWindow(&open);
+
+			ExpImGui::EndNewFrame();
 
 			m_LastFrameTime = time;
 		}

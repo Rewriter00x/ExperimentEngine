@@ -18,6 +18,10 @@
 #include <fstream>
 #undef _CRT_SECURE_NO_WARNINGS
 
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/type_ptr.hpp"
+
 #include "Engine/System/Miscellaneous/IntegerTypes.h"
 #include "Engine/System/Miscellaneous/PtrTypes.h"
 
@@ -35,3 +39,6 @@
 #include "Engine/Events/KeyEvents.h"
 #include "Engine/Events/MouseEvents.h"
 #include "Engine/Events/WindowEvents.h"
+
+#include "Engine/System/Application.h"
+#include "Engine/System/Window.h"

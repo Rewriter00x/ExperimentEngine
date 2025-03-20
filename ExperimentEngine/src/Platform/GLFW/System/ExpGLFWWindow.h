@@ -16,6 +16,11 @@ namespace Exp
 
 		virtual void SetVSync(bool enabled) override;
 
+		inline virtual uint32 GetWidth() const override { return m_WindowProps.Width; }
+		inline virtual uint32 GetHeight() const override { return m_WindowProps.Height; }
+
+		inline virtual void* GetNativeWindow() const override { return m_NativeWindow; }
+
 	private:
 		void InitEvents() const;
 

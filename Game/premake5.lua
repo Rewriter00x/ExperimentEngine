@@ -16,6 +16,7 @@ project "Game"
 	includedirs
 	{
 		"%{wks.location}/ExperimentEngine/src",
+		"%{IncludeDirs.glm}",
 	}
 
 	links

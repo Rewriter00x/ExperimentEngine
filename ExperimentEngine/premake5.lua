@@ -21,12 +21,15 @@ project "ExperimentEngine"
 		"src",
 		"%{IncludeDirs.GLFW}",
 		"%{IncludeDirs.glad}",
+		"%{IncludeDirs.ImGui}",
+		"%{IncludeDirs.glm}",
 	}
 
 	links
 	{
 		"GLFW",
 		"glad",
+		"ImGui",
 	}
 
 	filter "system:windows"

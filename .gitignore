@@ -16,3 +16,5 @@ Log/
 
 *.xcworkspace
 *.xcodeproj
+
+imgui.ini

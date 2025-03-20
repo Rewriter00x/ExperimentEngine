@@ -36,10 +36,10 @@ namespace Exp
 
 	void ExpGLFWWindow::OnUpdate(float DeltaSeconds)
 	{
-		glClear(GL_COLOR_BUFFER_BIT);
-		glClearColor(1, 0, 1, 1);
 		glfwSwapBuffers(m_NativeWindow);
 		glfwPollEvents();
+		glClear(GL_COLOR_BUFFER_BIT);
+		glClearColor(1, 0, 1, 1);
 	}
 
 	void ExpGLFWWindow::SetVSync(bool enabled)
