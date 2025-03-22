@@ -4,18 +4,19 @@ project "Game"
 	cppdialect "C++17"
 	staticruntime "on"
 
-	targetdir	("%{wks.location}/Binaries/" .. outputdir .. "/%{prj.name}")
-	objdir		("%{wks.location}/Intermediate/" .. outputdir .. "/%{prj.name}")
+	targetdir	(BinariesDir)
+	objdir		(IntermediateDir)
+
+	local localIncludes = {
+
+	}
+
+	local includeList = table.join(CoreIncludes, localIncludes)
 
 	files
 	{
 		"src/**.h",
 		"src/**.cpp",
-	}
-
-	local includeList = {
-		"%{wks.location}/ExperimentEngine/src",
-		"%{IncludeDirs.glm}",
 	}
 
 	links

@@ -4,10 +4,14 @@ project "Runtime"
 	cppdialect "C++17"
 	staticruntime "on"
 
-	local pathToBin = "%{wks.location}/Binaries/" .. outputdir .. "/%{prj.name}"
+	targetdir	(BinariesDir)
+	objdir		(IntermediateDir)
 
-	targetdir	(pathToBin)
-	objdir		("%{wks.location}/Intermediate/" .. outputdir .. "/%{prj.name}")
+	local localIncludes = {
+
+	}
+
+	local includeList = table.join(CoreIncludes, localIncludes)
 
 	files
 	{
@@ -15,17 +19,12 @@ project "Runtime"
 		"src/**.cpp",
 	}
 
-	local includeList = {
-		"%{wks.location}/ExperimentEngine/src",
-		"%{IncludeDirs.glm}",
-	}
-
 	links
 	{
 		"ExperimentEngine",
 	}
 
-	debugdir (pathToBin)
+	debugdir (BinariesDir)
 
 	filter "system:windows"
 		defines "EXP_WINDOWS"

@@ -4,24 +4,23 @@ project "ExperimentEngine"
 	cppdialect "C++17"
 	staticruntime "on"
 
-	targetdir	("%{wks.location}/Binaries/" .. outputdir .. "/%{prj.name}")
-	objdir		("%{wks.location}/Intermediate/" .. outputdir .. "/%{prj.name}")
+	targetdir	(BinariesDir)
+	objdir		(IntermediateDir)
 
     pchheader "exppch.h"
 	pchsource "src/exppch.cpp"
+
+	local localIncludes = {
+		"%{IncludeDirs.GLFW}",
+		"%{IncludeDirs.glad}",
+	}
+
+	local includeList = table.join(CoreIncludes, localIncludes)
 
 	files
 	{
 		"src/**.h",
 		"src/**.cpp",
-	}
-
-	local includeList = {
-		"src",
-		"%{IncludeDirs.GLFW}",
-		"%{IncludeDirs.glad}",
-		"%{IncludeDirs.ImGui}",
-		"%{IncludeDirs.glm}",
 	}
 
 	links

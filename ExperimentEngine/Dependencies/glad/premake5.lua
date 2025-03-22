@@ -3,8 +3,8 @@ project "glad"
     language "C"
     staticruntime "on"
 
-    targetdir	("%{wks.location}/Binaries/" .. outputdir .. "/Dependencies/%{prj.name}")
-	objdir		("%{wks.location}/Intermediate/" .. outputdir .. "/Dependencies/%{prj.name}")
+    targetdir	(DependenciesBinariesDir)
+	objdir		(DependenciesIntermediateDir)
 
     files
     {
