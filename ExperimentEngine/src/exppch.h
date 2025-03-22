@@ -1,7 +1,5 @@
 #pragma once
 
-#include "ExperimentForward.h"
-
 #define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include <memory>
@@ -18,6 +16,9 @@
 #include <fstream>
 #undef _CRT_SECURE_NO_WARNINGS
 
+#include "ExperimentForward.h"
+#include "ExperimentGlobal.h"
+
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
@@ -25,6 +26,7 @@
 #include "Engine/System/Miscellaneous/IntegerTypes.h"
 #include "Engine/System/Miscellaneous/PtrTypes.h"
 
+#include "Engine/System/AssetManager/AssetManager.h"
 #include "Engine/System/Log/Log.h"
 
 #include "Engine/System/Macro/CoreMacro.h"

@@ -87,6 +87,7 @@ namespace Exp
 
 	void Application::Init()
 	{
+		AssetManager::Init();
 		Log::Init();
 		PlatformDependenciesInitializer::Init();
 	}
@@ -95,6 +96,7 @@ namespace Exp
 	{
 		PlatformDependenciesInitializer::Shutdown();
 		Log::Shutdown();
+		AssetManager::Shutdown();
 	}
 
 	void Application::OnWindowClosed(const WindowCloseEvent& event)

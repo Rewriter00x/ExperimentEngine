@@ -4,7 +4,9 @@ project "Laboratory"
 	cppdialect "C++17"
 	staticruntime "on"
 
-	targetdir	("%{wks.location}/Binaries/" .. outputdir .. "/%{prj.name}")
+	local pathToBin = "%{wks.location}/Binaries/" .. outputdir .. "/%{prj.name}"
+
+	targetdir	(pathToBin)
 	objdir		("%{wks.location}/Intermediate/" .. outputdir .. "/%{prj.name}")
 
 	files
@@ -23,6 +25,8 @@ project "Laboratory"
 	{
 		"ExperimentEngine",
 	}
+
+	debugdir (pathToBin)
 
 	filter "system:windows"
 		defines "EXP_WINDOWS"

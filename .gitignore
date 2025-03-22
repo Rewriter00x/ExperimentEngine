@@ -1,11 +1,9 @@
 .vs/
 .idea/
+
 Binaries/
 Intermediate/
-Log/
-
-# will replace when asset manager always logs in one folder
-!Experimentengine/src/Engine/System/Log
+Saved/
 
 *.DS_Store
 

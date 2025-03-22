@@ -17,7 +17,7 @@ namespace Exp::Logger
 	};
 
 	static const std::filesystem::path LogFilePath = "Log";
-	static const std::string LogFileName = "Log.log"; // TODO: use asset manager
+	static const std::string LogFileName = "Log.log";
 
 	static FILE* LogFile;
 
@@ -26,7 +26,7 @@ namespace Exp::Logger
 
 	void Init()
 	{
-		std::filesystem::path path = LogFilePath;
+		std::filesystem::path path = g_OutputDirectory / LogFilePath;
 		std::filesystem::create_directories(path);
 		path /= LogFileName;
 		LogFile = fopen(path.string().c_str(), "w");
@@ -50,11 +50,13 @@ namespace Exp::Logger
 		std::vprintf(fmt, args);
 		std::printf("\n");
 		ResetLogColor();
+		std::fflush(stdout);
 
 		if (Verbosity != Log::LogVerbosity::Info)
 		{
 			std::vfprintf(LogFile, fmt, args);
 			std::fprintf(LogFile, "\n");
+			std::fflush(LogFile);
 		}
 
 		va_end(args);
