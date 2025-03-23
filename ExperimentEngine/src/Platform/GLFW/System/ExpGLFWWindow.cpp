@@ -16,7 +16,7 @@ namespace Exp
 		EXP_LOG(Info, "Creating window %s (%d:%d)", props.Title.c_str(), props.Width, props.Height);
         
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
@@ -25,7 +25,7 @@ namespace Exp
 
 		glfwMakeContextCurrent(m_NativeWindow);
 
-		RenderAPI::Init(glfwGetProcAddress); // should be done after glfwMakeContextCurrent
+		RenderAPI::Init((const void*)glfwGetProcAddress); // should be done after glfwMakeContextCurrent
 		Renderer::Init();
 
 		glfwSetWindowUserPointer(m_NativeWindow, this);

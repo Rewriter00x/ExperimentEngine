@@ -1,4 +1,4 @@
-﻿#include "exppch.h"
+#include "exppch.h"
 #include "Engine/Render/RenderData/VertexBuffer.h"
 
 #include "glad/glad.h"
@@ -12,7 +12,7 @@ namespace Exp
 
     VertexBuffer::VertexBuffer(const void* data, uint32 size)
     {
-        glCreateBuffers(1, &m_RendererID);
+        glGenBuffers(1, &m_RendererID);
         glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
         glBufferData(GL_ARRAY_BUFFER, size, data, data ? GL_STATIC_DRAW : GL_DYNAMIC_DRAW);
     }

@@ -1,4 +1,4 @@
-﻿#include "exppch.h"
+#include "exppch.h"
 #include "Engine/Render/RenderData/VertexArray.h"
 
 #include "Engine/Render/RenderData/IndexBuffer.h"

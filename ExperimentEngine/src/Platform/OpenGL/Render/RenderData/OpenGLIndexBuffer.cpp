@@ -1,4 +1,4 @@
-﻿#include "exppch.h"
+#include "exppch.h"
 #include "Engine/Render/RenderData/IndexBuffer.h"
 
 #include "glad/glad.h"
@@ -8,7 +8,7 @@ namespace Exp
     IndexBuffer::IndexBuffer(const uint32* data, uint32 count)
         : m_Count(count)
     {
-        glCreateBuffers(1, &m_RendererID);
+        glGenBuffers(1, &m_RendererID);
         glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
         glBufferData(GL_ARRAY_BUFFER, count * sizeof(*data), data, GL_STATIC_DRAW);
         // Better to fill in array buffer, but later bind to elements array buffer
