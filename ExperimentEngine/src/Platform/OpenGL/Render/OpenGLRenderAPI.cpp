@@ -1,0 +1,42 @@
+﻿#include "exppch.h"
+#include "Engine/Render/RenderAPI.h"
+
+#include "Engine/Render/RenderData/IndexBuffer.h"
+
+#include "glad/glad.h"
+
+namespace Exp::RenderAPI
+{
+    static GLuint m_DefaultVAO;
+    
+    void Init(const void* proc)
+    {
+        const int status = gladLoadGLLoader((GLADloadproc)proc);
+        EXP_ASSERT_MSG(status, "Failed to initialize GLAD");
+        
+        glGenVertexArrays(1, &m_DefaultVAO);
+        glBindVertexArray(m_DefaultVAO);
+    }
+
+    void Shutdown()
+    {
+        glDeleteVertexArrays(1, &m_DefaultVAO);
+    }
+
+    void Clear()
+    {
+        glClear(GL_COLOR_BUFFER_BIT);
+    }
+
+    void SetClearColor(const glm::vec4& color)
+    {
+        glClearColor(color.r, color.g, color.b, color.a);
+    }
+
+    void DrawIndexed(const Shared<VertexArray>& vertexArray, uint32 indexCount)
+    {
+        const uint32 count = indexCount ? indexCount : vertexArray->GetIndexBuffer()->GetCount();
+        vertexArray->Bind();
+        glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
+    }
+}

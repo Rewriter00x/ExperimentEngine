@@ -3,6 +3,7 @@
 
 std::filesystem::path g_RootDirectory;
 std::filesystem::path g_OutputDirectory;
+std::filesystem::path g_EngineResourcesDirectory;
 
 namespace Exp::AssetManager
 {
@@ -18,6 +19,7 @@ namespace Exp::AssetManager
 		
 		g_RootDirectory = rootPath;
 		g_OutputDirectory = g_RootDirectory / "Saved";
+		g_EngineResourcesDirectory = g_RootDirectory / "ExperimentEngine" / "Resources";
 	}
 
 	void Shutdown()

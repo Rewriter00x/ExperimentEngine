@@ -4,6 +4,7 @@
 #include "imgui.h"
 #include "Window.h"
 #include "Engine/ImGui/ExpImGui.h"
+#include "Engine/Render/Renderer.h"
 
 #include "Platform/PlatformDependenciesInitializer.h"
 #include "Platform/PlatformUtils.h"
@@ -73,10 +74,22 @@ namespace Exp
 
 			m_Window->OnUpdate(deltaSeconds);
 
+			Renderer::BeginBatch();
+
+			static glm::vec2 position = { 0.f, 0.f };
+			static glm::vec2 size = { 1.f, 1.f };
+			static glm::vec4 color = { 1.f, 0.f, 0.f, 1.f };
+			Renderer::DrawQuad(position, size, color);
+			
+			Renderer::EndBatch();
+
 			ExpImGui::BeginNewFrame();
 
-			bool open = true;
-			ImGui::ShowDemoWindow(&open);
+			ImGui::Begin("Test");
+			ImGui::DragFloat2("Position", glm::value_ptr(position), .01f);
+			ImGui::DragFloat2("Size", glm::value_ptr(size), .01f);
+			ImGui::ColorEdit4("Color", glm::value_ptr(color));
+			ImGui::End();
 
 			ExpImGui::EndNewFrame();
 

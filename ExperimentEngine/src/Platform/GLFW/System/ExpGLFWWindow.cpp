@@ -1,9 +1,10 @@
 #include "exppch.h"
 #include "ExpGLFWWindow.h"
 
+#include "Engine/Render/RenderAPI.h"
+#include "Engine/Render/Renderer.h"
 #include "Engine/System/Application.h"
 
-#include "glad/glad.h"
 #include "GLFW/glfw3.h"
 
 namespace Exp
@@ -14,8 +15,8 @@ namespace Exp
 	{
 		EXP_LOG(Info, "Creating window %s (%d:%d)", props.Title.c_str(), props.Width, props.Height);
         
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
@@ -24,23 +25,21 @@ namespace Exp
 
 		glfwMakeContextCurrent(m_NativeWindow);
 
-		const int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress); // should be done after glfwMakeContextCurrent
-		EXP_ASSERT_MSG(status, "Failed to initialize GLAD");
+		RenderAPI::Init(glfwGetProcAddress); // should be done after glfwMakeContextCurrent
+		Renderer::Init();
 
 		glfwSetWindowUserPointer(m_NativeWindow, this);
 
         glfwSwapInterval(1); // enable vsync
 
 		InitEvents();
-        
-        static_assert(std::is_same_v<decltype(m_DefaultVAO), GLuint>, "Type mismatch for m_DefaultVAO");
-        glGenVertexArrays(1, &m_DefaultVAO);
-        glBindVertexArray(m_DefaultVAO);
 	}
 
 	ExpGLFWWindow::~ExpGLFWWindow()
 	{
-        glDeleteVertexArrays(1, &m_DefaultVAO);
+		Renderer::Shutdown();
+		RenderAPI::Shutdown();
+		
 		glfwDestroyWindow(m_NativeWindow);
 	}
 
@@ -48,8 +47,9 @@ namespace Exp
 	{
 		glfwSwapBuffers(m_NativeWindow);
 		glfwPollEvents();
-		glClear(GL_COLOR_BUFFER_BIT);
-		glClearColor(1, 0, 1, 1);
+
+		RenderAPI::Clear();
+		RenderAPI::SetClearColor({ 1, 0, 1, 1 });
 	}
 
 	void ExpGLFWWindow::SetVSync(bool enabled)

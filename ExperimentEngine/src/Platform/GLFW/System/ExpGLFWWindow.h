@@ -24,7 +24,6 @@ namespace Exp
 	private:
 		void InitEvents() const;
 
-        uint32 m_DefaultVAO;
 		GLFWwindow* m_NativeWindow = nullptr;
 
 		WindowProps m_WindowProps;
