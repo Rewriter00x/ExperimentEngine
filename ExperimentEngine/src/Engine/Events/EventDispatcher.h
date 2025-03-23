@@ -3,7 +3,10 @@
 namespace Exp
 {
 	template<typename T, typename F>
-	constexpr static std::function<bool(const Event&)> WrapEventFunction(F&& func)
+#ifdef EXP_WINDOWS
+    constexpr
+#endif
+    inline static std::function<bool(const Event&)> WrapEventFunction(F&& func)
 	{
 		return [func](const Event& e) -> decltype(auto)
 			{
