@@ -3,20 +3,20 @@
 namespace Exp
 {
 	template<typename T, typename F>
-	static std::function<void(const Event&)> WrapEventFunction(F&& func)
+	constexpr static std::function<bool(const Event&)> WrapEventFunction(F&& func)
 	{
-		return [func](const Event& e)
+		return [func](const Event& e) -> decltype(auto)
 			{
-				func(static_cast<const T&>(e));
+				return func(static_cast<const T&>(e));
 			};
 	}
 
-	#define ADD_EVENT_LISTENER(obj, type, fn) ::Exp::Application::Get().AddEventListener(obj, EventType::type, WrapEventFunction<type##Event>([this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); }))
+	#define ADD_EVENT_LISTENER(obj, type, fn) ::Exp::Application::Get().AddEventListener(obj, EventType::type, WrapEventFunction<type##Event>([obj](auto&&... args) -> decltype(auto) { return obj->fn(std::forward<decltype(args)>(args)...); }))
 
 	class EventDispatcher final
 	{
 	public:
-		using EventFn = std::function<void(const Event&)>;
+		using EventFn = std::function<bool(const Event&)>;
 
 	public:
 		EventDispatcher() = default;

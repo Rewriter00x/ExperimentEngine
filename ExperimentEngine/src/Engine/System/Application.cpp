@@ -15,8 +15,7 @@ namespace Exp
 		const auto it = map->find(obj);
 		if (it != map->end())
 		{
-			it->second(e);
-			return true;
+			return it->second(e);
 		}
 
 		return false;
@@ -99,8 +98,9 @@ namespace Exp
 		AssetManager::Shutdown();
 	}
 
-	void Application::OnWindowClosed(const WindowCloseEvent& event)
+	bool Application::OnWindowClosed(const WindowCloseEvent& event)
 	{
 		RequestShutdown();
+		return true;
 	}
 }
