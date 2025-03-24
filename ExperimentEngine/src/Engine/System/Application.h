@@ -30,6 +30,7 @@ namespace Exp
 		static void Shutdown();
 
 		bool OnWindowClosed(const WindowCloseEvent& event);
+		bool OnWindowResized(const WindowResizeEvent& event);
 
 		inline static Application* s_Instance = nullptr;
 

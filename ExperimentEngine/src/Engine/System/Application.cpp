@@ -5,6 +5,7 @@
 #include "Window.h"
 #include "Engine/ImGui/ExpImGui.h"
 #include "Engine/Render/Renderer.h"
+#include "Engine/Render/RenderAPI.h"
 
 #include "Platform/PlatformDependenciesInitializer.h"
 #include "Platform/PlatformUtils.h"
@@ -36,6 +37,7 @@ namespace Exp
 		m_LastFrameTime = PlatformUtils::GetTime();
 
 		ADD_EVENT_LISTENER(this, WindowClose, OnWindowClosed);
+		ADD_EVENT_LISTENER(this, WindowResize, OnWindowResized);
 
 		EXP_LOG(Log, "Application init");
 	}
@@ -115,5 +117,11 @@ namespace Exp
 	{
 		RequestShutdown();
 		return true;
+	}
+
+	bool Application::OnWindowResized(const WindowResizeEvent& event)
+	{
+		RenderAPI::SetViewport(0, 0, event.GetWidth(), event.GetHeight());
+		return false;
 	}
 }

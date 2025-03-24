@@ -33,6 +33,11 @@ namespace Exp::RenderAPI
         glClearColor(color.r, color.g, color.b, color.a);
     }
 
+    void SetViewport(int32 x, int32 y, int32 width, int32 height)
+    {
+        glViewport(x, y, width, height);
+    }
+
     void DrawIndexed(const Shared<VertexArray>& vertexArray, uint32 indexCount)
     {
         const uint32 count = indexCount ? indexCount : vertexArray->GetIndexBuffer()->GetCount();
