@@ -38,7 +38,7 @@ namespace Exp
 	{
 		if (type == "vertex")
 			return GL_VERTEX_SHADER;
-		if (type == "fragment" || type == "pixel")
+		if (type == "fragment")
 			return GL_FRAGMENT_SHADER;
 
 		EXP_ASSERT_MSG(false, "Unknown shader type!");
@@ -119,12 +119,11 @@ namespace Exp
     }
     
     Shader::Shader(const std::filesystem::path& filepath)
+	    : m_Name(filepath.stem().string())
     {
 		const std::string source = AssetManager::ReadAssetData(filepath);
 		const std::unordered_map<GLenum, std::string> shaderSources = PreProcess(source);
 		m_RendererID = CompileProgram(shaderSources);
-
-		m_Name = filepath.stem().string();
     }
 
     Shader::~Shader()

@@ -69,5 +69,9 @@ namespace Exp::AssetManager
 		{
 			s_ReadFileData.erase(filepath);
 		}
+		else
+		{
+			EXP_LOG(Warning, "Trying to release asset data for unloaded asset %s", filepath.string().c_str());
+		}
 	}
 }

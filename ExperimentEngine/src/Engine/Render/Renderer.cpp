@@ -85,6 +85,7 @@ namespace Exp::Renderer
 
         static const std::filesystem::path quadShaderPath = g_EngineResourcesDirectory / "Shaders" / "QuadShader.glsl";
         QuadShader = MakeShared<Shader>(quadShaderPath);
+        AssetManager::ReleaseAssetData(quadShaderPath);
 
         QuadVertexPositions[0] = { -.5f, -.5f, 0.f, 1.f };
         QuadVertexPositions[1] = {  .5f, -.5f, 0.f, 1.f };

@@ -24,6 +24,25 @@ namespace Exp::Logger
 	static inline void SetLogColor(int color) { std::cout << "\033[" << color << "m"; }
 	static inline void ResetLogColor() { SetLogColor(0); }
 
+	static void LogTimestamp(FILE* target)
+	{
+		const auto now = std::chrono::system_clock::now();
+		const auto nowMicroSeconds = std::chrono::duration_cast<std::chrono::microseconds>(now.time_since_epoch()) % 1000000;
+		const std::time_t timeNow = std::chrono::system_clock::to_time_t(now);
+		std::tm tmBuf;
+
+#if defined(EXP_WINDOWS)
+		localtime_s(&tmBuf, &timeNow);
+#elif defined(EXP_MACOS)
+		localtime_r(&timeNow, &tmBuf);
+#endif
+
+		char timeBuffer[20];
+		std::strftime(timeBuffer, sizeof(timeBuffer), "%Y-%m-%d %H:%M:%S", &tmBuf);
+
+		std::fprintf(target, "[%s.%06lld] ", timeBuffer, nowMicroSeconds.count());
+	}
+
 	void Init()
 	{
 		std::filesystem::path path = g_OutputDirectory / LogFilePath;
@@ -47,6 +66,7 @@ namespace Exp::Logger
 		va_start(args, fmt);
 
 		SetLogColor(VerbosityColorMap.at(Verbosity));
+		LogTimestamp(stdout);
 		std::vprintf(fmt, args);
 		std::printf("\n");
 		ResetLogColor();
@@ -54,6 +74,7 @@ namespace Exp::Logger
 
 		if (Verbosity != Log::LogVerbosity::Info)
 		{
+			LogTimestamp(LogFile);
 			std::vfprintf(LogFile, fmt, args);
 			std::fprintf(LogFile, "\n");
 			std::fflush(LogFile);
