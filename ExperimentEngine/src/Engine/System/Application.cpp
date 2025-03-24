@@ -119,7 +119,7 @@ namespace Exp
 		return true;
 	}
 
-	bool Application::OnWindowResized(const WindowResizeEvent& event)
+	bool Application::OnWindowResized(const WindowResizeEvent& event) const
 	{
 		RenderAPI::SetViewport(0, 0, event.GetWidth(), event.GetHeight());
 		return false;

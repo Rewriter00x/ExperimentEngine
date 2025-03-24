@@ -44,34 +44,6 @@ namespace Exp
 		EXP_ASSERT_MSG(false, "Unknown shader type!");
 		return GL_INVALID_ENUM;
 	}
-	
-    static std::string ReadFile(const std::filesystem::path& filepath)
-    {
-    	std::string result;
-    
-    	if (std::ifstream in = std::ifstream(filepath, std::ios::in | std::ios::binary))
-    	{
-    		in.seekg(0, std::ios::end);
-    		const int64 size = in.tellg();
-    		if (size != -1)
-    		{
-    			result.resize(size);
-    			in.seekg(0, std::ios::beg);
-    			in.read(result.data(), size);
-    			in.close();
-    		}
-    		else
-    		{
-    			EXP_LOG(Error, "Could not read from file %s", filepath.string().c_str());
-    		}
-    	}
-    	else
-    	{
-    		EXP_LOG(Error, "Could not open file %s", filepath.string().c_str());
-    	}
-    
-    	return result;
-    }
     
     static std::unordered_map<GLenum, std::string> PreProcess(const std::string& source)
     {
@@ -148,8 +120,8 @@ namespace Exp
     
     Shader::Shader(const std::filesystem::path& filepath)
     {
-		const std::string source = ReadFile(filepath);
-		const std::unordered_map<uint32, std::string> shaderSources = PreProcess(source);
+		const std::string source = AssetManager::ReadAssetData(filepath);
+		const std::unordered_map<GLenum, std::string> shaderSources = PreProcess(source);
 		m_RendererID = CompileProgram(shaderSources);
 
 		m_Name = filepath.stem().string();
