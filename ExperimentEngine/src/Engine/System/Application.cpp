@@ -27,6 +27,8 @@ namespace Exp
 	{
 		EXP_ASSERT_MSG(!s_Instance, "Trying to create second instance of Application");
 		s_Instance = this;
+		
+		EXP_LOG(Log, "Application init");
 
 		WindowProps props;
 		props.Title = name.empty() ? "Experiment Engine" : name;
@@ -38,8 +40,6 @@ namespace Exp
 
 		ADD_EVENT_LISTENER(this, WindowClose, OnWindowClosed);
 		ADD_EVENT_LISTENER(this, WindowResize, OnWindowResized);
-
-		EXP_LOG(Log, "Application init");
 	}
 
 	Application::~Application()

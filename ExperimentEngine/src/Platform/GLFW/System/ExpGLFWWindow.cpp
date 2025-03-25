@@ -13,7 +13,7 @@ namespace Exp
 		: Window(props)
 		, m_WindowProps(props)
 	{
-		EXP_LOG(Info, "Creating window %s (%d:%d)", props.Title.c_str(), props.Width, props.Height);
+		EXP_LOG(Log, "Creating window %s (%d:%d)", props.Title.c_str(), props.Width, props.Height);
         
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
