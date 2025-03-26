@@ -4,6 +4,7 @@
 #include "imgui.h"
 #include "Window.h"
 #include "Engine/ImGui/ExpImGui.h"
+#include "Engine/Render/Camera.h"
 #include "Engine/Render/Renderer.h"
 #include "Engine/Render/RenderAPI.h"
 
@@ -76,11 +77,15 @@ namespace Exp
 
 			m_Window->OnUpdate(deltaSeconds);
 
-			Renderer::BeginBatch();
+			static Camera camera;
+			camera.SetAspectRatio((float)m_Window->GetWidth() / (float)m_Window->GetHeight());
 
-			static glm::vec2 position = { 0.f, 0.f };
+			static glm::vec3 position = { 0.f, 0.f, -10.f };
 			static glm::vec2 size = { 1.f, 1.f };
 			static glm::vec4 color = { 1.f, 0.f, 0.f, 1.f };
+
+			Renderer::BeginBatch(camera);
+			
 			Renderer::DrawQuad(position, size, color);
 			
 			Renderer::EndBatch();
@@ -88,7 +93,7 @@ namespace Exp
 			ExpImGui::BeginNewFrame();
 
 			ImGui::Begin("Test");
-			ImGui::DragFloat2("Position", glm::value_ptr(position), .01f);
+			ImGui::DragFloat3("Position", glm::value_ptr(position), .01f);
 			ImGui::DragFloat2("Size", glm::value_ptr(size), .01f);
 			ImGui::ColorEdit4("Color", glm::value_ptr(color));
 			ImGui::End();

@@ -1,6 +1,7 @@
 ﻿#include "exppch.h"
 #include "Renderer.h"
 
+#include "Camera.h"
 #include "RenderAPI.h"
 
 #include "RenderData/VertexArray.h"
@@ -98,10 +99,10 @@ namespace Exp::Renderer
         delete[] QuadVertexBufferBase;
     }
 
-    void BeginBatch()
+    void BeginBatch(const Camera& camera)
     {
         ResetQuadData();
-        QuadShader->SetUniformMat4("u_ViewProjection", glm::mat4(1.f));
+        QuadShader->SetUniformMat4("u_ViewProjection", camera.GetProjection());
     }
 
     void EndBatch()

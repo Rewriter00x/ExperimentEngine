@@ -2,12 +2,17 @@
 
 namespace Exp
 {
+    class Camera;
+}
+
+namespace Exp
+{
     namespace Renderer
     {
         void Init();
         void Shutdown();
 
-        void BeginBatch();
+        void BeginBatch(const Camera& camera);
         void EndBatch();
         
         void DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color);
