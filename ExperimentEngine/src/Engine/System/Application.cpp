@@ -61,10 +61,28 @@ namespace Exp
 
 	void Application::DispatchEvent(const Event& e) const
 	{
+		static const void* priorityList[] = { this, m_Window.get() };
+		
 		if (const auto* map = m_EventDispatcher.GetEventListeners(e.GetEventType()))
 		{
-			if (DispatchEventForObject(e, this, map)) return;
-			if (DispatchEventForObject(e, m_Window.get(), map)) return;
+			for (const void* obj : priorityList)
+			{
+				if (DispatchEventForObject(e, obj, map))
+				{
+					return;
+				}
+			}
+			
+			std::unordered_map<const void*, EventDispatcher::EventFn> leftMap = *map;
+			for (const void* obj : priorityList)
+			{
+				leftMap.erase(obj);
+			}
+
+			for (const auto& [obj, func] : leftMap)
+			{
+				const bool res = func(e); // dispatching functions for objects is not blocking and ordered for now
+			}
 		}
 	}
 
@@ -78,7 +96,6 @@ namespace Exp
 			m_Window->OnUpdate(deltaSeconds);
 
 			static Camera camera;
-			camera.SetAspectRatio((float)m_Window->GetWidth() / (float)m_Window->GetHeight());
 
 			static glm::vec3 position = { 0.f, 0.f, -10.f };
 			static glm::vec2 size = { 1.f, 1.f };

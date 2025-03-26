@@ -9,10 +9,10 @@ namespace Exp
         Camera(float fov, float aspectRatio, float near, float far);
 
         inline const glm::mat4& GetProjection() const { return m_Projection; }
-
-        inline void SetAspectRatio(float aspectRatio) { m_AspectRatio = aspectRatio; RecalculateProjection(); }
         
     private:
+        bool OnWindowResized(const WindowResizeEvent& e);
+        
         void RecalculateProjection();
         
         glm::mat4 m_Projection = glm::mat4(1.f);

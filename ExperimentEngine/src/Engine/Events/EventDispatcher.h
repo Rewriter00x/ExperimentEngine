@@ -25,7 +25,7 @@ namespace Exp
 		EventDispatcher() = default;
 		~EventDispatcher() = default;
 
-		void AddEventListener(void* obj, EventType eventType, const EventFn& function);
+		void AddEventListener(const void* obj, EventType eventType, const EventFn& function);
 
 		const std::unordered_map<const void*, EventFn>* GetEventListeners(EventType Type) const;
 

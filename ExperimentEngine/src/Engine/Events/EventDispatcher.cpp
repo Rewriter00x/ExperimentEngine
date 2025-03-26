@@ -3,7 +3,7 @@
 
 namespace Exp
 {
-	void EventDispatcher::AddEventListener(void* obj, EventType eventType, const EventFn& function)
+	void EventDispatcher::AddEventListener(const void* obj, EventType eventType, const EventFn& function)
 	{
 		m_Listeners[eventType][obj] = function;
 	}
