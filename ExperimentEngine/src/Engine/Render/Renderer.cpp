@@ -102,7 +102,7 @@ namespace Exp::Renderer
     void BeginBatch(const Camera& camera)
     {
         ResetQuadData();
-        QuadShader->SetUniformMat4("u_ViewProjection", camera.GetProjection());
+        QuadShader->SetUniformMat4("u_ViewProjection", camera.GetViewProjection());
     }
 
     void EndBatch()

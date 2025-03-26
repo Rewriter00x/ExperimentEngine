@@ -1,12 +1,18 @@
 ﻿#include "exppch.h"
 #include "Camera.h"
 
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/quaternion.hpp>
+#include <glm/gtx/rotate_vector.hpp>
+
 namespace Exp
 {
+    static float s_CameraMoveSpeed = 10.f;
+    static float s_CameraRotationSpeed = 45.f;
+    
     Camera::Camera()
     {
         RecalculateProjection();
-        ADD_EVENT_LISTENER(this, WindowResize, OnWindowResized);
     }
 
     Camera::Camera(float fov, float aspectRatio, float near, float far)
@@ -15,15 +21,24 @@ namespace Exp
         RecalculateProjection();
     }
 
-    bool Camera::OnWindowResized(const WindowResizeEvent& e)
+    void Camera::AddMovementInput(const glm::vec3& input)
     {
-        m_AspectRatio = (float)e.GetWidth() / (float)e.GetHeight();
-        RecalculateProjection();
-        return false;
+        const glm::vec3 transformedInput = GetRotationQuat() * input;
+        SetPosition(m_Position + transformedInput * s_CameraMoveSpeed);
+    }
+
+    void Camera::AddRotationInput(const glm::vec3& input)
+    {
+        SetRotation(m_Rotation + input * s_CameraRotationSpeed);
     }
 
     void Camera::RecalculateProjection()
     {
         m_Projection = glm::perspective(glm::radians(m_FOV), m_AspectRatio, m_Near, m_Far);
+    }
+
+    void Camera::RecalculateView()
+    {
+        m_View = glm::inverse(glm::translate(glm::mat4(1.f), m_Position) * glm::toMat4(GetRotationQuat()));
     }
 }

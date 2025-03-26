@@ -4,7 +4,7 @@
 #include "imgui.h"
 #include "Window.h"
 #include "Engine/ImGui/ExpImGui.h"
-#include "Engine/Render/Camera.h"
+#include "Engine/Render/EditorCamera.h"
 #include "Engine/Render/Renderer.h"
 #include "Engine/Render/RenderAPI.h"
 
@@ -24,6 +24,8 @@ namespace Exp
 		return false;
 	}
 
+	static EditorCamera* s_MainCamera; // TODO move
+
 	Application::Application(const std::string& name)
 	{
 		EXP_ASSERT_MSG(!s_Instance, "Trying to create second instance of Application");
@@ -39,6 +41,8 @@ namespace Exp
 
 		m_LastFrameTime = PlatformUtils::GetTime();
 
+		s_MainCamera = new EditorCamera;
+
 		ADD_EVENT_LISTENER(this, WindowClose, OnWindowClosed);
 		ADD_EVENT_LISTENER(this, WindowResize, OnWindowResized);
 	}
@@ -46,6 +50,8 @@ namespace Exp
 	Application::~Application()
 	{
 		EXP_LOG(Log, "Application shutdown");
+
+		delete s_MainCamera;
 
 		ExpImGui::Shutdown();
 	}
@@ -93,15 +99,15 @@ namespace Exp
 			const float time = PlatformUtils::GetTime();
 			const float deltaSeconds = time - m_LastFrameTime;
 
-			m_Window->OnUpdate(deltaSeconds);
+			s_MainCamera->OnUpdate(deltaSeconds);
 
-			static Camera camera;
+			m_Window->OnUpdate(deltaSeconds);
 
 			static glm::vec3 position = { 0.f, 0.f, -10.f };
 			static glm::vec2 size = { 1.f, 1.f };
 			static glm::vec4 color = { 1.f, 0.f, 0.f, 1.f };
 
-			Renderer::BeginBatch(camera);
+			Renderer::BeginBatch(*s_MainCamera);
 			
 			Renderer::DrawQuad(position, size, color);
 			
@@ -143,7 +149,10 @@ namespace Exp
 
 	bool Application::OnWindowResized(const WindowResizeEvent& event) const
 	{
-		RenderAPI::SetViewport(0, 0, event.GetWidth(), event.GetHeight());
+		const uint32 width = event.GetWidth();
+		const uint32 height = event.GetHeight();
+		RenderAPI::SetViewport(0, 0, width, height);
+		s_MainCamera->SetAspectRatio((float)width / (float)height);
 		return false;
 	}
 }

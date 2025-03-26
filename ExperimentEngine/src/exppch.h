@@ -35,6 +35,8 @@
 #include "Engine/System/KeyCodes.h"
 #include "Engine/System/MouseCodes.h"
 
+#include "Engine/System/Input.h"
+
 #include "Engine/Events/Event.h"
 #include "Engine/Events/EventDispatcher.h"
 
