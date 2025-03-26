@@ -42,7 +42,7 @@ namespace Exp
         void CalculateOffsetsAndStride();
         
         std::vector<BufferLayoutElement> m_Elements;
-        unsigned int m_Stride = 0;
+        uint32 m_Stride = 0;
         
     };
 }

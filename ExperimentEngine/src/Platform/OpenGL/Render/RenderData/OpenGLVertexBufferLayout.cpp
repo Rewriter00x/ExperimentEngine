@@ -77,7 +77,7 @@ namespace Exp
             case ShaderDataType::Mat3:
             case ShaderDataType::Mat4:
                 {
-                    const unsigned int count = element.GetComponentCount();
+                    const uint32 count = element.GetComponentCount();
                     for (uint8_t i = 0; i < count; i++)
                     {
                         glEnableVertexAttribArray(vertexBufferIndex);

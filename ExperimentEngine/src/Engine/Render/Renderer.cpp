@@ -37,7 +37,7 @@ namespace Exp::Renderer
     {
         if (QuadIndexCount)
         {
-            const unsigned int quadDataSize = (uint32)(QuadVertexBufferPtr - QuadVertexBufferBase) * sizeof(QuadVertex);
+            const uint32 quadDataSize = (uint32)(QuadVertexBufferPtr - QuadVertexBufferBase) * sizeof(QuadVertex);
             QuadVertexBuffer->SetData(QuadVertexBufferBase, quadDataSize);
         }
     }
