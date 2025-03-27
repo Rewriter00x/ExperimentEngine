@@ -1,4 +1,4 @@
-﻿#include "exppch.h"
+#include "exppch.h"
 #include "Renderer.h"
 
 #include "Camera.h"
@@ -17,7 +17,7 @@ namespace Exp::Renderer
     constexpr static uint32 MaxQuads = 10000;
     constexpr static uint32 MaxVertices = MaxQuads * VerticesPerQuad;
     constexpr static uint32 MaxIndices = MaxQuads * IndicesPerQuad;
-    constexpr static uint32 MaxTextureSlots = 32;
+    constexpr static uint32 MaxTextureSlots = 16;
     
     struct QuadVertex
     {
