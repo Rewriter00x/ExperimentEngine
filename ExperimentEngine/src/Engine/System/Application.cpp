@@ -7,6 +7,7 @@
 #include "Engine/Render/EditorCamera.h"
 #include "Engine/Render/Renderer.h"
 #include "Engine/Render/RenderAPI.h"
+#include "Engine/Render/RenderData/Texture.h"
 
 #include "Platform/PlatformDependenciesInitializer.h"
 #include "Platform/PlatformUtils.h"
@@ -106,10 +107,16 @@ namespace Exp
 			static glm::vec3 position = { 0.f, 0.f, -10.f };
 			static glm::vec2 size = { 1.f, 1.f };
 			static glm::vec4 color = { 1.f, 0.f, 0.f, 1.f };
+			static Shared<Texture> texture = MakeShared<Texture>(g_EngineResourcesDirectory / "Textures" / "CheckerBoard.png");
 
 			Renderer::BeginBatch(*s_MainCamera);
 			
 			Renderer::DrawQuad(position, size, color);
+
+			const glm::mat4 transform = glm::translate(glm::mat4(1.f), position)
+				* glm::scale(glm::mat4(1.f), { size.x, size.y, 1.f });
+
+			Renderer::DrawQuad(transform, texture);
 			
 			Renderer::EndBatch();
 

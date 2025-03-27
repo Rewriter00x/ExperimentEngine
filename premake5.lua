@@ -33,6 +33,7 @@ IncludeDirs["GLFW"] = "%{wks.location}/ExperimentEngine/Dependencies/GLFW/GLFW/i
 IncludeDirs["glad"] = "%{wks.location}/ExperimentEngine/Dependencies/glad/glad/include"
 IncludeDirs["ImGui"] = "%{wks.location}/ExperimentEngine/Dependencies/imgui/imgui"
 IncludeDirs["glm"] = "%{wks.location}/ExperimentEngine/Dependencies/glm/glm"
+IncludeDirs["stb_image"] = "%{wks.location}/ExperimentEngine/Dependencies/stb_image/stb_image"
 
 CoreIncludes = {
 	"%{wks.location}/ExperimentEngine/src",

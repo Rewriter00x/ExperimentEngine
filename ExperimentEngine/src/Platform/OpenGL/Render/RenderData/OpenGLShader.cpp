@@ -143,8 +143,14 @@ namespace Exp
 
     void Shader::SetUniformMat4(const std::string& name, const glm::mat4& matrix) const
     {
-		const int location = GetUniformLocation(name);
+		const int32 location = GetUniformLocation(name);
 		glUniformMatrix4fv(location, 1, false, glm::value_ptr(matrix));
+    }
+
+    void Shader::SetUniformIntArray(const std::string& name, const int32* values, uint32 count) const
+    {
+		const int32 location = GetUniformLocation(name);
+		glUniform1iv(location, count, values);
     }
 
     int32 Shader::GetUniformLocation(const std::string& name) const

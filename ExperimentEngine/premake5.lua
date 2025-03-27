@@ -13,6 +13,7 @@ project "ExperimentEngine"
 	local localIncludes = {
 		"%{IncludeDirs.GLFW}",
 		"%{IncludeDirs.glad}",
+		"%{IncludeDirs.stb_image}",
 	}
 
 	local includeList = table.join(CoreIncludes, localIncludes)
@@ -21,6 +22,9 @@ project "ExperimentEngine"
 	{
 		"src/**.h",
 		"src/**.cpp",
+
+		"%{IncludeDirs.stb_image}/**.h",
+		"%{IncludeDirs.stb_image}/**.cpp",
 	}
 
 	links

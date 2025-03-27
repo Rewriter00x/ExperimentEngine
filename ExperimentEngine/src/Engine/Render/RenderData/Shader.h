@@ -12,6 +12,7 @@ namespace Exp
         static void Unbind();
 
         void SetUniformMat4(const std::string& name, const glm::mat4& matrix) const;
+        void SetUniformIntArray(const std::string& name, const int32* values, uint32 count) const;
 
     private:
         int32 GetUniformLocation(const std::string& name) const;

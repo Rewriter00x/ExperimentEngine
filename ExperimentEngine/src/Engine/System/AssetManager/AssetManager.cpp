@@ -1,6 +1,8 @@
 #include "exppch.h"
 #include "AssetManager.h"
 
+#include "stb_image.h"
+
 std::filesystem::path g_RootDirectory;
 std::filesystem::path g_OutputDirectory;
 std::filesystem::path g_EngineResourcesDirectory;
@@ -8,6 +10,7 @@ std::filesystem::path g_EngineResourcesDirectory;
 namespace Exp::AssetManager
 {
 	static std::unordered_map<std::filesystem::path, std::string> s_ReadFileData;
+	static std::unordered_map<std::filesystem::path, TextureData> s_ReadTextureData;
 	
 	void Init()
 	{
@@ -22,6 +25,8 @@ namespace Exp::AssetManager
 		g_RootDirectory = rootPath;
 		g_OutputDirectory = g_RootDirectory / "Saved";
 		g_EngineResourcesDirectory = g_RootDirectory / "ExperimentEngine" / "Resources";
+
+		stbi_set_flip_vertically_on_load(1);
 	}
 
 	void Shutdown()
@@ -73,5 +78,18 @@ namespace Exp::AssetManager
 		{
 			EXP_LOG(Warning, "Trying to release asset data for unloaded asset %s", filepath.string().c_str());
 		}
+	}
+
+	TextureData ReadTextureData(const std::filesystem::path& filepath)
+	{
+		TextureData& res = s_ReadTextureData[filepath];
+		res.Data = stbi_load(filepath.string().c_str(), &res.Width, &res.Height, &res.Channels, 0);
+		return res;
+	}
+
+	void ReleaseTextureData(const std::filesystem::path& filepath)
+	{
+		stbi_image_free(s_ReadTextureData[filepath].Data);
+		s_ReadTextureData.erase(filepath);
 	}
 }
