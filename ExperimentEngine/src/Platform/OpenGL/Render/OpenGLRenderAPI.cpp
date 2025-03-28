@@ -1,4 +1,4 @@
-﻿#include "exppch.h"
+#include "exppch.h"
 #include "Engine/Render/RenderAPI.h"
 
 #include "Engine/Render/RenderData/IndexBuffer.h"
@@ -17,6 +17,9 @@ namespace Exp::RenderAPI
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LESS);
+        
         glGenVertexArrays(1, &m_DefaultVAO);
         glBindVertexArray(m_DefaultVAO);
     }
@@ -28,7 +31,7 @@ namespace Exp::RenderAPI
 
     void Clear()
     {
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
     void SetClearColor(const glm::vec4& color)
