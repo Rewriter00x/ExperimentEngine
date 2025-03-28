@@ -16,10 +16,6 @@ namespace Exp
         if (Input::IsKeyPressed(KeyCode::D))	movementInput.x = 1.f;
         if (Input::IsKeyPressed(KeyCode::S))	movementInput.z = 1.f;
         if (Input::IsKeyPressed(KeyCode::W))	movementInput.z = -1.f;
-        if (movementInput != glm::vec3(0.f))
-        {
-            AddMovementInput(movementInput * deltaSeconds);
-        }
 
         glm::vec3 rotationInput(0.f);
         if (Input::IsKeyPressed(KeyCode::E))	rotationInput.z = -1.f;
@@ -32,9 +28,10 @@ namespace Exp
             rotationInput.y = delta.x;
             m_LastMousePos = mousePos;
         }
-        if (rotationInput != glm::vec3(0.f))
+        
+        if (movementInput != glm::vec3(0.f) || rotationInput != glm::vec3(0.f))
         {
-            AddRotationInput(rotationInput * deltaSeconds);
+            AddMovementAndRotationInput(movementInput * deltaSeconds, rotationInput * deltaSeconds);
         }
     }
 

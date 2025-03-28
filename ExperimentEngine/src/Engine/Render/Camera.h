@@ -21,9 +21,11 @@ namespace Exp
         
         inline void SetPosition(const glm::vec3& position) { m_Position = position; RecalculateView(); }
         inline void SetRotation(const glm::vec3& rotation) { m_Rotation = rotation; RecalculateView(); }
+        inline void SetPositionAndRotation(const glm::vec3& position, const glm::vec3& rotation) { m_Position = position; m_Rotation = rotation; RecalculateView(); }
         
         void AddMovementInput(const glm::vec3& input);
         void AddRotationInput(const glm::vec3& input);
+        void AddMovementAndRotationInput(const glm::vec3& movementInput, const glm::vec3& rotationInput);
         
     private:
         void RecalculateProjection();
