@@ -40,13 +40,21 @@ namespace Exp
 
     bool EditorCamera::OnMouseButtonPressed(const MouseButtonPressedEvent& e)
     {
-        m_LastMousePos = Input::GetMousePosition();
-        return true;
+        if (e.GetMouseButton() == MouseCode::ButtonRight)
+        {
+            m_LastMousePos = Input::GetMousePosition();
+            return true;
+        }
+        return false;
     }
 
     bool EditorCamera::OnMouseButtonReleased(const MouseButtonReleasedEvent& e)
     {
-        m_LastMousePos = glm::vec2(0.f);
-        return true;
+        if (e.GetMouseButton() == MouseCode::ButtonRight)
+        {
+            m_LastMousePos = glm::vec2(0.f);
+            return true;
+        }
+        return false;
     }
 }
