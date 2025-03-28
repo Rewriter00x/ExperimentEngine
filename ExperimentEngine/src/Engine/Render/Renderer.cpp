@@ -10,6 +10,9 @@
 #include "RenderData/Shader.h"
 #include "RenderData/Texture.h"
 
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/quaternion.hpp>
+
 namespace Exp::Renderer
 {
     constexpr static uint32 VerticesPerQuad = 4;
@@ -72,6 +75,44 @@ namespace Exp::Renderer
         QuadVertexBufferPtr = QuadVertexBufferBase;
     }
 
+    static void SetBatchData()
+    {
+        SetQuadData();
+        SetTextureData();
+    }
+
+    static void ResetBatchData()
+    {
+        ResetQuadData();
+        ResetTextureData();
+    }
+
+    static void FlushAndReset()
+    {
+        EndBatch();
+        ResetBatchData();
+    }
+
+    static bool CheckBatchIndicesSize()
+    {
+        if (QuadIndexCount + IndicesPerQuad > MaxIndices)
+        {
+            FlushAndReset();
+            return true;
+        }
+        return false;
+    }
+
+    static bool CheckBatchTexturesSize()
+    {
+        if (TextureSlotIndex + 1 > MaxTextureSlots)
+        {
+            FlushAndReset();
+            return true;
+        }
+        return false;
+    }
+
     static uint32 FindOrAddTextureSlot(const Shared<Texture>& texture)
     {
         uint32 textureIndex = 0;
@@ -87,6 +128,7 @@ namespace Exp::Renderer
 
         if (textureIndex == 0)
         {
+            CheckBatchTexturesSize();
             textureIndex = TextureSlotIndex++;
             TextureSlots[textureIndex] = texture;
         }
@@ -167,55 +209,39 @@ namespace Exp::Renderer
 
     void BeginBatch(const Camera& camera)
     {
-        ResetQuadData();
-        ResetTextureData();
+        ResetBatchData();
+        
+        QuadShader->Bind();
         QuadShader->SetUniformMat4("u_ViewProjection", camera.GetViewProjection());
     }
 
     void EndBatch()
     {
-        SetQuadData();
-        SetTextureData();
+        SetBatchData();
 
         QuadShader->Bind();
         RenderAPI::DrawIndexed(QuadVertexArray, QuadIndexCount);
     }
 
-    void DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color)
+    void DrawQuad(const QuadData& data)
     {
-        DrawQuad(glm::vec3(position, 0.f), size, color);
-    }
+        CheckBatchIndicesSize();
 
-    void DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
-    {
-        const glm::mat4 transform = glm::translate(glm::mat4(1.f), position)
-            * glm::scale(glm::mat4(1.f), { size.x, size.y, 1.f });
+        glm::mat4 transform = glm::translate(glm::mat4(1.f), data.Position);
 
-        DrawQuad(transform, color);
-    }
-
-    void DrawQuad(const glm::mat4& transform, const glm::vec4& color)
-    {
-        for (uint32 i = 0; i < VerticesPerQuad; ++i)
+        if (data.Rotation != glm::vec3(0.f))
         {
-            QuadVertexBufferPtr->Position = transform * QuadVertexPositions[i];
-            QuadVertexBufferPtr->Color = color;
-            QuadVertexBufferPtr->TexCoord = QuadTexturePositions[i];
-            QuadVertexBufferPtr->TexIndex = WhiteTextureIndex;
-            ++QuadVertexBufferPtr;
+            transform *= glm::toMat4(glm::quat(glm::radians(data.Rotation)));
         }
 
-        QuadIndexCount += IndicesPerQuad;
-    }
+        transform *= glm::scale(glm::mat4(1.f), { data.Size.x, data.Size.y, 1.f });
 
-    void DrawQuad(const glm::mat4& transform, const Shared<Texture>& texture)
-    {
-        const uint32 textureIndex = FindOrAddTextureSlot(texture);
+        const uint32 textureIndex = data.Texture ? FindOrAddTextureSlot(data.Texture) : WhiteTextureIndex;
 
         for (uint32 i = 0; i < VerticesPerQuad; ++i)
         {
             QuadVertexBufferPtr->Position = transform * QuadVertexPositions[i];
-            QuadVertexBufferPtr->Color = glm::vec4(1.f);
+            QuadVertexBufferPtr->Color = data.Color;
             QuadVertexBufferPtr->TexCoord = QuadTexturePositions[i];
             QuadVertexBufferPtr->TexIndex = textureIndex;
             ++QuadVertexBufferPtr;

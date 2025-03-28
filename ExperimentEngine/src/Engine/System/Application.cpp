@@ -43,6 +43,7 @@ namespace Exp
 		m_LastFrameTime = PlatformUtils::GetTime();
 
 		s_MainCamera = new EditorCamera;
+		s_MainCamera->SetPosition({ 0.f, 0.f, 10.f });
 
 		ADD_EVENT_LISTENER(this, WindowClose, OnWindowClosed);
 		ADD_EVENT_LISTENER(this, WindowResize, OnWindowResized);
@@ -104,19 +105,23 @@ namespace Exp
 
 			m_Window->OnUpdate(deltaSeconds);
 
-			static glm::vec3 position = { 0.f, 0.f, -10.f };
+			static glm::vec3 position = { 0.f, 0.f, 0.f };
+			static glm::vec3 rotation = { 0.f, 0.f, 0.f };
 			static glm::vec2 size = { 1.f, 1.f };
 			static glm::vec4 color = { 1.f, 0.f, 0.f, 1.f };
 			static Shared<Texture> texture = MakeShared<Texture>(g_EngineResourcesDirectory / "Textures" / "CheckerBoard.png");
 
 			Renderer::BeginBatch(*s_MainCamera);
 			
-			Renderer::DrawQuad(position, size, color);
-
-			const glm::mat4 transform = glm::translate(glm::mat4(1.f), position)
-				* glm::scale(glm::mat4(1.f), { size.x, size.y, 1.f });
-
-			Renderer::DrawQuad(transform, texture);
+			for (int32 i = 0; i < 25; i++)
+			{
+				const int32 div = i / 5;
+				const int32 mod = i % 5;
+				glm::vec3 pos = position;
+				constexpr float sqrt = 1.4142135f;
+				pos += glm::vec3 { sqrt * size.x * mod, -sqrt * size.y * div, 0.f };
+				Renderer::DrawQuad({ pos, rotation, size, color, texture });
+			}
 			
 			Renderer::EndBatch();
 
@@ -124,6 +129,7 @@ namespace Exp
 
 			ImGui::Begin("Test");
 			ImGui::DragFloat3("Position", glm::value_ptr(position), .01f);
+			ImGui::DragFloat3("Rotation", glm::value_ptr(rotation), 1.f);
 			ImGui::DragFloat2("Size", glm::value_ptr(size), .01f);
 			ImGui::ColorEdit4("Color", glm::value_ptr(color));
 			ImGui::End();
