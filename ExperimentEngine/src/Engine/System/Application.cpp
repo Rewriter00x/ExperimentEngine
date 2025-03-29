@@ -7,6 +7,8 @@
 #include "Engine/Render/EditorCamera.h"
 #include "Engine/Render/Renderer.h"
 #include "Engine/Render/RenderAPI.h"
+
+#include "Engine/Render/RenderData/Framebuffer.h"
 #include "Engine/Render/RenderData/Texture.h"
 
 #include "Platform/PlatformDependenciesInitializer.h"
@@ -26,6 +28,8 @@ namespace Exp
 	}
 
 	static EditorCamera* s_MainCamera; // TODO move
+	static Framebuffer* s_Framebuffer;
+	static glm::vec2 s_ViewportSize = { 0.f, 0.f };
 
 	Application::Application(const std::string& name)
 	{
@@ -45,6 +49,13 @@ namespace Exp
 		s_MainCamera = new EditorCamera;
 		s_MainCamera->SetPosition({ 0.f, 0.f, 10.f });
 
+		FramebufferSpecification spec;
+		spec.Attachments = { FramebufferTextureFormat::COLOR, FramebufferTextureFormat::DEPTH };
+		spec.Width = props.Width;
+		spec.Height = props.Height;
+		s_ViewportSize = { props.Width, props.Height };
+		s_Framebuffer = new Framebuffer(spec);
+
 		ADD_EVENT_LISTENER(this, WindowClose, OnWindowClosed);
 		ADD_EVENT_LISTENER(this, WindowResize, OnWindowResized);
 	}
@@ -53,6 +64,7 @@ namespace Exp
 	{
 		EXP_LOG(Log, "Application shutdown");
 
+		delete s_Framebuffer;
 		delete s_MainCamera;
 
 		ExpImGui::Shutdown();
@@ -110,6 +122,21 @@ namespace Exp
 			static glm::vec2 size = { 1.f, 1.f };
 			static glm::vec4 color = { 1.f, 0.f, 0.f, 1.f };
 			static Shared<Texture> texture = MakeShared<Texture>(g_EngineResourcesDirectory / "Textures" / "CheckerBoard.png");
+			static int32 attachmentIndex = 0;
+
+			const FramebufferSpecification& spec = s_Framebuffer->GetSpecification();
+			if (s_ViewportSize.x > 0.0f && s_ViewportSize.y > 0.0f && // zero sized framebuffer is invalid
+				(spec.Width != s_ViewportSize.x || spec.Height != s_ViewportSize.y))
+			{
+				s_Framebuffer->Resize((uint32)s_ViewportSize.x, (uint32)s_ViewportSize.y);
+
+				s_MainCamera->SetAspectRatio(s_ViewportSize.x / s_ViewportSize.y);
+			}
+
+			s_Framebuffer->Bind();
+
+			RenderAPI::Clear();
+			RenderAPI::SetClearColor({ 1, 0, 1, 1 });
 
 			Renderer::BeginBatch(*s_MainCamera);
 			
@@ -125,6 +152,8 @@ namespace Exp
 			
 			Renderer::EndBatch();
 
+			Framebuffer::Unbind();
+
 			ExpImGui::BeginNewFrame();
 
 			ImGui::Begin("Test");
@@ -132,6 +161,14 @@ namespace Exp
 			ImGui::DragFloat3("Rotation", glm::value_ptr(rotation), 1.f);
 			ImGui::DragFloat2("Size", glm::value_ptr(size), .01f);
 			ImGui::ColorEdit4("Color", glm::value_ptr(color));
+			ImGui::DragInt("Attachment Index", &attachmentIndex, 1.f, 0, 1);
+			ImGui::End();
+
+			ImGui::Begin("Viewport");
+			const ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
+			s_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
+			const uint32 textureID = s_Framebuffer->GetAttachmentRendererID(attachmentIndex);
+			ImGui::Image(textureID, viewportPanelSize, { 0.f, 1.f }, { 1.f, 0.f });
 			ImGui::End();
 
 			ExpImGui::EndNewFrame();
@@ -165,7 +202,7 @@ namespace Exp
 		const uint32 width = event.GetWidth();
 		const uint32 height = event.GetHeight();
 		RenderAPI::SetViewport(0, 0, width, height);
-		s_MainCamera->SetAspectRatio((float)width / (float)height);
+		//s_MainCamera->SetAspectRatio((float)width / (float)height);
 		return false;
 	}
 }
