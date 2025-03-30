@@ -7,6 +7,11 @@ project "ImGui"
     targetdir	(DependenciesBinariesDir)
 	objdir		(DependenciesIntermediateDir)
 
+    local localIncludes = {
+		"%{IncludeDirs.GLFW}",
+		"%{IncludeDirs.ImGui}",
+	}
+
     files
     {
         "imgui/imconfig.h",
@@ -20,6 +25,12 @@ project "ImGui"
         "imgui/imstb_textedit.h",
         "imgui/imstb_truetype.h",
         "imgui/imgui_demo.cpp",
+
+        "imgui/backends/imgui_impl_opengl3.cpp",
+        "imgui/backends/imgui_impl_opengl3.h",
+        "imgui/backends/imgui_impl_opengl3_loader.h",
+        "imgui/backends/imgui_impl_glfw.cpp",
+        "imgui/backends/imgui_impl_glfw.h",
     }
 
     defines
@@ -29,6 +40,11 @@ project "ImGui"
 
     filter "system:windows"
         systemversion "latest"
+
+        includedirs (localIncludes)
+
+    filter "system:macosx"
+        externalincludedirs (localIncludes)
 
     filter { "system:windows", "configurations:Debug" }
         runtime "Debug"
