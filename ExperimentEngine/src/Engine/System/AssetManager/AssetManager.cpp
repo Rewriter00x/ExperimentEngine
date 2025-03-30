@@ -32,6 +32,10 @@ namespace Exp::AssetManager
 	void Shutdown()
 	{
 		s_ReadFileData.clear();
+		for (const auto& [path, texture] : s_ReadTextureData)
+		{
+			stbi_image_free(texture.Data);
+		}
 	}
 
 	std::string ReadAssetData(const std::filesystem::path& filepath)
