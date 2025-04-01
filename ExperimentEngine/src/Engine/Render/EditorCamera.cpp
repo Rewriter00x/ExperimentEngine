@@ -35,6 +35,23 @@ namespace Exp
         }
     }
 
+    void EditorCamera::AddMovementInput(const glm::vec3& input)
+    {
+        const glm::vec3 transformedInput = GetRotationQuat() * input;
+        SetPosition(GetPosition() + transformedInput * m_CameraMoveSpeed);
+    }
+
+    void EditorCamera::AddRotationInput(const glm::vec3& input)
+    {
+        SetRotation(GetRotation() + input * m_CameraRotationSpeed);
+    }
+
+    void EditorCamera::AddMovementAndRotationInput(const glm::vec3& movementInput, const glm::vec3& rotationInput)
+    {
+        const glm::vec3 transformedMovementInput = GetRotationQuat() * movementInput;
+        SetPositionAndRotation(GetPosition() + transformedMovementInput * m_CameraMoveSpeed, GetRotation() + rotationInput * m_CameraRotationSpeed);
+    }
+
     bool EditorCamera::OnMouseButtonPressed(const MouseButtonPressedEvent& e)
     {
         if (e.GetMouseButton() == MouseCode::ButtonRight)

@@ -7,9 +7,6 @@
 
 namespace Exp
 {
-    static float s_CameraMoveSpeed = 10.f;
-    static float s_CameraRotationSpeed = 45.f;
-    
     Camera::Camera()
     {
         RecalculateProjection();
@@ -19,23 +16,6 @@ namespace Exp
         : m_FOV(fov), m_Near(near), m_Far(far), m_AspectRatio(aspectRatio)
     {
         RecalculateProjection();
-    }
-
-    void Camera::AddMovementInput(const glm::vec3& input)
-    {
-        const glm::vec3 transformedInput = GetRotationQuat() * input;
-        SetPosition(m_Position + transformedInput * s_CameraMoveSpeed);
-    }
-
-    void Camera::AddRotationInput(const glm::vec3& input)
-    {
-        SetRotation(m_Rotation + input * s_CameraRotationSpeed);
-    }
-
-    void Camera::AddMovementAndRotationInput(const glm::vec3& movementInput, const glm::vec3& rotationInput)
-    {
-        const glm::vec3 transformedMovementInput = GetRotationQuat() * movementInput;
-        SetPositionAndRotation(m_Position + transformedMovementInput * s_CameraMoveSpeed, m_Rotation + rotationInput * s_CameraRotationSpeed);
     }
 
     void Camera::RecalculateProjection()
