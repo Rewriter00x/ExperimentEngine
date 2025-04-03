@@ -11,6 +11,8 @@ namespace Exp
         void OnUpdate(float deltaSeconds) const;
         void OnImGuiRender() const;
 
+        const std::vector<Unique<Module>>& GetModules() const { return m_Modules; }
+
     private:
         std::vector<Unique<Module>> m_Modules;
         

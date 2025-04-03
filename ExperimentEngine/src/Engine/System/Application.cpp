@@ -68,6 +68,11 @@ namespace Exp
 					return;
 				}
 			}
+
+			for (const Unique<Module>& module : m_ModuleManager.GetModules())
+			{
+				DispatchEventForObject(e, module.get(), map);
+			}
 			
 			std::unordered_map<const void*, EventDispatcher::EventFn> leftMap = *map;
 			for (const void* obj : priorityList)
