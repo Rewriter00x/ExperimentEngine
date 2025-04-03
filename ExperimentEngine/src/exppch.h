@@ -44,5 +44,7 @@
 #include "Engine/Events/MouseEvents.h"
 #include "Engine/Events/WindowEvents.h"
 
+#include "Engine/System/Module.h"
+#include "Engine/System/ModuleManager.h"
 #include "Engine/System/Application.h"
 #include "Engine/System/Window.h"
