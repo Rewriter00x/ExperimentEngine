@@ -10,9 +10,6 @@
 #include "RenderData/Shader.h"
 #include "RenderData/Texture.h"
 
-#define GLM_ENABLE_EXPERIMENTAL
-#include <glm/gtx/quaternion.hpp>
-
 namespace Exp::Renderer
 {
     constexpr static uint32 VerticesPerQuad = 4;
@@ -227,20 +224,11 @@ namespace Exp::Renderer
     {
         CheckBatchIndicesSize();
 
-        glm::mat4 transform = glm::translate(glm::mat4(1.f), data.Position);
-
-        if (data.Rotation != glm::vec3(0.f))
-        {
-            transform *= glm::toMat4(glm::quat(glm::radians(data.Rotation)));
-        }
-
-        transform *= glm::scale(glm::mat4(1.f), { data.Size.x, data.Size.y, 1.f });
-
         const uint32 textureIndex = data.Texture ? FindOrAddTextureSlot(data.Texture) : WhiteTextureIndex;
 
         for (uint32 i = 0; i < VerticesPerQuad; ++i)
         {
-            QuadVertexBufferPtr->Position = transform * QuadVertexPositions[i];
+            QuadVertexBufferPtr->Position = data.Transform * QuadVertexPositions[i];
             QuadVertexBufferPtr->Color = data.Color;
             QuadVertexBufferPtr->TexCoord = QuadTexturePositions[i];
             QuadVertexBufferPtr->TexIndex = textureIndex;

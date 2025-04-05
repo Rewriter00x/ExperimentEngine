@@ -19,6 +19,8 @@ namespace Exp
         EditorCamera m_EditorCamera;
         Unique<Framebuffer> m_Framebuffer;
         glm::vec2 m_ViewportSize = { 0.f, 0.f };
+
+        Shared<World> m_ActiveWorld;
         
     };
 }
