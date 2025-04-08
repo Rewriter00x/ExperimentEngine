@@ -28,7 +28,7 @@ namespace Exp::ExpImGui
         const glm::vec2 screenSize = PlatformUtils::GetScreenSize();
         const float screenHeightScale = screenSize.y / 1080.f;
         
-        const float overallScale = dpiScale / screenHeightScale;
+        const float overallScale = dpiScale * screenHeightScale / 2.f;
 
 		io.Fonts->Clear();
 		ImFontConfig fontConfig;

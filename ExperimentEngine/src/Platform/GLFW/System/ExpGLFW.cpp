@@ -35,12 +35,17 @@ namespace Exp::ExpGLFW
 
     glm::vec2 GetScreenSize()
     {
+#if defined(EXP_WINDOWS)
         const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-        //return { (float)mode->width, (float)mode->height };
-        
+        return { (float)mode->width, (float)mode->height };
+#elif defined(EXP_MACOS)
         int fbWidth, fbHeight;
         glfwGetFramebufferSize(static_cast<GLFWwindow*>(Application::Get().GetWindow()->GetNativeWindow()), &fbWidth, &fbHeight);
         return { (float)fbWidth, (float)fbHeight };
+#else
+		EXP_ASSERT_MSG(false, "Unsupported platform!");
+		reeturn {};
+#endif
     }
 
     glm::vec2 GetDPIScales()
