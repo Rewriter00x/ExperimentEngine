@@ -16,7 +16,6 @@ namespace Exp::Logger
 		{ Log::LogVerbosity::Fatal,		31 },
 	};
 
-	static const std::filesystem::path LogFilePath = "Log";
 	static const std::string LogFileName = "Log.log";
 
 	static FILE* LogFile;
@@ -45,9 +44,7 @@ namespace Exp::Logger
 
 	void Init()
 	{
-		std::filesystem::path path = g_OutputDirectory / LogFilePath;
-		std::filesystem::create_directories(path);
-		path /= LogFileName;
+		const std::filesystem::path path = g_OutputLogDirectory / LogFileName;
 		LogFile = fopen(path.string().c_str(), "w");
         EXP_ASSERT(LogFile);
 	}

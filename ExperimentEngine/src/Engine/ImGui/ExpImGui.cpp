@@ -9,6 +9,8 @@
 
 namespace Exp::ExpImGui
 {
+	static std::string s_IniPathString;
+	
 	void Init()
 	{
 		IMGUI_CHECKVERSION();
@@ -20,6 +22,10 @@ namespace Exp::ExpImGui
 		io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
         io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+
+		const std::filesystem::path iniPath = g_OutputIniDirectory / "imgui.ini";
+		s_IniPathString = iniPath.string();
+		io.IniFilename = s_IniPathString.c_str();
 
         const glm::vec2 dpiScales = PlatformUtils::GetDPIScales();
 		const float dpiScale = (dpiScales.x + dpiScales.y) * .5f;

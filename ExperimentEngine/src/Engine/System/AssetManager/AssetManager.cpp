@@ -7,6 +7,9 @@ std::filesystem::path g_RootDirectory;
 std::filesystem::path g_OutputDirectory;
 std::filesystem::path g_EngineResourcesDirectory;
 
+std::filesystem::path g_OutputLogDirectory;
+std::filesystem::path g_OutputIniDirectory;
+
 namespace Exp::AssetManager
 {
 	static std::unordered_map<std::filesystem::path, std::string> s_ReadFileData;
@@ -25,6 +28,12 @@ namespace Exp::AssetManager
 		g_RootDirectory = rootPath;
 		g_OutputDirectory = g_RootDirectory / "Saved";
 		g_EngineResourcesDirectory = g_RootDirectory / "ExperimentEngine" / "Resources";
+		std::filesystem::create_directories(g_OutputDirectory);
+
+		g_OutputLogDirectory = g_OutputDirectory / "Log";
+		g_OutputIniDirectory = g_OutputDirectory / "Ini";
+		std::filesystem::create_directories(g_OutputLogDirectory);
+		std::filesystem::create_directories(g_OutputIniDirectory);
 
 		stbi_set_flip_vertically_on_load(1);
 	}
