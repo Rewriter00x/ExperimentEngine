@@ -5,7 +5,7 @@
 #include "backends/imgui_impl_opengl3.h"
 #include "backends/imgui_impl_glfw.h"
 
-#include "GLFW/glfw3.h"
+#include "Platform/PlatformUtils.h"
 
 namespace Exp::ExpImGui
 {
@@ -21,18 +21,22 @@ namespace Exp::ExpImGui
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
         io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
-		float xScale, yScale;
-		glfwGetMonitorContentScale(glfwGetPrimaryMonitor(), &xScale, &yScale);
-		const float dpiScale = (xScale + yScale) * .5f;
+        const glm::vec2 dpiScales = PlatformUtils::GetDPIScales();
+		const float dpiScale = (dpiScales.x + dpiScales.y) * .5f;
 		EXP_LOG(Info, "DPI scale: %f", dpiScale);
+        
+        const glm::vec2 screenSize = PlatformUtils::GetScreenSize();
+        const float screenHeightScale = screenSize.y / 1080.f;
+        
+        const float overallScale = dpiScale / screenHeightScale;
 
 		io.Fonts->Clear();
 		ImFontConfig fontConfig;
-		fontConfig.SizePixels = 14.f * dpiScale;
+		fontConfig.SizePixels = 14.f * overallScale;
 		io.Fonts->AddFontDefault(&fontConfig);
 
 		ImGuiStyle& style = ImGui::GetStyle();
-		style.ScaleAllSizes(dpiScale);
+		style.ScaleAllSizes(overallScale);
 
 		Application& app = Application::Get();
 		GLFWwindow* window = static_cast<GLFWwindow*>(app.GetWindow()->GetNativeWindow());
@@ -70,10 +74,10 @@ namespace Exp::ExpImGui
         
         if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
         {
-            GLFWwindow* backup_current_context = glfwGetCurrentContext();
+            PlatformUtils::CacheCurrentContext();
             ImGui::UpdatePlatformWindows();
             ImGui::RenderPlatformWindowsDefault();
-            glfwMakeContextCurrent(backup_current_context);
+            PlatformUtils::ApplyCachedContext();
         }
 	}
 }

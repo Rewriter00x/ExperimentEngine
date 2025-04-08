@@ -5,6 +5,8 @@
 
 namespace Exp::ExpGLFW
 {
+    static GLFWwindow* s_CachedContext = nullptr;
+
 	static void GLFWErrorCallback(int error, const char* description)
 	{
 		EXP_LOG(Error, "GLFW Error (%d): %s", error, description);
@@ -30,4 +32,33 @@ namespace Exp::ExpGLFW
 	{
 		return (float)glfwGetTime();
 	}
+
+    glm::vec2 GetScreenSize()
+    {
+        const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+        //return { (float)mode->width, (float)mode->height };
+        
+        int fbWidth, fbHeight;
+        glfwGetFramebufferSize(static_cast<GLFWwindow*>(Application::Get().GetWindow()->GetNativeWindow()), &fbWidth, &fbHeight);
+        return { (float)fbWidth, (float)fbHeight };
+    }
+
+    glm::vec2 GetDPIScales()
+    {
+        glm::vec2 scale;
+        glfwGetMonitorContentScale(glfwGetPrimaryMonitor(), &scale.x, &scale.y);
+        return scale;
+    }
+
+    void CacheCurrentContext()
+    {
+        s_CachedContext = glfwGetCurrentContext();
+    }
+
+    void ApplyCachedContext()
+    {
+        EXP_ASSERT_MSG(s_CachedContext, "Trying to apply null cached context!");
+        glfwMakeContextCurrent(s_CachedContext);
+        s_CachedContext = nullptr;
+    }
 }
