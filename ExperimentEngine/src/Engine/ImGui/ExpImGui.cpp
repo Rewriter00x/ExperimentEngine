@@ -29,7 +29,6 @@ namespace Exp::ExpImGui
 
         const glm::vec2 dpiScales = PlatformUtils::GetDPIScales();
 		const float dpiScale = (dpiScales.x + dpiScales.y) * .5f;
-		EXP_LOG(Info, "DPI scale: %f", dpiScale);
         
         const glm::vec2 screenSize = PlatformUtils::GetScreenSize();
         const float screenHeightScale = screenSize.y / 1080.f;
