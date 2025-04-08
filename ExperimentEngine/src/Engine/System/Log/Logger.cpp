@@ -23,7 +23,13 @@ namespace Exp::Logger
 	static inline void SetLogColor(int color) { std::cout << "\033[" << color << "m"; }
 	static inline void ResetLogColor() { SetLogColor(0); }
 
-	static void LogTimestamp(FILE* target)
+	struct Timestamp
+	{
+		std::tm Tm;
+		std::chrono::microseconds Ms;
+	};
+
+	static Timestamp GetTimestamp()
 	{
 		const auto now = std::chrono::system_clock::now();
 		const auto nowMicroSeconds = std::chrono::duration_cast<std::chrono::microseconds>(now.time_since_epoch()) % 1000000;
@@ -36,10 +42,15 @@ namespace Exp::Logger
 		localtime_r(&timeNow, &tmBuf);
 #endif
 
-		char timeBuffer[20];
-		std::strftime(timeBuffer, sizeof(timeBuffer), "%Y-%m-%d %H:%M:%S", &tmBuf);
+		return { tmBuf, nowMicroSeconds };
+	}
 
-		std::fprintf(target, "[%s.%06lld] ", timeBuffer, nowMicroSeconds.count());
+	static void LogTimestamp(const Timestamp& ts, FILE* target)
+	{
+		char timeBuffer[20];
+		std::strftime(timeBuffer, sizeof(timeBuffer), "%Y-%m-%d %H:%M:%S", &ts.Tm);
+
+		std::fprintf(target, "[%s.%06lld] ", timeBuffer, ts.Ms.count());
 	}
 
 	void Init()
@@ -59,11 +70,13 @@ namespace Exp::Logger
 
 	void LogString(Log::LogVerbosity Verbosity, const char* fmt, ...)
 	{
+		const Timestamp ts = GetTimestamp();
+		
 		va_list args;
 		va_start(args, fmt);
 
 		SetLogColor(VerbosityColorMap.at(Verbosity));
-		LogTimestamp(stdout);
+		LogTimestamp(ts, stdout);
 		std::vprintf(fmt, args);
 		std::printf("\n");
 		ResetLogColor();
@@ -71,7 +84,7 @@ namespace Exp::Logger
 
 		if (Verbosity != Log::LogVerbosity::Info)
 		{
-			LogTimestamp(LogFile);
+			LogTimestamp(ts, LogFile);
 			std::vfprintf(LogFile, fmt, args);
 			std::fprintf(LogFile, "\n");
 			std::fflush(LogFile);
