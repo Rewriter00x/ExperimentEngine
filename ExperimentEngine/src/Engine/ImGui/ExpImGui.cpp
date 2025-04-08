@@ -21,11 +21,27 @@ namespace Exp::ExpImGui
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
         io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
+		float xScale, yScale;
+		glfwGetMonitorContentScale(glfwGetPrimaryMonitor(), &xScale, &yScale);
+		const float dpiScale = (xScale + yScale) * .5f;
+		EXP_LOG(Info, "DPI scale: %f", dpiScale);
+
+		io.Fonts->Clear();
+		ImFontConfig fontConfig;
+		fontConfig.SizePixels = 14.f * dpiScale;
+		io.Fonts->AddFontDefault(&fontConfig);
+
+		ImGuiStyle& style = ImGui::GetStyle();
+		style.ScaleAllSizes(dpiScale);
+
 		Application& app = Application::Get();
 		GLFWwindow* window = static_cast<GLFWwindow*>(app.GetWindow()->GetNativeWindow());
 
 		ImGui_ImplGlfw_InitForOpenGL(window, true);
 		ImGui_ImplOpenGL3_Init("#version 410");
+		
+		ImGui_ImplOpenGL3_DestroyFontsTexture();
+		ImGui_ImplOpenGL3_CreateFontsTexture();
 	}
 
 	void Shutdown()

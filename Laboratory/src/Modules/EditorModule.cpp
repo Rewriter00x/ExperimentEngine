@@ -88,6 +88,21 @@ namespace Exp
 
     void EditorModule::OnImGuiRender()
     {
+        ImGui::DockSpaceOverViewport();
+
+        if (ImGui::BeginMainMenuBar())
+        {
+            if (ImGui::BeginMenu("File"))
+            {
+                if (ImGui::MenuItem("New", "CTRL+N"))
+                {
+                    EXP_LOG(Info, "File->New");
+                }
+                ImGui::EndMenu();
+            }
+            ImGui::EndMainMenuBar();
+        }
+        
 #ifdef RENDER_TEST_DATA
         ImGui::Begin("Test");
         ImGui::DragFloat3("Position", glm::value_ptr(s_Position), .01f);
