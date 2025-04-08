@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "ComponentRegistry.h"
 
@@ -73,21 +73,21 @@ namespace Exp
     template <typename T, typename ... Args>
     T& Entity::AddComponent(Args&&... args)
     {
-        EXP_ASSERT(!HasComponent<T>(), "Entity already has component!");
+        EXP_ASSERT_MSG(!HasComponent<T>(), "Entity already has component!");
         return m_World->m_Registry.AddComponent<T>(m_RegistryID, std::forward<Args>(args)...);
     }
 
     template <typename T>
     T& Entity::GetComponent()
     {
-        EXP_ASSERT(HasComponent<T>(), "Entity does not have component component!");
+        EXP_ASSERT_MSG(HasComponent<T>(), "Entity does not have component component!");
         return m_World->m_Registry.GetComponent<T>(m_RegistryID);
     }
 
     template <typename T>
     const T& Entity::GetComponent() const
     {
-        EXP_ASSERT(HasComponent<T>(), "Entity does not have component component!");
+        EXP_ASSERT_MSG(HasComponent<T>(), "Entity does not have component component!");
         return m_World->m_Registry.GetComponent<T>(m_RegistryID);
     }
 
