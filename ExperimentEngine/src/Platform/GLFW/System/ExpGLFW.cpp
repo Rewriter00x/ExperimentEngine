@@ -44,7 +44,7 @@ namespace Exp::ExpGLFW
         return { (float)fbWidth, (float)fbHeight };
 #else
 		EXP_ASSERT_MSG(false, "Unsupported platform!");
-		reeturn {};
+		return {};
 #endif
     }
 

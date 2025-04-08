@@ -28,7 +28,11 @@ namespace Exp::ExpImGui
         const glm::vec2 screenSize = PlatformUtils::GetScreenSize();
         const float screenHeightScale = screenSize.y / 1080.f;
         
-        const float overallScale = dpiScale * screenHeightScale / 2.f;
+        float overallScale = dpiScale * screenHeightScale / 2.f;
+        
+#if defined(EXP_MACOS)
+        overallScale /= 1.25; // fine tuning for macos retina
+#endif
 
 		io.Fonts->Clear();
 		ImFontConfig fontConfig;
