@@ -15,6 +15,8 @@ namespace Exp
         Entity& CreateEntity(const std::string& name = "", UUID uuid = UUID());
         void DestroyEntity(const Entity& entity);
 
+        inline std::vector<Entity>& GetEntities() { return m_Entities; }
+        
         inline const std::vector<Entity>& GetEntities() const { return m_Entities; }
 
         void OnUpdate(float deltaSeconds);

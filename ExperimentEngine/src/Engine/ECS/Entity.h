@@ -23,12 +23,20 @@ namespace Exp
         Entity(const EntityParams& params);
 
         inline Entity_ID GetID() const { return m_RegistryID; }
-        inline Entity_ID GetUUID() const { return m_UUID; }
+        inline UUID GetUUID() const { return m_UUID; }
+
+        inline std::string& GetName() { return m_Name; }
+        
         inline const std::string& GetName() const { return m_Name; }
+
+        inline glm::vec3& GetPosition() { return m_Position; }
+        inline glm::vec3& GetRotation() { return m_Rotation; }
+        inline glm::vec3& GetScale() { return m_Scale; }
         
         inline const glm::vec3& GetPosition() const { return m_Position; }
         inline const glm::vec3& GetRotation() const { return m_Rotation; }
         inline const glm::vec3& GetScale() const { return m_Scale; }
+        
         inline glm::quat GetRotationQuat() const { return glm::quat(glm::radians(m_Rotation)); }
 
         inline void SetPosition(const glm::vec3& position) { m_Position = position; }
