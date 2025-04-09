@@ -8,7 +8,7 @@ project "Laboratory"
 	objdir		(IntermediateDir)
 
 	local localIncludes = {
-
+		"src",
 	}
 
 	local includeList = table.join(CoreIncludes, localIncludes)

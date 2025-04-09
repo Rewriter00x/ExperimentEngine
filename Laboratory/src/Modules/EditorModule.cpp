@@ -32,6 +32,8 @@ namespace Exp
         s_Texture = MakeShared<Texture>(g_EngineResourcesDirectory / "Textures" / "CheckerBoard.png");
 
         m_ActiveWorld = MakeShared<World>();
+        m_Outliner.SetWorld(m_ActiveWorld);
+        
         m_ActiveWorld->CreateEntity().AddComponent<SpriteComponent>(glm::vec4(1.f, 0.f, 0.f, 1.f ), nullptr);
         
         Entity& e = m_ActiveWorld->CreateEntity();
@@ -43,7 +45,11 @@ namespace Exp
 
     void EditorModule::OnUpdate(float deltaSeconds)
     {
+        m_EditorCamera.SetShouldCaptureKey(m_ViewportFocused);
+        m_EditorCamera.SetShouldCaptureMouse(m_ViewportHovered);
+        
         m_EditorCamera.OnUpdate(deltaSeconds);
+        
 
         const FramebufferSpecification& spec = m_Framebuffer->GetSpecification();
         if (m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f && // zero sized framebuffer is invalid
@@ -86,6 +92,8 @@ namespace Exp
         Renderer::EndBatch();
 
         Framebuffer::Unbind();
+
+        m_Outliner.OnUpdate(deltaSeconds);
     }
 
     void EditorModule::OnImGuiRender()
@@ -117,11 +125,24 @@ namespace Exp
 
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0.f, 0.f });
         ImGui::Begin("Viewport");
+        
+        m_ViewportFocused = ImGui::IsWindowFocused();
+        m_ViewportHovered = ImGui::IsWindowHovered();
+
+        if (m_ViewportHovered && ImGui::IsMouseClicked(ImGuiMouseButton_Right))
+        {
+            ImGui::SetWindowFocus();
+        }
+        
         const ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
         m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
+        
         const uint32 textureID = m_Framebuffer->GetAttachmentRendererID(s_AttachmentIndex);
         ImGui::Image(textureID, viewportPanelSize, { 0.f, 1.f }, { 1.f, 0.f });
+        
         ImGui::End();
         ImGui::PopStyleVar();
+
+        m_Outliner.OnImGuiRender();
     }
 }

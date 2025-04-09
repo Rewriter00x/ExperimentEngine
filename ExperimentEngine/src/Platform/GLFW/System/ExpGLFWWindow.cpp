@@ -21,6 +21,7 @@ namespace Exp
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
 		m_NativeWindow = glfwCreateWindow(props.Width, props.Height, props.Title.c_str(), nullptr, nullptr);
+		glfwMaximizeWindow(m_NativeWindow);
 		EXP_ASSERT_MSG(m_NativeWindow, "Failed to create GLFW window!");
 
 		glfwMakeContextCurrent(m_NativeWindow);

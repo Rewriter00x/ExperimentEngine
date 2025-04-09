@@ -12,23 +12,28 @@ namespace Exp
     void EditorCamera::OnUpdate(float deltaSeconds)
     {
         glm::vec3 movementInput(0.f);
-        if (Input::IsKeyPressed(KeyCode::A))	movementInput.x = -1.f;
-        if (Input::IsKeyPressed(KeyCode::D))	movementInput.x = 1.f;
-        if (Input::IsKeyPressed(KeyCode::S))	movementInput.z = 1.f;
-        if (Input::IsKeyPressed(KeyCode::W))	movementInput.z = -1.f;
+        if (m_ShouldCaptureKey)
+        {
+            if (Input::IsKeyPressed(KeyCode::A))	movementInput.x = -1.f;
+            if (Input::IsKeyPressed(KeyCode::D))	movementInput.x = 1.f;
+            if (Input::IsKeyPressed(KeyCode::S))	movementInput.z = 1.f;
+            if (Input::IsKeyPressed(KeyCode::W))	movementInput.z = -1.f;
+        }
 
         glm::vec3 rotationInput(0.f);
-        if (Input::IsKeyPressed(KeyCode::E))	rotationInput.z = -1.f;
-        if (Input::IsKeyPressed(KeyCode::Q))	rotationInput.z = 1.f;
-        if (Input::IsMouseButtonPressed(MouseCode::ButtonRight))
+        if (m_ShouldCaptureKey)
         {
-            const glm::vec2 mousePos = Input::GetMousePosition();
-            const glm::vec2 delta = m_LastMousePos - mousePos;
-            rotationInput.x = delta.y;
-            rotationInput.y = delta.x;
-            m_LastMousePos = mousePos;
+            if (Input::IsKeyPressed(KeyCode::E))	rotationInput.z = -1.f;
+            if (Input::IsKeyPressed(KeyCode::Q))	rotationInput.z = 1.f;
+            if (m_IsCapturingMouse && Input::IsMouseButtonPressed(MouseCode::ButtonRight))
+            {
+                const glm::vec2 mousePos = Input::GetMousePosition();
+                const glm::vec2 delta = m_LastMousePos - mousePos;
+                rotationInput.x = delta.y;
+                rotationInput.y = delta.x;
+                m_LastMousePos = mousePos;
+            }
         }
-        
         if (movementInput != glm::vec3(0.f) || rotationInput != glm::vec3(0.f))
         {
             AddMovementAndRotationInput(movementInput * deltaSeconds, rotationInput * deltaSeconds);
@@ -54,8 +59,9 @@ namespace Exp
 
     bool EditorCamera::OnMouseButtonPressed(const MouseButtonPressedEvent& e)
     {
-        if (e.GetMouseButton() == MouseCode::ButtonRight)
+        if (m_ShouldCaptureMouse && e.GetMouseButton() == MouseCode::ButtonRight)
         {
+            m_IsCapturingMouse = true;
             m_LastMousePos = Input::GetMousePosition();
             return true;
         }
@@ -66,6 +72,7 @@ namespace Exp
     {
         if (e.GetMouseButton() == MouseCode::ButtonRight)
         {
+            m_IsCapturingMouse = false;
             m_LastMousePos = glm::vec2(0.f);
             return true;
         }
