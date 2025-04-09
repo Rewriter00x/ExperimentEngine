@@ -1,4 +1,4 @@
-﻿#include "OutlinerPanel.h"
+#include "OutlinerPanel.h"
 
 #include "imgui.h"
 
@@ -13,13 +13,11 @@ namespace Exp
             if (cap <= data->BufTextLen)
             {
                 name->resize((size_t)data->BufTextLen * 2);
-                EXP_LOG(Info, "Resize from %d to %d", cap, data->BufTextLen * 2);
             }
             else if (cap > data->BufTextLen * 2)
             {
                 name->resize((size_t)data->BufTextLen);
                 name->shrink_to_fit();
-                EXP_LOG(Info, "Resize from %d to %d", cap, data->BufTextLen);
             }
             data->Buf = name->data();
         }
