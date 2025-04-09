@@ -1,6 +1,7 @@
 ﻿#include "EditorModule.h"
 
 #include "imgui.h"
+#include "Engine/ECS/Components/SpriteComponent.h"
 #include "Engine/Render/RenderAPI.h"
 #include "Engine/Render/Renderer.h"
 #include "Engine/Render/RenderData/Texture.h"
@@ -31,9 +32,10 @@ namespace Exp
         s_Texture = MakeShared<Texture>(g_EngineResourcesDirectory / "Textures" / "CheckerBoard.png");
 
         m_ActiveWorld = MakeShared<World>();
-        m_ActiveWorld->CreateEntity();
+        m_ActiveWorld->CreateEntity().AddComponent<SpriteComponent>(glm::vec4(1.f, 0.f, 0.f, 1.f ), nullptr);
         
         Entity& e = m_ActiveWorld->CreateEntity();
+        e.AddComponent<SpriteComponent>(glm::vec4{ 0.f, 1.f, 0.f, 1.f }, s_Texture);
         e.SetPosition({ 5.f, 5.f, -5.f });
         e.SetRotation({ 45.f, 45.f, 45.f });
         e.SetScale({ 3.f, 3.f, 3.f });
@@ -113,11 +115,13 @@ namespace Exp
         ImGui::End();
 #endif
 
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0.f, 0.f });
         ImGui::Begin("Viewport");
         const ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
         m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
         const uint32 textureID = m_Framebuffer->GetAttachmentRendererID(s_AttachmentIndex);
         ImGui::Image(textureID, viewportPanelSize, { 0.f, 1.f }, { 1.f, 0.f });
         ImGui::End();
+        ImGui::PopStyleVar();
     }
 }

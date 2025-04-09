@@ -1,6 +1,7 @@
 ﻿#include "exppch.h"
 #include "World.h"
 
+#include "Components/SpriteComponent.h"
 #include "Engine/Render/Renderer.h"
 
 namespace Exp
@@ -30,7 +31,11 @@ namespace Exp
     {
         for (const Entity& entity : m_Entities)
         {
-            Renderer::DrawQuad({ entity.GetTransform(), glm::vec4(1.f, 0.f, 0.f, 1.f), nullptr });
+            if (entity.HasComponent<SpriteComponent>())
+            {
+                const SpriteComponent& sc = entity.GetComponent<SpriteComponent>();
+                Renderer::DrawQuad({ entity.GetTransform(), sc.Color, sc.SpriteTexture });
+            }
         }
     }
 }
