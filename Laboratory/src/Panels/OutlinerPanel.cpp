@@ -73,7 +73,7 @@ namespace Exp
             ImGui::InputText("Name", name.data(), name.capacity() + 1, ImGuiInputTextFlags_CallbackResize, InputTextCallback, &name);
 
             ImGui::Text("ID: %d", (int32)selectedEntity.GetID());
-            ImGui::Text("UUID: %d", (int32)selectedEntity.GetUUID());
+            ImGui::Text("UUID: %llu", (uint64)selectedEntity.GetUUID());
         }
 
         ImGui::End();
