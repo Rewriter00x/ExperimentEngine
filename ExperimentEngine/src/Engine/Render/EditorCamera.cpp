@@ -72,9 +72,10 @@ namespace Exp
     {
         if (e.GetMouseButton() == MouseCode::ButtonRight)
         {
+            const bool wasCapturingMouse = m_IsCapturingMouse;
             m_IsCapturingMouse = false;
             m_LastMousePos = glm::vec2(0.f);
-            return true;
+            return wasCapturingMouse;
         }
         return false;
     }
