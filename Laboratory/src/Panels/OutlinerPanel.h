@@ -16,7 +16,7 @@ namespace Exp
         void SetWorld(const Shared<World>& world);
 
     private:
-        void SetSelectedEntity(int32 id);
+        void SetSelectedEntityID(int32 id);
         
         Shared<World> m_World = nullptr;
         int32 m_SelectedEntityID = -1;

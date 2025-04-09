@@ -27,10 +27,10 @@ namespace Exp
         {
             const Entity& entity = entities[i];
             const std::string label = entity.GetName() + "##" + std::to_string(i);
-            const bool selected = m_SelectedEntityID != -1 && entities[m_SelectedEntityID] == entity;
+            const bool selected = m_SelectedEntityID == i;
             if (ImGui::Selectable(label.c_str(), selected))
             {
-                SetSelectedEntity(i);
+                SetSelectedEntityID(i);
             }
         }
 
@@ -47,7 +47,7 @@ namespace Exp
         m_SelectedEntityID = -1;
     }
     
-    void OutlinerPanel::SetSelectedEntity(int32 id)
+    void OutlinerPanel::SetSelectedEntityID(int32 id)
     {
         m_SelectedEntityID = id;
     }
