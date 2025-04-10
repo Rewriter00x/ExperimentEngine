@@ -14,6 +14,6 @@ namespace Exp
 
         void SetViewport(int32 x, int32 y, int32 width, int32 height);
 
-        void DrawIndexed(const Shared<VertexArray>& vertexArray, uint32 indexCount = 0);
+        void DrawIndexed(const Shared<VertexArray>& vertexArray, uint32 indexCount);
     }
 }
