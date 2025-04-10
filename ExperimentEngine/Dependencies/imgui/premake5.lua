@@ -46,10 +46,10 @@ project "ImGui"
     filter "system:macosx"
         externalincludedirs (localIncludes)
 
-    filter { "system:windows", "configurations:Debug" }
+    filter "configurations:Debug" 
         runtime "Debug"
         symbols "on"
 
-    filter { "system:windows", "configurations:Release" }
+    filter "configurations:Release"
         runtime "Release"
         optimize "on"
