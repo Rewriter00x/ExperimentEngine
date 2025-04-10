@@ -101,10 +101,14 @@ namespace Exp
 
             if (typeid(*m_SelectedComponent) == typeid(SelectedComponentBase))
             {
+                ImGui::Text("\"%s\" entity properties", selectedEntity.GetName().c_str());
+                ImGui::Separator();
                 DrawEntityProperties(selectedEntity);
             }
             else
             {
+                ImGui::Text("\"%s\" properties", m_SelectedComponent->GetName());
+                ImGui::Separator();
                 m_SelectedComponent->Draw(selectedEntity);
             }
         }

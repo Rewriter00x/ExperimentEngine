@@ -31,13 +31,15 @@ namespace Exp
         struct SelectedComponentBase
         {
             virtual ~SelectedComponentBase() = default;
-            virtual void Draw(Entity& e) {}
+            virtual void Draw(Entity& e) const {}
+            virtual const char* GetName() const { return nullptr; }
         };
 
         template<typename T>
         struct SelectedComponent : SelectedComponentBase
         {
-            virtual void Draw(Entity& e) override { DrawComponent<T>(e); }
+            virtual void Draw(Entity& e) const override { DrawComponent<T>(e); }
+            virtual const char* GetName() const override { return GetComponentName<T>(); }
         };
 
         Unique<SelectedComponentBase> m_SelectedComponent = MakeUnique<SelectedComponentBase>();
