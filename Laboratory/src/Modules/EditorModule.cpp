@@ -92,8 +92,6 @@ namespace Exp
         Renderer::EndBatch();
 
         Framebuffer::Unbind();
-
-        m_Outliner.OnUpdate(deltaSeconds);
     }
 
     void EditorModule::OnImGuiRender()
