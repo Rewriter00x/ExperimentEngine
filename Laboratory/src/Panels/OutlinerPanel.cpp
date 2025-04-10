@@ -121,6 +121,7 @@ namespace Exp
     void OutlinerPanel::SetSelectedEntityID(int32 id)
     {
         m_SelectedEntityID = id;
+        ClearSelectedComponent();
     }
 
     void OutlinerPanel::ClearSelectedEntity()
