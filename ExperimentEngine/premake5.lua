@@ -14,6 +14,7 @@ project "ExperimentEngine"
 		"%{IncludeDirs.GLFW}",
 		"%{IncludeDirs.glad}",
 		"%{IncludeDirs.stb_image}",
+		"%{IncludeDirs.yaml_cpp}",
 	}
 
 	local includeList = table.join(CoreIncludes, localIncludes)
@@ -22,9 +23,6 @@ project "ExperimentEngine"
 	{
 		"src/**.h",
 		"src/**.cpp",
-
-		"%{IncludeDirs.stb_image}/**.h",
-		"%{IncludeDirs.stb_image}/**.cpp",
 	}
 
 	links
@@ -32,6 +30,8 @@ project "ExperimentEngine"
 		"GLFW",
 		"glad",
 		"ImGui",
+		"stb_image",
+		"yaml-cpp",
 	}
 
 	filter "system:windows"

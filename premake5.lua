@@ -34,6 +34,7 @@ IncludeDirs["glad"] = "%{wks.location}/ExperimentEngine/Dependencies/glad/glad/i
 IncludeDirs["ImGui"] = "%{wks.location}/ExperimentEngine/Dependencies/imgui/imgui"
 IncludeDirs["glm"] = "%{wks.location}/ExperimentEngine/Dependencies/glm/glm"
 IncludeDirs["stb_image"] = "%{wks.location}/ExperimentEngine/Dependencies/stb_image/stb_image"
+IncludeDirs["yaml_cpp"] = "%{wks.location}/ExperimentEngine/Dependencies/yaml-cpp/yaml-cpp/include"
 
 CoreIncludes = {
 	"%{wks.location}/ExperimentEngine/src",
@@ -45,6 +46,8 @@ group "Dependencies"
 include "ExperimentEngine/Dependencies/GLFW"
 include "ExperimentEngine/Dependencies/glad"
 include "ExperimentEngine/Dependencies/imgui"
+include "ExperimentEngine/Dependencies/stb_image"
+include "ExperimentEngine/Dependencies/yaml-cpp"
 group ""
 
 include "ExperimentEngine"

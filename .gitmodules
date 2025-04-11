@@ -8,3 +8,6 @@
 [submodule "ExperimentEngine/Dependencies/glm/glm"]
 	path = ExperimentEngine/Dependencies/glm/glm
 	url = https://github.com/g-truc/glm
+[submodule "ExperimentEngine/Dependencies/yaml-cpp/yaml-cpp"]
+	path = ExperimentEngine/Dependencies/yaml-cpp/yaml-cpp
+	url = https://github.com/jbeder/yaml-cpp
