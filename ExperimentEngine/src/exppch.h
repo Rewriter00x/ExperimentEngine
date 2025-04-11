@@ -60,3 +60,4 @@
 
 #include "Engine/ECS/World.h"
 #include "Engine/ECS/Entity.h"
+#include "Engine/ECS/Components/ComponentUtils.h"

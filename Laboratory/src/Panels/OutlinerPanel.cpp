@@ -96,10 +96,10 @@ namespace Exp
             Entity& selectedEntity = entities[m_SelectedEntityID];
             
             ImGui::Separator();
-            DrawComponentsList(selectedEntity, AllComponents{});
+            DrawComponentsList(selectedEntity);
             ImGui::Separator();
 
-            if (typeid(*m_SelectedComponent) == typeid(SelectedComponentBase))
+            if (!m_SelectedComponent)
             {
                 ImGui::Text("\"%s\" entity properties", selectedEntity.GetName().c_str());
                 ImGui::Separator();
@@ -136,11 +136,10 @@ namespace Exp
 
     void OutlinerPanel::ClearSelectedComponent()
     {
-        m_SelectedComponent = MakeUnique<SelectedComponentBase>();
+        m_SelectedComponent = nullptr;
     }
 
-    template<typename... Components>
-    void OutlinerPanel::DrawComponentsList(Entity& e, ComponentList<Components...>)
+    void OutlinerPanel::DrawComponentsList(Entity& e)
     {
         if (ImGui::Button("Add Components"))
         {
@@ -149,45 +148,45 @@ namespace Exp
 
         if (ImGui::BeginPopup("AddComponents"))
         {
-            ([&e]
+            for (const ComponentWrapperBase* component : GetAllComponents())
             {
-                const char* name = GetComponentName<Components>();
-                if (!e.HasComponent<Components>())
+                const char* name = component->GetName();
+                if (!component->ContainedBy(e))
                 {
                     if (ImGui::MenuItem(name))
                     {
-                        e.AddComponent<Components>();
+                        component->AddTo(e);
                         ImGui::CloseCurrentPopup();
                     }
                 }
-            }(), ...);
+            }
 
             ImGui::EndPopup();
         }
-        
-        ([this, &e]
+
+        for (const ComponentWrapperBase* component : GetAllComponents())
         {
-            const char* name = GetComponentName<Components>();
-            if (e.HasComponent<Components>())
+            const char* name = component->GetName();
+            if (component->ContainedBy(e))
             {
-                const bool selected = typeid(SelectedComponent<Components>) == typeid(*m_SelectedComponent);
+                const bool selected = m_SelectedComponent == component;
                 if (ImGui::Selectable(name, selected))
                 {
-                    m_SelectedComponent = selected ? MakeUnique<SelectedComponentBase>() : MakeUnique<SelectedComponent<Components>>();
+                    m_SelectedComponent = selected ? nullptr : component;
                 }
                 if (ImGui::BeginPopupContextItem(name))
                 {
                     if (ImGui::MenuItem("Remove Component"))
                     {
-                        if (typeid(SelectedComponent<Components>) == typeid(*m_SelectedComponent))
+                        if (m_SelectedComponent == component)
                         {
                             ClearSelectedComponent();
                         }
-                        e.RemoveComponent<Components>();
+                        component->RemoveFrom(e);
                     }
                     ImGui::EndPopup();
                 }
             }
-        }(), ...);
+        }
     }
 }

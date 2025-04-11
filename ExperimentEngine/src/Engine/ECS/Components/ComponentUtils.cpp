@@ -9,6 +9,10 @@
 namespace Exp
 {
     // BEGIN TODO REFLECTOR
+    static ComponentWrapper<SpriteComponent> spriteComponent;
+    
+    static std::vector<ComponentWrapperBase*> s_AllComponents = { &spriteComponent };
+    
     template<>
     const char* GetComponentName<SpriteComponent>()
     {
@@ -35,4 +39,9 @@ namespace Exp
         
     }
     // END TODO REFLECTOR
+
+    const std::vector<ComponentWrapperBase*>& GetAllComponents()
+    {
+        return s_AllComponents;
+    }
 }

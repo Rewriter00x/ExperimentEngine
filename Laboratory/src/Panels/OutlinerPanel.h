@@ -2,9 +2,6 @@
 
 #include "ExperimentEngine.h"
 
-#include "Engine/ECS/Components/ComponentUtils.h"
-#include "Components/ComponentList.h"
-
 namespace Exp
 {
     class OutlinerPanel
@@ -23,27 +20,12 @@ namespace Exp
         void ClearSelectedEntity();
         void ClearSelectedComponent();
 
-        template<typename... Components>
-        void DrawComponentsList(Entity& e, ComponentList<Components...>);
+        void DrawComponentsList(Entity& e);
         
         Shared<World> m_World = nullptr;
         int32 m_SelectedEntityID = -1;
     
-        struct SelectedComponentBase
-        {
-            virtual ~SelectedComponentBase() = default;
-            virtual void Draw(Entity& e) const {}
-            virtual const char* GetName() const { return nullptr; }
-        };
-
-        template<typename T>
-        struct SelectedComponent : SelectedComponentBase
-        {
-            virtual void Draw(Entity& e) const override { DrawComponent<T>(e); }
-            virtual const char* GetName() const override { return GetComponentName<T>(); }
-        };
-
-        Unique<SelectedComponentBase> m_SelectedComponent = MakeUnique<SelectedComponentBase>();
+        const ComponentWrapperBase* m_SelectedComponent = nullptr;
         
     };
 }
