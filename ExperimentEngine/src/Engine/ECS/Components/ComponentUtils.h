@@ -6,9 +6,6 @@
 
 namespace Exp
 {
-    template<typename... Components>
-    struct ComponentList {};
-
     template<typename T>
     const char* GetComponentName();
 
@@ -16,8 +13,6 @@ namespace Exp
     void DrawComponent(Entity& e);
     
     // BEGIN TODO REFLECTOR
-    using AllComponents = ComponentList<SpriteComponent>;
-    
     template<>
     inline const char* GetComponentName<SpriteComponent>()
     {

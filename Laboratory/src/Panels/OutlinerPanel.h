@@ -2,7 +2,8 @@
 
 #include "ExperimentEngine.h"
 
-#include "Engine/ECS/Components/Components.h"
+#include "Engine/ECS/Components/ComponentUtils.h"
+#include "Components/ComponentList.h"
 
 namespace Exp
 {
