@@ -42,6 +42,10 @@ CoreIncludes = {
 	"%{IncludeDirs.glm}",
 }
 
+CoreDefines = {
+	"YAML_CPP_STATIC_DEFINE",
+}
+
 group "Dependencies"
 include "ExperimentEngine/Dependencies/GLFW"
 include "ExperimentEngine/Dependencies/glad"

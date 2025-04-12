@@ -13,6 +13,14 @@ project "Game"
 
 	local includeList = table.join(CoreIncludes, localIncludes)
 
+	local localDefines = {
+
+	}
+
+	local definesList = table.join(CoreDefines, localDefines)
+
+	defines (definesList)
+
 	files
 	{
 		"src/**.h",
