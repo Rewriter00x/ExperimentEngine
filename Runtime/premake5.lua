@@ -46,13 +46,20 @@ project "Runtime"
 		externalincludedirs (includeList)
 
 		-- sadly there are dynamic links so I need to link them in every executable
-        links
-        {
-            "Cocoa.framework",
-            "IOKit.framework",
-            "CoreFoundation.framework",
-            "QuartzCore.framework",
-        }
+		-- upd: seems like they are not, as for some reason I need to link Reflector here also, even though it's a static lib, but it doesn't link to engine
+		links
+		{
+			"Cocoa.framework",
+			"IOKit.framework",
+			"CoreFoundation.framework",
+			"QuartzCore.framework",
+			"Reflector",
+		}
+
+		libdirs
+		{
+			DependenciesBinariesDir .. "/../Reflector",
+		}
 
 	filter "configurations:Debug"
 		defines "EXP_DEBUG"
