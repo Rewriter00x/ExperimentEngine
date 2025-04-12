@@ -45,15 +45,14 @@ namespace Exp
 {{"""
 
 def gen_prop_draw(prop):
-    match prop.type:
-        case "float":
-            return f"""
+    if prop.type == "float":
+        return f"""
         ImGui::DragFloat(\"{split_name(prop.name)}\", &component.{prop.name});"""
-        case "glm::vec3":
-            return f"""
+    elif prop.type == "glm::vec3":
+        return f"""
         ImGui::DragFloat3(\"{split_name(prop.name)}\", glm::value_ptr(component.{prop.name}));"""
-        case "glm::vec4":
-            return f"""
+    elif prop.type == "glm::vec4":
+        return f"""
         ImGui::ColorEdit4(\"{split_name(prop.name)}\", glm::value_ptr(component.{prop.name}));"""
 
 def gen_prop_save(prop):

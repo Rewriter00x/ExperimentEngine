@@ -76,11 +76,11 @@ project "ExperimentEngine"
 
 		prebuildcommands
 		{
-			"cd \"../ExperimentEngine/Dependencies/Reflector/scripts\" || exit 1",
+			"cd ../ExperimentEngine/Dependencies/Reflector/script",
 			"python3 reflector.py",
 			"cd ../",
 			"sh GenerateProjectFiles",
-			"xcodebuild -project Reflector.xcodeproj -configuration %{cfg.buildcfg} -quiet",
+			"xcodebuild -workspace Reflector.xcworkspace -scheme Reflector -configuration %{cfg.buildcfg} -quiet",
 		}
 
 		externalincludedirs (includeList)
