@@ -7,9 +7,12 @@ namespace Exp
 
 namespace Exp
 {
+    //c
     struct SpriteComponent
     {
+        //p draw, save
         glm::vec4 Color = glm::vec4(1.f);
+        
         Shared<Texture> SpriteTexture = nullptr;
 
         SpriteComponent() = default;

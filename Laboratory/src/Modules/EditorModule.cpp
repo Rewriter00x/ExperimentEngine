@@ -1,7 +1,6 @@
 ﻿#include "EditorModule.h"
 
 #include "imgui.h"
-#include "Engine/ECS/Components/SpriteComponent.h"
 #include "Engine/Render/RenderAPI.h"
 #include "Engine/Render/Renderer.h"
 #include "Engine/Render/RenderData/Texture.h"

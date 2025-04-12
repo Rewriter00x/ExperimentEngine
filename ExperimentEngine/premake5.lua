@@ -7,6 +7,11 @@ project "ExperimentEngine"
 	targetdir	(BinariesDir)
 	objdir		(IntermediateDir)
 
+	dependson
+	{
+		"Reflector",
+	}
+
     pchheader "exppch.h"
 	pchsource "src/exppch.cpp"
 
@@ -34,6 +39,7 @@ project "ExperimentEngine"
 
 	links
 	{
+		"Reflector",
 		"GLFW",
 		"glad",
 		"ImGui",
@@ -41,9 +47,23 @@ project "ExperimentEngine"
 		"yaml-cpp",
 	}
 
+	libdirs
+	{
+		DependenciesBinariesDir .. "/../Reflector",
+	}
+
 	filter "system:windows"
 		defines "EXP_WINDOWS"
 		systemversion "latest"
+
+		prebuildcommands
+		{
+			"cd ../ExperimentEngine/Dependencies/Reflector/script/",
+			"python3 reflector.py",
+			"cd ../",
+			"call GenerateProjectFiles.bat",
+			"msbuild Reflector.sln /p:Configuration=%{cfg.buildcfg}",
+		}
 
 		includedirs (includeList)
 
@@ -52,6 +72,15 @@ project "ExperimentEngine"
 		xcodebuildsettings
 		{
 			["GCC_PREFIX_HEADER"] = "src/exppch.h",
+		}
+
+		prebuildcommands
+		{
+			"cd \"$(dirname \"$0/ExperimentEngine/Dependencies/Reflector/scripts\")\" || exit 1",
+			"python3 reflector.py",
+			"cd ../",
+			"sh GenerateProjectFiles",
+			"xcodebuild -project Reflector.xcodeproj -configuration %{cfg.buildcfg} -quiet",
 		}
 
 		externalincludedirs (includeList)

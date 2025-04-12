@@ -5,6 +5,10 @@ Binaries/
 Intermediate/
 Saved/
 
+__pycache__/
+
+ExperimentEngine/Dependencies/Reflector/src
+
 *.DS_Store
 
 *.sln
