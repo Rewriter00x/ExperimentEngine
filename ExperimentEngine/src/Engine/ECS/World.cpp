@@ -6,6 +6,11 @@
 
 namespace Exp
 {
+    World::World(const std::string& name)
+        : m_Name(name.empty() ? "New World" : name)
+    {
+    }
+
     Entity& World::CreateEntity(const std::string& name, UUID uuid)
     {
         EntityParams params;

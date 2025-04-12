@@ -1,0 +1,16 @@
+World: New World
+Entities:
+  - UUID: 1128578483519664294
+    Name: New Entity
+    Position: [0, 0, 0]
+    Rotation: [0, 0, 0]
+    Scale: [1, 1, 1]
+    Sprite Component:
+      Color: [1, 0, 0, 1]
+  - UUID: 7808941185800310489
+    Name: New Entity
+    Position: [5, 5, -5]
+    Rotation: [45, 45, 45]
+    Scale: [3, 3, 3]
+    Sprite Component:
+      Color: [0, 1, 0, 1]

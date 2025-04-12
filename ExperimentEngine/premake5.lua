@@ -14,7 +14,6 @@ project "ExperimentEngine"
 		"%{IncludeDirs.GLFW}",
 		"%{IncludeDirs.glad}",
 		"%{IncludeDirs.stb_image}",
-		"%{IncludeDirs.yaml_cpp}",
 	}
 
 	local includeList = table.join(CoreIncludes, localIncludes)

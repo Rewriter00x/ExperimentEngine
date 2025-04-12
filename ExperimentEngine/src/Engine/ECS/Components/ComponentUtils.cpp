@@ -3,6 +3,7 @@
 
 #include "imgui.h"
 #include "yaml-cpp/yaml.h"
+#include "Engine/Serialization/Serializer.h"
 
 #include "SpriteComponent.h"
 
@@ -28,15 +29,23 @@ namespace Exp
     }
 
     template<>
-    void SerializeComponent<SpriteComponent>(const Entity& e)
+    void SerializeComponent<SpriteComponent>(YAML::Emitter& out, const Entity& e)
     {
+        using namespace Serializer;
         
+        const SpriteComponent& component = e.GetComponent<SpriteComponent>();
+        out << YAML::Key << GetComponentName<SpriteComponent>();
+        out << YAML::BeginMap;
+        out << YAML::Key << "Color" << YAML::Value << component.Color;
+        //out << YAML::Key << "Texture" << YAML::Value << component.SpriteTexture;
+        out << YAML::EndMap;
     }
     
     template<>
-    void DeserializeComponent<SpriteComponent>(Entity& e)
+    void DeserializeComponent<SpriteComponent>(const YAML::Node& node, Entity& e)
     {
-        
+        SpriteComponent& component = e.AddComponent<SpriteComponent>();
+        component.Color = node["Color"].as<glm::vec4>();
     }
     // END TODO REFLECTOR
 

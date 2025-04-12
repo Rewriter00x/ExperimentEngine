@@ -1,114 +1,120 @@
 ﻿#include "exppch.h"
 #include "Serializer.h"
 
-namespace YAML {
-
-    template<>
-    struct convert<glm::vec2>
-    {
-        static Node encode(const glm::vec2& rhs)
-        {
-            Node node;
-            node.push_back(rhs.x);
-            node.push_back(rhs.y);
-            node.SetStyle(EmitterStyle::Flow);
-            return node;
-        }
-
-        static bool decode(const Node& node, glm::vec2& rhs)
-        {
-            if (!node.IsSequence() || node.size() != 2)
-                return false;
-
-            rhs.x = node[0].as<float>();
-            rhs.y = node[1].as<float>();
-            return true;
-        }
-    };
-
-    template<>
-    struct convert<glm::vec3>
-    {
-        static Node encode(const glm::vec3& rhs)
-        {
-            Node node;
-            node.push_back(rhs.x);
-            node.push_back(rhs.y);
-            node.push_back(rhs.z);
-            node.SetStyle(EmitterStyle::Flow);
-            return node;
-        }
-
-        static bool decode(const Node& node, glm::vec3& rhs)
-        {
-            if (!node.IsSequence() || node.size() != 3)
-                return false;
-
-            rhs.x = node[0].as<float>();
-            rhs.y = node[1].as<float>();
-            rhs.z = node[2].as<float>();
-            return true;
-        }
-    };
-
-    template<>
-    struct convert<glm::vec4>
-    {
-        static Node encode(const glm::vec4& rhs)
-        {
-            Node node;
-            node.push_back(rhs.x);
-            node.push_back(rhs.y);
-            node.push_back(rhs.z);
-            node.push_back(rhs.w);
-            node.SetStyle(EmitterStyle::Flow);
-            return node;
-        }
-
-        static bool decode(const Node& node, glm::vec4& rhs)
-        {
-            if (!node.IsSequence() || node.size() != 4)
-                return false;
-
-            rhs.x = node[0].as<float>();
-            rhs.y = node[1].as<float>();
-            rhs.z = node[2].as<float>();
-            rhs.w = node[3].as<float>();
-            return true;
-        }
-    };
-
-}
-
 namespace Exp::Serializer
 {
+    static void SerializeEntity(YAML::Emitter& out, const Entity& entity)
+    {
+        out << YAML::BeginMap;
+        
+        out << YAML::Key << "UUID" << YAML::Value << entity.GetUUID();
+        out << YAML::Key << "Name" << YAML::Value << entity.GetName();
+
+        out << YAML::Key << "Position" << YAML::Value << entity.GetPosition();
+        out << YAML::Key << "Rotation" << YAML::Value << entity.GetRotation();
+        out << YAML::Key << "Scale" << YAML::Value << entity.GetScale();
+
+        for (const ComponentWrapperBase* component : GetAllComponents())
+        {
+            if (component->ContainedBy(entity))
+            {
+                component->Serialize(out, entity);
+            }
+        }
+        
+        out << YAML::EndMap;
+    }
+    
     void Serialize(const Shared<World>& world, const std::filesystem::path& path)
     {
+        YAML::Emitter out;
+        out << YAML::BeginMap;
+        out << YAML::Key << "World" << YAML::Value << world->GetName();
+        out << YAML::Key << "Entities" << YAML::Value << YAML::BeginSeq;
+        for (const Entity& entity : world->GetEntities())
+        {
+            SerializeEntity(out, entity);
+        }
+        out << YAML::EndSeq;
+        out << YAML::EndMap;
+
+        std::ofstream fout(path);
+        EXP_ASSERT(fout);
+        fout << out.c_str();
     }
 
     bool Deserialize(Shared<World>& world, const std::filesystem::path& path)
     {
-        return false;
+        YAML::Node data;
+        try
+        {
+            data = YAML::LoadFile(path.string());
+        }
+        catch (const YAML::ParserException& e)
+        {
+            return false;
+        }
+
+        if (!data["World"])
+        {
+            return false;
+        }
+
+        const std::string worldName = data["World"].as<std::string>();
+
+        if (const YAML::Node entities = data["Entities"])
+        {
+            for (auto entityData : entities)
+            {
+                const UUID uuid = entityData["UUID"].as<uint64>();
+                const std::string name = entityData["Name"].as<std::string>();
+
+                const glm::vec3 position = entityData["Position"].as<glm::vec3>();
+                const glm::vec3 rotation = entityData["Rotation"].as<glm::vec3>();
+                const glm::vec3 scale = entityData["Scale"].as<glm::vec3>();
+
+                Entity& entity = world->CreateEntity(name, uuid);
+                entity.SetPosition(position);
+                entity.SetRotation(rotation);
+                entity.SetScale(scale);
+                
+                for (const ComponentWrapperBase* component : GetAllComponents())
+                {
+                    if (const YAML::Node componentData = entityData[component->GetName()])
+                    {
+                        component->Deserialize(componentData, entity);
+                    }
+                }
+            }
+        }
+        
+        return true;
     }
-}
+    
+    YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec2& v)
+    {
+        out << YAML::Flow;
+        out << YAML::BeginSeq << v.x << v.y << YAML::EndSeq;
+        return out;
+    }
 
-YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec2& v)
-{
-    out << YAML::Flow;
-    out << YAML::BeginSeq << v.x << v.y << YAML::EndSeq;
-    return out;
-}
+    YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec3& v)
+    {
+        out << YAML::Flow;
+        out << YAML::BeginSeq << v.x << v.y << v.z << YAML::EndSeq;
+        return out;
+    }
 
-YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec3& v)
-{
-    out << YAML::Flow;
-    out << YAML::BeginSeq << v.x << v.y << v.z << YAML::EndSeq;
-    return out;
-}
+    YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec4& v)
+    {
+        out << YAML::Flow;
+        out << YAML::BeginSeq << v.x << v.y << v.z << v.w << YAML::EndSeq;
+        return out;
+    }
 
-YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec4& v)
-{
-    out << YAML::Flow;
-    out << YAML::BeginSeq << v.x << v.y << v.z << v.w << YAML::EndSeq;
-    return out;
+    /*YAML::Emitter& operator<<(YAML::Emitter& out, const Shared<Texture>& t)
+    {
+        out << (t ? t->GetFilepath().string() : ""); // TODO rel path
+        return out;
+    }*/
 }

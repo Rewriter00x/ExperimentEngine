@@ -34,13 +34,13 @@ namespace Exp
         m_ActiveWorld = MakeShared<World>();
         m_Outliner.SetWorld(m_ActiveWorld);
         
-        m_ActiveWorld->CreateEntity().AddComponent<SpriteComponent>(glm::vec4(1.f, 0.f, 0.f, 1.f ), nullptr);
+        /*m_ActiveWorld->CreateEntity().AddComponent<SpriteComponent>(glm::vec4(1.f, 0.f, 0.f, 1.f ), nullptr);
         
         Entity& e = m_ActiveWorld->CreateEntity();
         e.AddComponent<SpriteComponent>(glm::vec4{ 0.f, 1.f, 0.f, 1.f }, s_Texture);
         e.SetPosition({ 5.f, 5.f, -5.f });
         e.SetRotation({ 45.f, 45.f, 45.f });
-        e.SetScale({ 3.f, 3.f, 3.f });
+        e.SetScale({ 3.f, 3.f, 3.f });*/
     }
 
     void EditorModule::OnUpdate(float deltaSeconds)
@@ -106,6 +106,18 @@ namespace Exp
                 {
                     EXP_LOG(Info, "File->New");
                 }
+
+                if (ImGui::MenuItem("Open", "CTRL+O"))
+                {
+                    Serializer::Deserialize(m_ActiveWorld, g_EngineResourcesDirectory / "Worlds" / "New World.expw");
+                }
+                
+                if (ImGui::MenuItem("Save", "CTRL+S"))
+                {
+                    const std::string file = m_ActiveWorld->GetName() + ".expw";
+                    Serializer::Serialize(m_ActiveWorld, g_EngineResourcesDirectory / "Worlds" / file);
+                }
+                
                 ImGui::EndMenu();
             }
             ImGui::EndMainMenuBar();
