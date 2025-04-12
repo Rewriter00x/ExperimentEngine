@@ -1,4 +1,4 @@
 cd "$(dirname "$0")" || exit 1
 ./setup/premake/premake5 xcode4
-cd "$(dirname "$0/ExperimentEngine/Dependencies/Reflector")" || exit 1
+cd "ExperimentEngine/Dependencies/Reflector" || exit 1
 sh GenerateProjectFiles

@@ -134,7 +134,9 @@ def gen_main_file(comp_list):
     return gen_main_file_data(include_list, init_list, array_init_list)
 
 def gen_files(comp_list):
-    #os.makedirs("../src")
+    if not os.path.exists("../src"):
+        os.makedirs("../src")
+    
     for comp in comp_list:
         comp_file = "// Generated file, DO NOT CHANGE\n" + gen_comp_file(comp)
         with open(f"../src/{comp.name}.gen.cpp", "w") as file:

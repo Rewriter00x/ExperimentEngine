@@ -76,7 +76,7 @@ project "ExperimentEngine"
 
 		prebuildcommands
 		{
-			"cd \"$(dirname \"$0/ExperimentEngine/Dependencies/Reflector/scripts\")\" || exit 1",
+			"cd \"../ExperimentEngine/Dependencies/Reflector/scripts\" || exit 1",
 			"python3 reflector.py",
 			"cd ../",
 			"sh GenerateProjectFiles",
