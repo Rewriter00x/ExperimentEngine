@@ -9,6 +9,8 @@ namespace Exp
         Texture(uint32 width, uint32 height);
         ~Texture();
 
+        inline const std::filesystem::path& GetFilepath() const { return m_Filepath; }
+
         inline uint32 GetWidth() const { return m_Width; }
         inline uint32 GetHeight() const { return m_Height; }
 
@@ -25,6 +27,8 @@ namespace Exp
 
     private:
         void SetDefaultTextureParams() const;
+
+        std::filesystem::path m_Filepath;
         
         uint32 m_RendererID;
         uint32 m_Width, m_Height;

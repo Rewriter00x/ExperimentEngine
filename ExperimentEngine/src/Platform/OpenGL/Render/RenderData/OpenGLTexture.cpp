@@ -6,6 +6,7 @@
 namespace Exp
 {
     Texture::Texture(const std::filesystem::path& filepath)
+        : m_Filepath(filepath)
     {
         const TextureData data = AssetManager::ReadTextureData(filepath);
         if (data.Data)
@@ -37,7 +38,7 @@ namespace Exp
 
             SetDefaultTextureParams();
 
-            AssetManager::ReadTextureData(filepath);
+            AssetManager::ReleaseTextureData(filepath);
         }
     }
 
