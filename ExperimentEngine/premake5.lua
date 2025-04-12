@@ -59,7 +59,7 @@ project "ExperimentEngine"
 		prebuildcommands
 		{
 			"cd ../ExperimentEngine/Dependencies/Reflector/script/",
-			"python3 reflector.py",
+			"python3 reflector.py || exit /b 1",
 			"cd ../",
 			"call GenerateProjectFiles.bat",
 			"msbuild Reflector.sln /p:Configuration=%{cfg.buildcfg}",
