@@ -46,7 +46,8 @@ namespace Exp
 
     void EditorModule::OnUpdate(float deltaSeconds)
     {
-        m_EditorCamera.SetShouldCaptureKey(m_ViewportFocused);
+        const bool control = Input::IsKeyPressed(KeyCode::LeftControl) || Input::IsKeyPressed(KeyCode::RightControl);
+        m_EditorCamera.SetShouldCaptureKey(m_ViewportFocused && !control);
         m_EditorCamera.SetShouldCaptureMouse(m_ViewportHovered);
         
         m_EditorCamera.OnUpdate(deltaSeconds);
