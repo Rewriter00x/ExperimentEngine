@@ -87,6 +87,7 @@ def gen_comp_save(comp_type, save_list, load_list):
         
         const {comp_type}& component = e.GetComponent<{comp_type}>();
         out << YAML::Key << GetComponentName<{comp_type}>();
+        out << YAML::BeginMap;
         {save_list}
         out << YAML::EndMap;
     }}
