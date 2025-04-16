@@ -4,6 +4,7 @@
 #include "Engine/Render/RenderAPI.h"
 #include "Engine/Render/Renderer.h"
 #include "Engine/Render/RenderData/Texture.h"
+#include "Engine/Utils/FileDialogs.h"
 
 namespace Exp
 {
@@ -30,8 +31,9 @@ namespace Exp
 
         s_Texture = MakeShared<Texture>(g_EngineResourcesDirectory / "Textures" / "CheckerBoard.png");
 
-        m_ActiveWorld = MakeShared<World>();
-        m_Outliner.SetWorld(m_ActiveWorld);
+        NewWorld();
+
+        ADD_EVENT_LISTENER(this, KeyPressed, OnKeyPressed);
         
         /*m_ActiveWorld->CreateEntity().AddComponent<SpriteComponent>(glm::vec4(1.f, 0.f, 0.f, 1.f ), nullptr);
         
@@ -101,20 +103,29 @@ namespace Exp
         {
             if (ImGui::BeginMenu("File"))
             {
-                if (ImGui::MenuItem("New", "CTRL+N"))
+                if (ImGui::MenuItem("New", "Ctrl+N"))
                 {
-                    EXP_LOG(Info, "File->New");
+                    NewWorld();
                 }
 
-                if (ImGui::MenuItem("Open", "CTRL+O"))
+                if (ImGui::MenuItem("Open", "Ctrl+O"))
                 {
-                    Serializer::Deserialize(m_ActiveWorld, g_EngineResourcesDirectory / "Worlds" / "New World.expw");
+                    OpenWorld();
                 }
                 
-                if (ImGui::MenuItem("Save", "CTRL+S"))
+                if (ImGui::MenuItem("Save", "Ctrl+S"))
                 {
-                    const std::string file = m_ActiveWorld->GetName() + ".expw";
-                    Serializer::Serialize(m_ActiveWorld, g_EngineResourcesDirectory / "Worlds" / file);
+                    SaveWorld();
+                }
+
+                if (ImGui::MenuItem("Save As", "Ctrl+Shift+S"))
+                {
+                    SaveWorldAs();
+                }
+
+                if (ImGui::MenuItem("Exit"))
+                {
+                    Application::Get().RequestShutdown();
                 }
                 
                 ImGui::EndMenu();
@@ -153,5 +164,114 @@ namespace Exp
         ImGui::PopStyleVar();
 
         m_Outliner.OnImGuiRender();
+    }
+
+    void EditorModule::OnNewWorld(const Shared<World>& world)
+    {
+        m_ActiveWorld = world;
+        m_Outliner.SetWorld(m_ActiveWorld);
+    }
+
+    void EditorModule::NewWorld()
+    {
+        OnNewWorld(MakeShared<World>());
+        m_ActiveWorldPath = std::filesystem::path();
+    }
+
+    void EditorModule::OpenWorld()
+    {
+        FileDialogs::DialogData data;
+        data.DefaultPath = g_EngineResourcesDirectory / "Worlds";
+        const std::filesystem::path filepath = FileDialogs::OpenFile(data);
+        if (!filepath.empty())
+        {
+            OpenWorld(filepath);
+        }
+    }
+
+    void EditorModule::OpenWorld(const std::filesystem::path& path)
+    {
+        if (path.extension().string() != ".expw")
+        {
+            EXP_LOG(Warning, "Could not load %s - not a scene file", path.filename().string().c_str());
+            return;
+        }
+
+        Shared<World> newWorld = MakeShared<World>();
+        if (Serializer::Deserialize(newWorld, path))
+        {
+            OnNewWorld(newWorld);
+            m_ActiveWorldPath = path;
+        }
+    }
+
+    void EditorModule::SaveWorld()
+    {
+        if (m_ActiveWorldPath.empty())
+        {
+            SaveWorldAs();
+            return;
+        }
+        
+        Serializer::Serialize(m_ActiveWorld, m_ActiveWorldPath);
+    }
+
+    void EditorModule::SaveWorldAs()
+    {
+        FileDialogs::DialogData data;
+        data.DefaultName = "NewWorld.expw";
+        data.DefaultPath = g_EngineResourcesDirectory / "Worlds";
+        const std::filesystem::path filepath = FileDialogs::SaveFile(data);
+        if (!filepath.empty())
+        {
+            Serializer::Serialize(m_ActiveWorld, filepath);
+            m_ActiveWorldPath = filepath;
+        }
+    }
+
+    bool EditorModule::OnKeyPressed(const KeyPressedEvent& e)
+    {
+        const bool control = Input::IsKeyPressed(KeyCode::LeftControl) || Input::IsKeyPressed(KeyCode::RightControl);
+        const bool shift = Input::IsKeyPressed(KeyCode::LeftShift) || Input::IsKeyPressed(KeyCode::RightShift);
+        
+        switch (e.GetKeyCode())
+        {
+        case KeyCode::N:
+            {
+                if (control)
+                {
+                    NewWorld();
+                    return true;
+                }
+            }
+            break;
+        case KeyCode::O:
+            {
+                if (control)
+                {
+                    OpenWorld();
+                    return true;
+                }
+            }
+            break;
+        case KeyCode::S:
+            {
+                if (control)
+                {
+                    if (shift)
+                    {
+                        SaveWorldAs();
+                        return true;
+                    }
+                    SaveWorld();
+                    return true;
+                }
+            }
+            break;
+        default:
+            break;
+        }
+
+        return false;
     }
 }

@@ -33,8 +33,17 @@ project "ExperimentEngine"
 
 	files
 	{
-		"src/**.h",
-		"src/**.cpp",
+		"src/*.h",
+		"src/*.cpp",
+		"src/Engine/**.h",
+		"src/Engine/**.cpp",
+
+		"src/Platform/*.h",
+		"src/Platform/*.cpp",
+		"src/Platform/GLFW/**.h",
+		"src/Platform/GLFW/**.cpp",
+		"src/Platform/OpenGL/**.h",
+		"src/Platform/OpenGL/**.cpp",
 	}
 
 	links
@@ -56,6 +65,12 @@ project "ExperimentEngine"
 		defines "EXP_WINDOWS"
 		systemversion "latest"
 
+		files
+		{
+			"src/Platform/Windows/**.h",
+			"src/Platform/Windows/**.cpp",
+		}
+
 		prebuildcommands
 		{
 			"cd ../ExperimentEngine/Dependencies/Reflector/script/",
@@ -72,6 +87,12 @@ project "ExperimentEngine"
 		xcodebuildsettings
 		{
 			["GCC_PREFIX_HEADER"] = "src/exppch.h",
+		}
+
+		files
+		{
+			"src/Platform/Macos/**.h",
+			"src/Platform/Macos/**.cpp",
 		}
 
 		prebuildcommands
