@@ -34,6 +34,13 @@ namespace Exp
         NewWorld();
 
         ADD_EVENT_LISTENER(this, KeyPressed, OnKeyPressed);
+
+        const std::filesystem::path imguiPath = g_OutputDirectory / "Ini" / "imgui.ini";
+        if (!std::filesystem::exists(imguiPath))
+        {
+            const std::string imguiDefaultPath = (g_EditorResourcesDirectory / "Ini" / "imgui_default.ini").string();
+            ImGui::LoadIniSettingsFromDisk(imguiDefaultPath.c_str());
+        }
         
         /*m_ActiveWorld->CreateEntity().AddComponent<SpriteComponent>(glm::vec4(1.f, 0.f, 0.f, 1.f ), nullptr);
         
@@ -52,7 +59,6 @@ namespace Exp
         
         m_EditorCamera.OnUpdate(deltaSeconds);
         
-
         const FramebufferSpecification& spec = m_Framebuffer->GetSpecification();
         if (m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f && // zero sized framebuffer is invalid
             (spec.Width != (uint32)m_ViewportSize.x || spec.Height != (uint32)m_ViewportSize.y))

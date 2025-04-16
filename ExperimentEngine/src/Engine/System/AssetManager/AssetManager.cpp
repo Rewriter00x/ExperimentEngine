@@ -6,6 +6,7 @@
 std::filesystem::path g_RootDirectory;
 std::filesystem::path g_OutputDirectory;
 std::filesystem::path g_EngineResourcesDirectory;
+std::filesystem::path g_EditorResourcesDirectory;
 
 std::filesystem::path g_OutputLogDirectory;
 std::filesystem::path g_OutputIniDirectory;
@@ -28,6 +29,7 @@ namespace Exp::AssetManager
 		g_RootDirectory = rootPath;
 		g_OutputDirectory = g_RootDirectory / "Saved";
 		g_EngineResourcesDirectory = g_RootDirectory / "ExperimentEngine" / "Resources";
+		g_EditorResourcesDirectory = g_RootDirectory / "Laboratory" / "Resources";
 		std::filesystem::create_directories(g_OutputDirectory);
 
 		g_OutputLogDirectory = g_OutputDirectory / "Log";
