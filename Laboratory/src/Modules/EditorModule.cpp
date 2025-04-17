@@ -16,6 +16,8 @@ namespace Exp
     static int32 s_AttachmentIndex = 0;
     
     EditorModule::EditorModule()
+        : m_EngineContentBrowser("Engine Resources", g_EngineResourcesDirectory)
+        , m_EditorContentBrowser("Editor Resources", g_EditorResourcesDirectory)
     {
         m_EditorCamera.SetPosition({ 0.f, 0.f, 10.f });
 
@@ -171,6 +173,8 @@ namespace Exp
         ImGui::PopStyleVar();
 
         m_Outliner.OnImGuiRender();
+        m_EngineContentBrowser.OnImGuiRender();
+        m_EditorContentBrowser.OnImGuiRender();
     }
 
     void EditorModule::OnNewWorld(const Shared<World>& world)

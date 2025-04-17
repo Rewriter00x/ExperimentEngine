@@ -2,6 +2,7 @@
 
 #include "ExperimentEngine.h"
 #include "Panels/OutlinerPanel.h"
+#include "Panels/ContentBrowserPanel.h"
 
 #include "Engine/Render/EditorCamera.h"
 #include "Engine/Render/RenderData/Framebuffer.h"
@@ -32,6 +33,8 @@ namespace Exp
         glm::vec2 m_ViewportSize = { 0.f, 0.f };
 
         OutlinerPanel m_Outliner;
+        ContentBrowserPanel m_EngineContentBrowser;
+        ContentBrowserPanel m_EditorContentBrowser;
 
         Shared<World> m_ActiveWorld;
         std::filesystem::path m_ActiveWorldPath;
