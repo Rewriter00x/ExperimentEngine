@@ -29,7 +29,7 @@ namespace Exp
         m_ViewportSize = { spec.Width, spec.Height };
         m_Framebuffer = MakeUnique<Framebuffer>(spec);
 
-        s_Texture = MakeShared<Texture>(g_EngineResourcesDirectory / "Textures" / "CheckerBoard.png");
+        s_Texture = AssetManager::GetTexture(g_EngineResourcesDirectory / "Textures" / "CheckerBoard.png");
 
         NewWorld();
 

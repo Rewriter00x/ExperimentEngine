@@ -2,6 +2,11 @@
 
 namespace Exp
 {
+	class Texture;
+}
+
+namespace Exp
+{
 	struct TextureData
 	{
 		uint8* Data;
@@ -18,6 +23,9 @@ namespace Exp
 
 		TextureData ReadTextureData(const std::filesystem::path& filepath);
 		void ReleaseTextureData(const std::filesystem::path& filepath);
+
+		const Shared<Texture>& GetTexture(const std::filesystem::path& filepath);
+		void FreeTexture(const std::filesystem::path& filepath);
 	}
 }
 

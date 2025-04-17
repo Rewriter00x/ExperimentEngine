@@ -2,6 +2,7 @@
 #include "AssetManager.h"
 
 #include "stb_image.h"
+#include "Engine/Render/RenderData/Texture.h"
 
 std::filesystem::path g_RootDirectory;
 std::filesystem::path g_OutputDirectory;
@@ -15,6 +16,8 @@ namespace Exp::AssetManager
 {
 	static std::unordered_map<std::filesystem::path, std::string> s_ReadFileData;
 	static std::unordered_map<std::filesystem::path, TextureData> s_ReadTextureData;
+
+	static std::unordered_map<std::filesystem::path, Shared<Texture>> s_CachedTextures;
 	
 	void Init()
 	{
@@ -47,6 +50,7 @@ namespace Exp::AssetManager
 		{
 			stbi_image_free(texture.Data);
 		}
+		s_CachedTextures.clear();
 	}
 
 	std::string ReadAssetData(const std::filesystem::path& filepath)
@@ -106,5 +110,30 @@ namespace Exp::AssetManager
 	{
 		stbi_image_free(s_ReadTextureData[filepath].Data);
 		s_ReadTextureData.erase(filepath);
+	}
+
+	const Shared<Texture>& GetTexture(const std::filesystem::path& filepath)
+	{
+		const auto it = s_CachedTextures.find(filepath);
+		if (it != s_CachedTextures.end())
+		{
+			return it->second;
+		}
+
+		s_CachedTextures[filepath] = MakeShared<Texture>(filepath);
+		return s_CachedTextures[filepath];
+	}
+
+	void FreeTexture(const std::filesystem::path& filepath)
+	{
+		const auto it = s_CachedTextures.find(filepath);
+		if (it != s_CachedTextures.end())
+		{
+			s_CachedTextures.erase(it);
+		}
+		else
+		{
+			EXP_LOG(Warning, "Trying to release unloaded texture %s", filepath.string().c_str());
+		}
 	}
 }
