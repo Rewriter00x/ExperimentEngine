@@ -2,6 +2,7 @@
 
 #include "imgui.h"
 #include "Engine/Render/RenderData/Texture.h"
+#include "Platform/PlatformUtils.h"
 
 namespace Exp
 {
@@ -19,7 +20,7 @@ namespace Exp
         ImGui::Begin(m_Name.c_str());
 
         static float padding = 16.f;
-        static float thumbnailSize = 256.f;
+        static float thumbnailSize = 128.f * PlatformUtils::GetScreenSize().y / 1080.f;
 
         const float cellSize = thumbnailSize + padding;
 
