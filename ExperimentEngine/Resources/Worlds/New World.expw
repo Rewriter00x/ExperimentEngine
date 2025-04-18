@@ -15,4 +15,4 @@ Entities:
     Scale: [3, 3, 3]
     Sprite Component:
       Color: [0, 1, 0, 1]
-      SpriteTexture: ExperimentEngine\Resources\Textures\Checkerboard.png
+      SpriteTexture: ExperimentEngine/Resources/Textures/Checkerboard.png
