@@ -19,6 +19,15 @@ namespace Exp
     {
         ImGui::Begin(m_Name.c_str());
 
+        if (ImGui::BeginPopupContextWindow("ContentBrowserPopup", 1 | ImGuiPopupFlags_NoOpenOverItems))
+        {
+            if (ImGui::MenuItem("Refresh"))
+            {
+                CacheCurrentDir();
+            }
+            ImGui::EndPopup();
+        }
+
         static float padding = 16.f;
         static float thumbnailSize = 170.f * ExpImGui::GetOverallContentScale();
 
