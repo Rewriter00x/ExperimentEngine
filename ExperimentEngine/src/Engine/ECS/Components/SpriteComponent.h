@@ -13,6 +13,7 @@ namespace Exp
         //p draw, save
         glm::vec4 Color = glm::vec4(1.f);
         
+        //p draw, save
         Shared<Texture> SpriteTexture = nullptr;
 
         SpriteComponent() = default;

@@ -38,6 +38,7 @@ def gen_comp_base(comp_type):
 #include "imgui.h"
 #include "yaml-cpp/yaml.h"
 #include "Engine/Serialization/Serializer.h"
+#include "Engine/Serialization/ExpYaml.h"
 
 #include "Engine/ECS/Components/{comp_type}.h"
 
@@ -54,12 +55,19 @@ def gen_prop_draw(prop):
     elif prop.type == "glm::vec4":
         return f"""
         ImGui::ColorEdit4(\"{split_name(prop.name)}\", glm::value_ptr(component.{prop.name}));"""
+    elif prop.type == "Shared<Texture>":
+        return f"""
+        ImGui::Button(\"{prop.name}\");"""
+    else:
+        return ""
 
 def gen_prop_save(prop):
-    return f"out << YAML::Key << \"{prop.name}\" << YAML::Value << component.{prop.name};"
+    return f"""
+        out << YAML::Key << \"{prop.name}\" << YAML::Value << component.{prop.name};"""
 
 def gen_prop_load(prop):
-    return f"component.{prop.name} = node[\"{prop.name}\"].as<{prop.type}>();"
+    return f"""
+        component.{prop.name} = node[\"{prop.name}\"].as<{prop.type}>();"""
 
 def gen_comp_name(comp_type, name):
     return f"""
@@ -74,8 +82,7 @@ def gen_comp_draw(comp_type, draw_list):
     template<>
     void DrawComponent<{comp_type}>(Entity& e)
     {{
-        {comp_type}& component = e.GetComponent<{comp_type}>();
-        {draw_list}
+        {comp_type}& component = e.GetComponent<{comp_type}>();{draw_list}
     }}"""
 
 def gen_comp_save(comp_type, save_list, load_list):
@@ -87,16 +94,14 @@ def gen_comp_save(comp_type, save_list, load_list):
         
         const {comp_type}& component = e.GetComponent<{comp_type}>();
         out << YAML::Key << GetComponentName<{comp_type}>();
-        out << YAML::BeginMap;
-        {save_list}
+        out << YAML::BeginMap;{save_list}
         out << YAML::EndMap;
     }}
     
     template<>
     void DeserializeComponent<{comp_type}>(const YAML::Node& node, Entity& e)
     {{
-        {comp_type}& component = e.AddComponent<{comp_type}>();
-        {load_list}
+        {comp_type}& component = e.AddComponent<{comp_type}>();{load_list}
     }}"""
 
 def gen_comp_file(comp):

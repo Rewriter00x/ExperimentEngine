@@ -1,6 +1,12 @@
 ﻿#include "exppch.h"
 #include "Serializer.h"
 
+#include "Engine/Render/RenderData/Texture.h"
+
+#include "yaml-cpp/yaml.h"
+
+#include "ExpYaml.h"
+
 namespace Exp::Serializer
 {
     static void SerializeEntity(YAML::Emitter& out, const Entity& entity)
@@ -112,9 +118,9 @@ namespace Exp::Serializer
         return out;
     }
 
-    /*YAML::Emitter& operator<<(YAML::Emitter& out, const Shared<Texture>& t)
+    YAML::Emitter& operator<<(YAML::Emitter& out, const Shared<Texture>& t)
     {
-        out << (t ? t->GetFilepath().string() : ""); // TODO rel path
+        out << (t ? std::filesystem::relative(t->GetFilepath(), g_RootDirectory).string() : "");
         return out;
-    }*/
+    }
 }

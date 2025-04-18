@@ -40,7 +40,6 @@ CoreIncludes = {
 	"%{wks.location}/ExperimentEngine/src",
 	"%{IncludeDirs.ImGui}",
 	"%{IncludeDirs.glm}",
-	"%{IncludeDirs.yaml_cpp}",
 }
 
 CoreDefines = {
