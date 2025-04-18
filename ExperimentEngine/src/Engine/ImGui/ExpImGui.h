@@ -9,5 +9,7 @@ namespace Exp
 
 		void BeginNewFrame();
 		void EndNewFrame();
+
+		float GetOverallContentScale();
 	}
 }

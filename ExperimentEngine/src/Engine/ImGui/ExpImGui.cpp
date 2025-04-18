@@ -27,17 +27,7 @@ namespace Exp::ExpImGui
 		s_IniPathString = iniPath.string();
 		io.IniFilename = s_IniPathString.c_str();
 
-        const glm::vec2 dpiScales = PlatformUtils::GetDPIScales();
-		const float dpiScale = (dpiScales.x + dpiScales.y) * .5f;
-        
-        const glm::vec2 screenSize = PlatformUtils::GetScreenSize();
-        const float screenHeightScale = screenSize.y / 1080.f;
-        
-        float overallScale = dpiScale * screenHeightScale / 2.f;
-        
-#if defined(EXP_MACOS)
-        overallScale /= 1.25; // fine tuning for macos retina
-#endif
+		const float overallScale = GetOverallContentScale();
 
 		io.Fonts->Clear();
 		ImFontConfig fontConfig;
@@ -88,5 +78,22 @@ namespace Exp::ExpImGui
             ImGui::RenderPlatformWindowsDefault();
             PlatformUtils::ApplyCachedContext();
         }
+	}
+
+	float GetOverallContentScale()
+	{
+		const glm::vec2 dpiScales = PlatformUtils::GetDPIScales();
+		const float dpiScale = (dpiScales.x + dpiScales.y) * .5f;
+        
+		const glm::vec2 screenSize = PlatformUtils::GetScreenSize();
+		const float screenHeightScale = screenSize.y / 1080.f;
+        
+		float overallScale = dpiScale * screenHeightScale / 2.f;
+        
+#if defined(EXP_MACOS)
+		overallScale /= 1.25; // fine tuning for macos retina
+#endif
+
+		return overallScale;
 	}
 }

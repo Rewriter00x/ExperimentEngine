@@ -1,8 +1,8 @@
 ﻿#include "ContentBrowserPanel.h"
 
 #include "imgui.h"
+#include "Engine/ImGui/ExpImGui.h"
 #include "Engine/Render/RenderData/Texture.h"
-#include "Platform/PlatformUtils.h"
 
 namespace Exp
 {
@@ -20,7 +20,7 @@ namespace Exp
         ImGui::Begin(m_Name.c_str());
 
         static float padding = 16.f;
-        static float thumbnailSize = 128.f * PlatformUtils::GetScreenSize().y / 1080.f;
+        static float thumbnailSize = 170.f * ExpImGui::GetOverallContentScale();
 
         const float cellSize = thumbnailSize + padding;
 
