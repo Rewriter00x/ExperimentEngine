@@ -1,5 +1,7 @@
 #pragma once
 
+struct ImGuiInputTextCallbackData;
+
 namespace Exp
 {
 	namespace ExpImGui
@@ -11,5 +13,7 @@ namespace Exp
 		void EndNewFrame();
 
 		float GetOverallContentScale();
+
+		int InputTextCallback(ImGuiInputTextCallbackData* data);
 	}
 }

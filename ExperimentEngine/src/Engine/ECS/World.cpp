@@ -1,6 +1,7 @@
 ﻿#include "exppch.h"
 #include "World.h"
 
+#include "Components/ScriptComponent.h"
 #include "Components/SpriteComponent.h"
 #include "Engine/Render/Renderer.h"
 
@@ -13,22 +14,70 @@ namespace Exp
 
     Entity& World::CreateEntity(const std::string& name, UUID uuid)
     {
+        const Entity_ID id = m_Registry.NewEntity();
         EntityParams params;
-        params.RegistryID = m_Registry.NewEntity();
+        params.RegistryID = id;
         params.World = this;
         params.UUID = uuid;
         params.Name = name.empty() ? "New Entity" : name;
+        entityToIndex[id] = m_Entities.size();
         return m_Entities.emplace_back(params);
     }
 
     void World::DestroyEntity(const Entity& entity)
     {
-        m_Registry.DeleteEntity(entity.GetID());
-        m_Entities.erase(std::remove(m_Entities.begin(), m_Entities.end(), entity), m_Entities.end());
+        const Entity_ID destroyID = entity.GetID();
+        const size_t index = entityToIndex[destroyID];
+        const size_t lastIndex = m_Entities.size() - 1;
+        if (index != lastIndex)
+        {
+            m_Entities[index] = std::move(m_Entities[lastIndex]);
+
+            for (auto& [id, idx] : entityToIndex)
+            {
+                if (idx == lastIndex)
+                {
+                    idx = index;
+                    break;
+                }
+            }
+        }
+        
+        m_Registry.DeleteEntity(destroyID);
+        m_Entities.pop_back();
+    }
+
+    void World::Start()
+    {
+        for (Entity& entity : m_Entities)
+        {
+            if (entity.HasComponent<ScriptComponent>())
+            {
+                ScriptComponent& sc = entity.GetComponent<ScriptComponent>();
+                sc.Create(entity.GetID(), this);
+            }
+        }
+    }
+
+    void World::End()
+    {
+        for (Entity& entity : m_Entities)
+        {
+            if (entity.HasComponent<ScriptComponent>())
+            {
+                ScriptComponent& sc = entity.GetComponent<ScriptComponent>();
+                sc.Destroy();
+            }
+        }
     }
 
     void World::OnUpdate(float deltaSeconds)
     {
+        for (ScriptComponent& sc : m_Registry.GetComponents<ScriptComponent>())
+        {
+            sc.Update(deltaSeconds);
+        }
+        
         RenderScene();
     }
 

@@ -96,4 +96,24 @@ namespace Exp::ExpImGui
 
 		return overallScale;
 	}
+
+	int InputTextCallback(ImGuiInputTextCallbackData* data)
+	{
+		if (data->EventFlag == ImGuiInputTextFlags_CallbackResize)
+		{
+			std::string* buf = (std::string*)data->UserData;
+			const int32 cap = (int32)buf->capacity();
+			if (cap <= data->BufTextLen)
+			{
+				buf->resize((size_t)data->BufTextLen * 2);
+			}
+			else if (cap > data->BufTextLen * 2)
+			{
+				buf->resize((size_t)data->BufTextLen);
+				buf->shrink_to_fit();
+			}
+			data->Buf = buf->data();
+		}
+		return 0;
+	}
 }

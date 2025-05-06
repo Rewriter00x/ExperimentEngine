@@ -1,29 +1,10 @@
 #include "OutlinerPanel.h"
 
 #include "imgui.h"
+#include "Engine/ImGui/ExpImGui.h"
 
 namespace Exp
 {
-    static int InputTextCallback(ImGuiInputTextCallbackData* data)
-    {
-        if (data->EventFlag == ImGuiInputTextFlags_CallbackResize)
-        {
-            std::string* name = (std::string*)data->UserData;
-            const int32 cap = (int32)name->capacity();
-            if (cap <= data->BufTextLen)
-            {
-                name->resize((size_t)data->BufTextLen * 2);
-            }
-            else if (cap > data->BufTextLen * 2)
-            {
-                name->resize((size_t)data->BufTextLen);
-                name->shrink_to_fit();
-            }
-            data->Buf = name->data();
-        }
-        return 0;
-    }
-
     static void DrawEntityProperties(Entity& e)
     {
         ImGui::DragFloat3("Position", glm::value_ptr(e.GetPosition()), .1f);
@@ -31,7 +12,7 @@ namespace Exp
         ImGui::DragFloat3("Scale", glm::value_ptr(e.GetScale()), .1f);
 
         std::string& name = e.GetName();
-        ImGui::InputText("Name", name.data(), name.capacity() + 1, ImGuiInputTextFlags_CallbackResize, InputTextCallback, &name);
+        ImGui::InputText("Name", name.data(), name.capacity() + 1, ImGuiInputTextFlags_CallbackResize, ExpImGui::InputTextCallback, &name);
 
         ImGui::Text("ID: %d", (int32)e.GetID());
         ImGui::Text("UUID: %llu", (uint64)e.GetUUID());

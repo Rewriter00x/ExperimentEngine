@@ -123,4 +123,10 @@ namespace Exp::Serializer
         out << (t ? std::filesystem::relative(t->GetFilepath(), g_RootDirectory).generic_string() : "");
         return out;
     }
+
+    YAML::Emitter& operator<<(YAML::Emitter& out, const ScriptName& s)
+    {
+        out << s.Name;
+        return out;
+    }
 }

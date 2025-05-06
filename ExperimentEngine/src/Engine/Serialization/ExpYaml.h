@@ -1,7 +1,9 @@
 ﻿#pragma once
 
-#include "Engine/Render/RenderData/Texture.h"
 #include "yaml-cpp/yaml.h"
+
+#include "Engine/Render/RenderData/Texture.h"
+#include "Engine/ECS/Script/ScriptName.h"
 
 namespace YAML
 {
@@ -63,6 +65,19 @@ namespace YAML
             {
                 rhs = Exp::AssetManager::GetTexture(g_RootDirectory / path);
             }
+            return true;
+        }
+    };
+    
+    template<>
+    struct convert<Exp::ScriptName>
+    {
+        static bool decode(const Node& node, Exp::ScriptName& rhs)
+        {
+            if (node.IsSequence())
+                return false;
+
+            rhs.Name = node.as<std::string>();
             return true;
         }
     };

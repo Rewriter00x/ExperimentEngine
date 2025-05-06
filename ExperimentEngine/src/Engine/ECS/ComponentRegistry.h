@@ -31,6 +31,9 @@ namespace Exp
         bool HasComponent(Entity_ID e) const;
 
         template<typename T>
+        std::vector<T>& GetComponents();
+
+        template<typename T>
         const std::vector<T>& GetComponents() const;
 
     private:
@@ -110,6 +113,13 @@ namespace Exp
         const std::type_index type = typeid(T);
         const std::unordered_set<std::type_index>& set = m_EntityComponents.at(e);
         return set.find(type) != set.end();
+    }
+
+    template <typename T>
+    std::vector<T>& ComponentRegistry::GetComponents()
+    {
+        TypeContainer<T>* container = GetTypeContainer<T>();
+        return container->data;
     }
 
     template <typename T>

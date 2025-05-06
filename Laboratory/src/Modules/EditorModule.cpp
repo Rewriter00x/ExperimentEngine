@@ -59,7 +59,7 @@ namespace Exp
 
         Renderer::BeginBatch(m_EditorCamera);
 
-        m_ActiveWorld->OnUpdate(deltaSeconds);
+        m_ActiveWorld->RenderScene();
 			
         Renderer::EndBatch();
 

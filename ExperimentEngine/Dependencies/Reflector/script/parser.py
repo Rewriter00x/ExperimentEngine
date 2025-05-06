@@ -7,6 +7,13 @@ def parse_comp(line):
 
     return Component(name=parts[1], props=[])
 
+def parse_script(line):
+    line = line.strip()
+
+    parts = line.split()
+
+    return Script(name=parts[1])
+
 def parse_prop_def(line):
     line = line.strip()
 
@@ -31,12 +38,16 @@ def parse_prop(line):
 
     parts = line.split()
 
+    name = parts[1]
+    if (name[-1] == ';'):
+        name = name[:-1]
+
     if len(parts) >= 2:
-        return Property(name=parts[1], type=parts[0], flags=[])
+        return Property(name=name, type=parts[0], flags=[])
 
     return None
 
-def parse_file(file):
+def parse_component_file(file):
     components = []
     component = None
     try:
@@ -65,3 +76,21 @@ def parse_file(file):
         components.append(component)
         
     return components
+
+def parse_script_file(file):
+    scripts = []
+    try:
+        with open(file) as file:
+            iterator = iter(file)
+            line = next(iterator, None)
+
+            while line is not None:
+                if "//sc" in line:
+                    line = next(iterator, None)
+                    scripts.append(parse_script(line))
+                line = next(iterator, None)
+
+    except Exception as e:
+        print(e)
+        
+    return scripts

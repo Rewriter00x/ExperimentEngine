@@ -20,8 +20,8 @@ def gen_main_file_data(include_list, init_list, array_init_list):
 
 {include_list}
 namespace Exp
-{{
-    {init_list}
+{{{init_list}
+
     static std::vector<ComponentWrapperBase*> s_AllComponents = {{ {array_init_list} }};
 
     const std::vector<ComponentWrapperBase*>& GetAllComponents()
@@ -36,6 +36,8 @@ def gen_comp_base(comp_type):
 #include "Engine/ECS/Components/ComponentUtils.h"
 
 #include "imgui.h"
+#include "Engine/ImGui/ExpImGui.h"
+#include "Engine/ECS/Script/ScriptUtils.h"
 #include "yaml-cpp/yaml.h"
 #include "Engine/Serialization/Serializer.h"
 #include "Engine/Serialization/ExpYaml.h"
@@ -58,6 +60,27 @@ def gen_prop_draw(prop):
     elif prop.type == "Shared<Texture>":
         return f"""
         ImGui::Button(\"{prop.name}\");"""
+    elif prop.type == "std::string":
+        return f"""
+        ImGui::InputText("{prop.name}", component.{prop.name}.data(), component.{prop.name}.capacity() + 1, ImGuiInputTextFlags_CallbackResize, ExpImGui::InputTextCallback, &component.{prop.name});"""
+    elif prop.type == "ScriptName":
+        return f"""
+        {{
+            const std::vector<std::string>& scriptNames = GetAllScriptNames();
+            std::vector<const char*> scriptPtrs = GetAllScriptNamesPtrs();
+            int32 selected = 0;
+            auto it = std::find(scriptNames.begin(), scriptNames.end(), component.{prop.name}.Name);
+            if (it != scriptNames.end())
+            {{
+                selected = (int32)std::distance(scriptNames.begin(), it);
+            }}
+            const int32 oldSelected = selected;
+            ImGui::Combo("{prop.name}", &selected, scriptPtrs.data(), (int32)scriptPtrs.size());
+            if (oldSelected != selected)
+            {{
+                component.{prop.name}.Name = scriptNames[selected];
+            }}
+        }}"""
     else:
         return ""
 
@@ -104,6 +127,44 @@ def gen_comp_save(comp_type, save_list, load_list):
         {comp_type}& component = e.AddComponent<{comp_type}>();{load_list}
     }}"""
 
+def gen_script_file_data(include_list, lambda_list, names_list):
+    return f"""
+#include "exppch.h"
+#include "Engine/ECS/Script/ScriptUtils.h"
+
+#include "Engine/ECS/Script/NativeScript.h"
+{include_list}
+
+namespace Exp
+{{
+    static const std::unordered_map<std::string, NativeScript*(*)(Entity_ID, World*)> s_NameToCreateMap = {{
+        {{ "None", [](Entity_ID entityID, World* world){{ return new NativeScript(entityID, world); }}}},{lambda_list}
+    }};
+
+    static const std::vector<std::string> s_Names = {{
+        "None",{names_list}
+    }};
+
+    static const std::vector<const char*> s_NamesPtrs = {{
+        "None",{names_list}
+    }};
+    
+    NativeScript* CreateScriptByName(const std::string& name, Entity_ID entityID, World* world)
+    {{
+        return s_NameToCreateMap.at(name)(entityID, world);
+    }}
+
+    const std::vector<std::string>& GetAllScriptNames()
+    {{
+        return s_Names;
+    }}
+
+    const std::vector<const char*>& GetAllScriptNamesPtrs()
+    {{
+        return s_NamesPtrs;
+    }}
+}}"""
+
 def gen_comp_file(comp):
     comp_file = gen_comp_base(comp.name)
     comp_file += gen_comp_name(comp.name, split_name(comp.name))
@@ -131,14 +192,30 @@ def gen_main_file(comp_list):
     array_init_list = ""
     for i, comp in enumerate(comp_list):
         include_list += f"#include \"Engine/ECS/Components/{comp.name}.h\"\n"
-        init_list += f"static ComponentWrapper<{comp.name}> {lower_name(comp.name)};\n"
+        init_list += f"""
+    static ComponentWrapper<{comp.name}> {lower_name(comp.name)};"""
         if (i != 0):
             array_init_list += ", "
         array_init_list += '&'+ lower_name(comp.name)
 
     return gen_main_file_data(include_list, init_list, array_init_list)
 
-def gen_files(comp_list):
+def gen_script_file(script_list):
+    include_list = ""
+    lambda_list = ""
+    names_list = ""
+
+    for script in script_list:
+        include_list += f"\n#include \"Engine/ECS/Script/{script.name}.h\""
+        lambda_list += f"""
+        {{ "{split_name(script.name)}", [](Entity_ID entityID, World* world){{ return (NativeScript*) new {script.name}(entityID, world); }}}},"""
+        names_list += f"""
+        "{split_name(script.name)}","""
+
+    return gen_script_file_data(include_list, lambda_list, names_list)
+
+
+def gen_component_files(comp_list):
     if not os.path.exists("../src"):
         os.makedirs("../src")
     
@@ -151,3 +228,10 @@ def gen_files(comp_list):
     with open("../src/ComponentUtils.gen.cpp", "w") as file:
         file.write(main_file)
 
+def gen_script_files(script_list):
+    if not os.path.exists("../src"):
+        os.makedirs("../src")
+
+    script_file = "// Generated file, DO NOT CHANGE\n" + gen_script_file(script_list)
+    with open("../src/ScriptUtils.gen.cpp", "w") as file:
+        file.write(script_file)
