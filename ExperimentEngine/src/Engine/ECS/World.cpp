@@ -1,4 +1,4 @@
-﻿#include "exppch.h"
+#include "exppch.h"
 #include "World.h"
 
 #include "Components/ScriptComponent.h"
@@ -10,6 +10,23 @@ namespace Exp
     World::World(const std::string& name)
         : m_Name(name.empty() ? "New World" : name)
     {
+    }
+
+    Shared<World> World::Duplicate() const
+    {
+        Shared<World> Res = MakeShared<World>("PIE " + m_Name);
+        for (const Entity& entity : m_Entities)
+        {
+            Entity& NewEntity = Res->CreateEntity(entity.GetName(), entity.GetUUID());
+            for (const ComponentWrapperBase* component : GetAllComponents())
+            {
+                if (component->ContainedBy(entity))
+                {
+                    component->Duplicate(NewEntity, entity);
+                }
+            }
+        }
+        return Res;
     }
 
     Entity& World::CreateEntity(const std::string& name, UUID uuid)
@@ -61,13 +78,9 @@ namespace Exp
 
     void World::End()
     {
-        for (Entity& entity : m_Entities)
+        for (ScriptComponent& sc : m_Registry.GetComponents<ScriptComponent>())
         {
-            if (entity.HasComponent<ScriptComponent>())
-            {
-                ScriptComponent& sc = entity.GetComponent<ScriptComponent>();
-                sc.Destroy();
-            }
+            sc.Destroy();
         }
     }
 

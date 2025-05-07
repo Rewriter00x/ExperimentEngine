@@ -1,4 +1,4 @@
-﻿#include "exppch.h"
+#include "exppch.h"
 #include "OpenGLVertexBufferLayout.h"
 
 #include "glad/glad.h"
@@ -55,7 +55,7 @@ namespace Exp
                         ShaderDataTypeToOpenGLBaseType(element.Type),
                         element.Normalized ? GL_TRUE : GL_FALSE,
                         m_Stride,
-                        (const void*)element.Offset);
+                        (const void*)(uint64)element.Offset);
                     ++vertexBufferIndex;
                     break;
                 }
@@ -70,7 +70,7 @@ namespace Exp
                         element.GetComponentCount(),
                         ShaderDataTypeToOpenGLBaseType(element.Type),
                         m_Stride,
-                        (const void*)element.Offset);
+                        (const void*)(uint64)element.Offset);
                     ++vertexBufferIndex;
                     break;
                 }

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 namespace YAML
 {
@@ -20,6 +20,9 @@ namespace Exp
     template<typename T>
     void DeserializeComponent(const YAML::Node& node, Entity& e);
 
+    template<typename T>
+    void DuplicateComponent(Entity& dst, const Entity& src);
+
     struct ComponentWrapperBase
     {
         virtual ~ComponentWrapperBase() = default;
@@ -32,6 +35,7 @@ namespace Exp
         virtual void AddTo(Entity& e) const = 0;
         virtual bool ContainedBy(const Entity& e) const = 0;
         virtual void RemoveFrom(Entity& e) const = 0;
+        virtual void Duplicate(Entity& dst, const Entity& src) const = 0;
     };
 
     template<typename T>
@@ -45,7 +49,8 @@ namespace Exp
         virtual void AddTo(Entity& e) const override { e.AddComponent<T>(); }
         virtual bool ContainedBy(const Entity& e) const override { return e.HasComponent<T>(); }
         virtual void RemoveFrom(Entity& e) const override { e.RemoveComponent<T>(); }
+        virtual void Duplicate(Entity& dst, const Entity& src) const override { DuplicateComponent<T>(dst, src); }
     };
 
-    const std::vector<ComponentWrapperBase*>& GetAllComponents();
+    const std::vector<const ComponentWrapperBase*>& GetAllComponents();
 }

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "ComponentRegistry.h"
 
@@ -13,6 +13,8 @@ namespace Exp
     {
     public:
         explicit World(const std::string& name = "");
+        
+        Shared<World> Duplicate() const;
         
         Entity& CreateEntity(const std::string& name = "", UUID uuid = UUID());
         void DestroyEntity(const Entity& entity);

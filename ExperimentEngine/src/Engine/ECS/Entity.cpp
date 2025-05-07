@@ -1,4 +1,4 @@
-﻿#include "exppch.h"
+#include "exppch.h"
 #include "Entity.h"
 
 namespace Exp

@@ -22,9 +22,9 @@ def gen_main_file_data(include_list, init_list, array_init_list):
 namespace Exp
 {{{init_list}
 
-    static std::vector<ComponentWrapperBase*> s_AllComponents = {{ {array_init_list} }};
+    static std::vector<const ComponentWrapperBase*> s_AllComponents = {{ {array_init_list} }};
 
-    const std::vector<ComponentWrapperBase*>& GetAllComponents()
+    const std::vector<const ComponentWrapperBase*>& GetAllComponents()
     {{
         return s_AllComponents;
     }}
@@ -92,6 +92,10 @@ def gen_prop_load(prop):
     return f"""
         component.{prop.name} = node[\"{prop.name}\"].as<{prop.type}>();"""
 
+def gen_prop_duplicate(prop):
+    return f"""
+        dstComp.{prop.name} = srcComp.{prop.name};"""
+
 def gen_comp_name(comp_type, name):
     return f"""
     template<>
@@ -125,6 +129,16 @@ def gen_comp_save(comp_type, save_list, load_list):
     void DeserializeComponent<{comp_type}>(const YAML::Node& node, Entity& e)
     {{
         {comp_type}& component = e.AddComponent<{comp_type}>();{load_list}
+    }}"""
+
+def gen_comp_duplicate(comp_type, duplicate_list):
+    return f"""
+    template<>
+    void DuplicateComponent<{comp_type}>(Entity& dst, const Entity& src)
+    {{
+        const {comp_type}& srcComp = src.GetComponent<{comp_type}>();
+        {comp_type}& dstComp = dst.AddComponent<{comp_type}>();
+        {duplicate_list}
     }}"""
 
 def gen_script_file_data(include_list, lambda_list, names_list):
@@ -172,6 +186,7 @@ def gen_comp_file(comp):
     draw_list = ""
     save_list = ""
     load_list = ""
+    duplicate_list = ""
     for prop in comp.props:
         if "draw" in prop.flags:
             draw_list += gen_prop_draw(prop)
@@ -180,8 +195,11 @@ def gen_comp_file(comp):
             save_list += gen_prop_save(prop)
             load_list += gen_prop_load(prop)
 
+        duplicate_list += gen_prop_duplicate(prop)
+
     comp_file += '\n' + gen_comp_draw(comp.name, draw_list)
     comp_file += '\n' + gen_comp_save(comp.name, save_list, load_list)
+    comp_file += '\n' + gen_comp_duplicate(comp.name, duplicate_list)
 
     comp_file += '\n}'
     return comp_file
@@ -193,7 +211,7 @@ def gen_main_file(comp_list):
     for i, comp in enumerate(comp_list):
         include_list += f"#include \"Engine/ECS/Components/{comp.name}.h\"\n"
         init_list += f"""
-    static ComponentWrapper<{comp.name}> {lower_name(comp.name)};"""
+    static const ComponentWrapper<{comp.name}> {lower_name(comp.name)};"""
         if (i != 0):
             array_init_list += ", "
         array_init_list += '&'+ lower_name(comp.name)

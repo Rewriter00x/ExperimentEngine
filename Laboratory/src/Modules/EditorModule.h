@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "ExperimentEngine.h"
 #include "Panels/OutlinerPanel.h"
@@ -9,6 +9,11 @@
 
 namespace Exp
 {
+    enum class WorldState : uint8
+    {
+        Edit, Play, Simulate
+    };
+
     class EditorModule : public Module
     {
     public:
@@ -25,6 +30,14 @@ namespace Exp
         void OpenWorld(const std::filesystem::path& path);
         void SaveWorld();
         void SaveWorldAs();
+        
+        void WorldPlayStart();
+        void WorldSimStart();
+        void WorldPause();
+        void WorldUnpause();
+        void WorldEnd();
+        
+        void RenderToolbar();
 
         bool OnKeyPressed(const KeyPressedEvent& e);
         
@@ -36,8 +49,14 @@ namespace Exp
         ContentBrowserPanel m_EngineContentBrowser;
         ContentBrowserPanel m_EditorContentBrowser;
 
-        Shared<World> m_ActiveWorld;
+        Shared<World> m_ActiveWorld, m_EditorWorld;
         std::filesystem::path m_ActiveWorldPath;
+        
+        Shared<Texture> m_PlayIcon, m_SimIcon,
+            m_PlayPauseIcon, m_SimPauseIcon, m_StopIcon;
+        
+        WorldState m_WorldState = WorldState::Edit;
+        bool m_WorldPaused = false;
 
         bool m_ViewportHovered = false;
         bool m_ViewportFocused = false;
