@@ -33,9 +33,9 @@ namespace Exp
         virtual void Deserialize(const YAML::Node& node, Entity& e) const = 0;
 
         virtual void AddTo(Entity& e) const = 0;
+        virtual void Duplicate(Entity& dst, const Entity& src) const = 0;
         virtual bool ContainedBy(const Entity& e) const = 0;
         virtual void RemoveFrom(Entity& e) const = 0;
-        virtual void Duplicate(Entity& dst, const Entity& src) const = 0;
     };
 
     template<typename T>
@@ -47,9 +47,9 @@ namespace Exp
         virtual void Deserialize(const YAML::Node& node, Entity& e) const override { DeserializeComponent<T>(node, e); }
 
         virtual void AddTo(Entity& e) const override { e.AddComponent<T>(); }
+        virtual void Duplicate(Entity& dst, const Entity& src) const override { DuplicateComponent<T>(dst, src); }
         virtual bool ContainedBy(const Entity& e) const override { return e.HasComponent<T>(); }
         virtual void RemoveFrom(Entity& e) const override { e.RemoveComponent<T>(); }
-        virtual void Duplicate(Entity& dst, const Entity& src) const override { DuplicateComponent<T>(dst, src); }
     };
 
     const std::vector<const ComponentWrapperBase*>& GetAllComponents();
