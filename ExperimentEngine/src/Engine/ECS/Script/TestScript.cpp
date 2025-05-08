@@ -1,4 +1,4 @@
-﻿#include "exppch.h"
+#include "exppch.h"
 #include "TestScript.h"
 
 namespace Exp
@@ -22,7 +22,7 @@ namespace Exp
         NativeScript::OnUpdate(deltaSeconds);
 
         glm::vec3 Rot = GetEntity().GetRotation();
-        Rot += glm::vec3 { 0.f, 0.f, 45.f } * deltaSeconds;
+        Rot += glm::vec3 { 0.f, 0.f, RotationPerSec } * deltaSeconds;
         GetEntity().SetRotation(Rot);
     }
 }

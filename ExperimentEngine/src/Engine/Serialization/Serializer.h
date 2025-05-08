@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 namespace YAML
 {
@@ -7,7 +7,7 @@ namespace YAML
 
 namespace Exp
 {
-    struct ScriptName;
+    struct ScriptInfo;
 }
 
 namespace Exp
@@ -21,6 +21,6 @@ namespace Exp
         YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec3& v);
         YAML::Emitter& operator<<(YAML::Emitter& out, const glm::vec4& v);
         YAML::Emitter& operator<<(YAML::Emitter& out, const Shared<Texture>& t);
-        YAML::Emitter& operator<<(YAML::Emitter& out, const ScriptName& s);
+        YAML::Emitter& operator<<(YAML::Emitter& out, const ScriptInfo& s);
     }
 }

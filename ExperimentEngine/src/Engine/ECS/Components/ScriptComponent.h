@@ -1,7 +1,7 @@
-﻿#pragma once
+#pragma once
 
 #include "Engine/ECS/Script/NativeScript.h"
-#include "Engine/ECS/Script/ScriptName.h"
+#include "Engine/ECS/Script/ScriptInfo.h"
 #include "Engine/ECS/Script/ScriptUtils.h"
 
 namespace Exp
@@ -10,7 +10,7 @@ namespace Exp
     struct ScriptComponent
     {
         //p draw, save
-        ScriptName SelectedScript;
+        ScriptInfo SelectedScript;
         
         NativeScript* Script = nullptr;
 
@@ -20,7 +20,8 @@ namespace Exp
         {
             EXP_ASSERT(!Script);
 
-            Script = CreateScriptByName(SelectedScript, entityID, world);
+            Script = CreateScriptByName(SelectedScript.Name, entityID, world);
+            SelectedScript.Properties->InitScript(Script);
             Script->Start();
         }
 

@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "NativeScript.h"
 
@@ -14,6 +14,9 @@ namespace Exp
         virtual void Start() override;
         virtual void End() override;
         virtual void OnUpdate(float deltaSeconds) override;
+        
+        //p draw, save
+        float RotationPerSec = 45.f;
     
     };
 }

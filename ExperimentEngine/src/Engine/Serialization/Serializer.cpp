@@ -1,4 +1,4 @@
-﻿#include "exppch.h"
+#include "exppch.h"
 #include "Serializer.h"
 
 #include "Engine/Render/RenderData/Texture.h"
@@ -124,9 +124,13 @@ namespace Exp::Serializer
         return out;
     }
 
-    YAML::Emitter& operator<<(YAML::Emitter& out, const ScriptName& s)
+    YAML::Emitter& operator<<(YAML::Emitter& out, const ScriptInfo& s)
     {
-        out << s.Name;
+        out << YAML::BeginMap;
+        out << YAML::Key << "Name" << YAML::Value << s.Name;
+        out << YAML::Key << "Properties" << YAML::Value;
+        s.Properties->Serialize(out);
+        out << YAML::EndMap;
         return out;
     }
 }

@@ -1,9 +1,10 @@
-﻿#pragma once
+#pragma once
 
 #include "yaml-cpp/yaml.h"
 
 #include "Engine/Render/RenderData/Texture.h"
-#include "Engine/ECS/Script/ScriptName.h"
+#include "Engine/ECS/Script/ScriptInfo.h"
+#include "Engine/ECS/Script/ScriptUtils.h"
 
 namespace YAML
 {
@@ -70,14 +71,16 @@ namespace YAML
     };
     
     template<>
-    struct convert<Exp::ScriptName>
+    struct convert<Exp::ScriptInfo>
     {
-        static bool decode(const Node& node, Exp::ScriptName& rhs)
+        static bool decode(const Node& node, Exp::ScriptInfo& rhs)
         {
-            if (node.IsSequence())
+            if (!node.IsMap())
                 return false;
 
-            rhs.Name = node.as<std::string>();
+            rhs.Name = node["Name"].as<std::string>();
+            rhs.Properties = Exp::CreateScriptPropertiesByName(rhs.Name);
+            rhs.Properties->Deserialize(node["Properties"]);
             return true;
         }
     };

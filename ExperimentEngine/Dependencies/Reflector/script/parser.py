@@ -12,7 +12,7 @@ def parse_script(line):
 
     parts = line.split()
 
-    return Script(name=parts[1])
+    return Script(name=parts[1], props=[])
 
 def parse_prop_def(line):
     line = line.strip()
@@ -33,7 +33,11 @@ def parse_prop(line):
 
     eq_pos = line.find('=')
 
+    def_val = None
+
     if eq_pos != -1:
+        def_val = line[eq_pos + 1:].strip()
+        def_val = def_val[:-1]
         line = line[:eq_pos].strip()
 
     parts = line.split()
@@ -43,7 +47,7 @@ def parse_prop(line):
         name = name[:-1]
 
     if len(parts) >= 2:
-        return Property(name=name, type=parts[0], flags=[])
+        return Property(name=name, type=parts[0], default_value=def_val, flags=[])
 
     return None
 
@@ -79,6 +83,7 @@ def parse_component_file(file):
 
 def parse_script_file(file):
     scripts = []
+    script = None
     try:
         with open(file) as file:
             iterator = iter(file)
@@ -86,11 +91,23 @@ def parse_script_file(file):
 
             while line is not None:
                 if "//sc" in line:
+                    if script is not None:
+                        scripts.append(script)
                     line = next(iterator, None)
-                    scripts.append(parse_script(line))
+                    script = parse_script(line)
+                elif "//p" in line:
+                    flags = parse_prop_def(line)
+                    line = next(iterator, None)
+                    prop = parse_prop(line)
+                    prop = prop._replace(flags=flags)
+                    props = script.props + [prop]
+                    script = script._replace(props=props)
                 line = next(iterator, None)
 
     except Exception as e:
         print(e)
+
+    if script is not None:
+        scripts.append(script)
         
     return scripts

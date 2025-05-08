@@ -3,7 +3,8 @@ from pathlib import Path
 
 from data_types import *
 from parser import *
-from generator import *
+from component_generator import *
+from script_generator import *
 
 def main():
     directory = Path("../../../src/Engine/ECS/Components")
