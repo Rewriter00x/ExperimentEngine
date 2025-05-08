@@ -1,5 +1,11 @@
 #pragma once
 
+namespace YAML
+{
+    class Emitter;
+    class Node;
+}
+
 namespace Exp
 {
     class NativeScript;
