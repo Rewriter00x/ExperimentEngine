@@ -57,6 +57,11 @@ project "Reflector"
         "../../../ExperimentEngine/src/exppch.cpp",
     }
 
+    defines
+    {
+        "YAML_CPP_STATIC_DEFINE",
+    }
+
     filter "system:windows"
 		defines "EXP_WINDOWS"
 		systemversion "latest"
