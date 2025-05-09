@@ -22,9 +22,13 @@ def parse_prop_def(line):
 
     parts = line.split(',')
 
-    flags = []
+    flags = {}
     for part in parts:
-        flags.append(part.strip())
+        val = None
+        eq_split = part.split('=')
+        if len(eq_split) > 1:
+            val = eq_split[1].strip()
+        flags[eq_split[0].strip()] = val
 
     return flags
 

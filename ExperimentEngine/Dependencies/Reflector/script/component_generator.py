@@ -37,21 +37,26 @@ namespace Exp
 {{"""
 
 def gen_prop_draw(prop):
+    onEdit = prop.flags.get("onEdit", "")
+    if len(onEdit) > 0:
+        onEdit += "();"
+        onEdit = "component." + onEdit
+
     if prop.type == "float":
         return f"""
-        ImGui::DragFloat(\"{split_name(prop.name)}\", &component.{prop.name});"""
+        if (ImGui::DragFloat(\"{split_name(prop.name)}\", &component.{prop.name})) {{ {onEdit} }}"""
     elif prop.type == "glm::vec3":
         return f"""
-        ImGui::DragFloat3(\"{split_name(prop.name)}\", glm::value_ptr(component.{prop.name}));"""
+        if (ImGui::DragFloat3(\"{split_name(prop.name)}\", glm::value_ptr(component.{prop.name}))) {{ {onEdit} }}"""
     elif prop.type == "glm::vec4":
         return f"""
-        ImGui::ColorEdit4(\"{split_name(prop.name)}\", glm::value_ptr(component.{prop.name}));"""
+        if (ImGui::ColorEdit4(\"{split_name(prop.name)}\", glm::value_ptr(component.{prop.name}))) {{ {onEdit} }}"""
     elif prop.type == "Shared<Texture>":
         return f"""
-        ImGui::Button(\"{prop.name}\");"""
+        if (ImGui::Button(\"{prop.name}\")) {{ {onEdit} }}"""
     elif prop.type == "std::string":
         return f"""
-        ImGui::InputText("{prop.name}", component.{prop.name}.data(), component.{prop.name}.capacity() + 1, ImGuiInputTextFlags_CallbackResize, ExpImGui::InputTextCallback, &component.{prop.name});"""
+        if (ImGui::InputText("{prop.name}", component.{prop.name}.data(), component.{prop.name}.capacity() + 1, ImGuiInputTextFlags_CallbackResize, ExpImGui::InputTextCallback, &component.{prop.name})) {{ {onEdit} }}"""
     elif prop.type == "ScriptInfo":
         return f"""
         {{
@@ -70,6 +75,7 @@ def gen_prop_draw(prop):
             {{
                 component.{prop.name}.Name = scriptNames[selected];
                 component.{prop.name}.Properties = CreateScriptPropertiesByName(scriptNames[selected]);
+                {onEdit}
             }}
         }}"""
     else:
