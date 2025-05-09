@@ -30,12 +30,24 @@ namespace Exp
     
     NativeScript* CreateScriptByName(const std::string& name, Entity_ID entityID, World* world)
     {{
-        return s_NameToCreateMap.at(name)(entityID, world);
+        auto it = s_NameToCreateMap.find(name);
+        if (it != s_NameToCreateMap.end())
+        {{
+            return it->second(entityID, world);
+        }}
+        EXP_LOG(Warning, "Attempt to create non-existing script %s", name.c_str());
+        return s_NameToCreateMap.at("None")(entityID, world);
     }}
 
     Unique<ScriptPropertiesBase> CreateScriptPropertiesByName(const std::string& name)
     {{
-        return s_NameToPropsMap.at(name)();
+        auto it = s_NameToPropsMap.find(name);
+        if (it != s_NameToPropsMap.end())
+        {{
+            return it->second();
+        }}
+        EXP_LOG(Warning, "Attempt to create non-existing script properties %s", name.c_str());
+        return s_NameToPropsMap.at("None")();
     }}
 
     const std::vector<std::string>& GetAllScriptNames()

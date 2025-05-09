@@ -1,18 +1,28 @@
 World: New World
 Entities:
   - UUID: 14988404776659194406
-    Name: New Entity
+    Name: Red
     Position: [0, 0, 0]
     Rotation: [0, 0, 0]
     Scale: [1, 1, 1]
     Sprite Component:
       Color: [1, 0, 0, 1]
       SpriteTexture: ""
+    Script Component:
+      SelectedScript:
+        Name: Test Script
+        Properties:
+          RotationPerSec: 90
   - UUID: 9843614674877756023
-    Name: New Entity
+    Name: Green
     Position: [5, 5, -5]
     Rotation: [45, 45, 45]
     Scale: [3, 3, 3]
     Sprite Component:
       Color: [0, 1, 0, 1]
       SpriteTexture: ExperimentEngine/Resources/Textures/Checkerboard.png
+    Script Component:
+      SelectedScript:
+        Name: Test Script
+        Properties:
+          RotationPerSec: -45

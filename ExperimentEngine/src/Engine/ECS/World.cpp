@@ -5,10 +5,13 @@
 #include "Components/SpriteComponent.h"
 #include "Engine/Render/Renderer.h"
 
+#include "ComponentRegistry.h"
+
 namespace Exp
 {
     World::World(const std::string& name)
         : m_Name(name.empty() ? "New World" : name)
+        , m_Registry(MakeUnique<ComponentRegistry>())
     {
     }
 
@@ -17,7 +20,16 @@ namespace Exp
         Shared<World> Res = MakeShared<World>("PIE " + m_Name);
         for (const Entity& entity : m_Entities)
         {
-            Entity& NewEntity = Res->CreateEntity(entity.GetName(), entity.GetUUID());
+            EntityParams params;
+            
+            params.UUID = entity.GetUUID();
+            params.Name = entity.GetName();
+            
+            params.Position = entity.GetPosition();
+            params.Rotation = entity.GetRotation();
+            params.Scale = entity.GetScale();
+            
+            Entity& NewEntity = Res->CreateEntity(params);
             for (const ComponentWrapperBase* component : GetAllComponents())
             {
                 if (component->ContainedBy(entity))
@@ -31,7 +43,7 @@ namespace Exp
 
     Entity& World::CreateEntity(const std::string& name, UUID uuid)
     {
-        const Entity_ID id = m_Registry.NewEntity();
+        const Entity_ID id = m_Registry->NewEntity();
         EntityParams params;
         params.RegistryID = id;
         params.World = this;
@@ -39,6 +51,16 @@ namespace Exp
         params.Name = name.empty() ? "New Entity" : name;
         entityToIndex[id] = m_Entities.size();
         return m_Entities.emplace_back(params);
+    }
+
+    Entity& World::CreateEntity(const EntityParams& params)
+    {
+        EntityParams newParams = params;
+        const Entity_ID id = m_Registry->NewEntity();
+        newParams.RegistryID = id;
+        newParams.World = this;
+        entityToIndex[id] = m_Entities.size();
+        return m_Entities.emplace_back(newParams);
     }
 
     void World::DestroyEntity(const Entity& entity)
@@ -60,25 +82,21 @@ namespace Exp
             }
         }
         
-        m_Registry.DeleteEntity(destroyID);
+        m_Registry->DeleteEntity(destroyID);
         m_Entities.pop_back();
     }
 
     void World::Start()
     {
-        for (Entity& entity : m_Entities)
+        for (ScriptComponent& sc : m_Registry->GetComponents<ScriptComponent>())
         {
-            if (entity.HasComponent<ScriptComponent>())
-            {
-                ScriptComponent& sc = entity.GetComponent<ScriptComponent>();
-                sc.Create(entity.GetID(), this);
-            }
+            sc.Create();
         }
     }
 
     void World::End()
     {
-        for (ScriptComponent& sc : m_Registry.GetComponents<ScriptComponent>())
+        for (ScriptComponent& sc : m_Registry->GetComponents<ScriptComponent>())
         {
             sc.Destroy();
         }
@@ -86,7 +104,7 @@ namespace Exp
 
     void World::OnUpdate(float deltaSeconds)
     {
-        for (ScriptComponent& sc : m_Registry.GetComponents<ScriptComponent>())
+        for (ScriptComponent& sc : m_Registry->GetComponents<ScriptComponent>())
         {
             sc.Update(deltaSeconds);
         }
@@ -96,13 +114,9 @@ namespace Exp
 
     void World::RenderScene() const
     {
-        for (const Entity& entity : m_Entities)
+        for (const SpriteComponent& sc : m_Registry->GetComponents<SpriteComponent>())
         {
-            if (entity.HasComponent<SpriteComponent>())
-            {
-                const SpriteComponent& sc = entity.GetComponent<SpriteComponent>();
-                Renderer::DrawQuad({ entity.GetTransform(), sc.Color, sc.SpriteTexture });
-            }
+            Renderer::DrawQuad({ sc.GetEntity().GetTransform(), sc.Color, sc.SpriteTexture });
         }
     }
 }

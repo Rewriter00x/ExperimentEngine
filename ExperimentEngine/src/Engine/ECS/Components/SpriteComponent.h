@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 namespace Exp
 {
@@ -8,7 +8,7 @@ namespace Exp
 namespace Exp
 {
     //c
-    struct SpriteComponent
+    struct SpriteComponent : public ComponentBase
     {
         //p draw, save
         glm::vec4 Color = glm::vec4(1.f);

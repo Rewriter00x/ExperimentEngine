@@ -82,32 +82,32 @@ namespace Exp
     T& Entity::AddComponent(Args&&... args)
     {
         EXP_ASSERT_MSG(!HasComponent<T>(), "Entity already has component!");
-        return m_World->m_Registry.AddComponent<T>(m_RegistryID, std::forward<Args>(args)...);
+        return m_World->m_Registry->AddComponent<T>(m_RegistryID, m_World, std::forward<Args>(args)...);
     }
 
     template <typename T>
     T& Entity::GetComponent()
     {
         EXP_ASSERT_MSG(HasComponent<T>(), "Entity does not have component component!");
-        return m_World->m_Registry.GetComponent<T>(m_RegistryID);
+        return m_World->m_Registry->GetComponent<T>(m_RegistryID);
     }
 
     template <typename T>
     const T& Entity::GetComponent() const
     {
         EXP_ASSERT_MSG(HasComponent<T>(), "Entity does not have component component!");
-        return m_World->m_Registry.GetComponent<T>(m_RegistryID);
+        return m_World->m_Registry->GetComponent<T>(m_RegistryID);
     }
 
     template <typename T>
     bool Entity::HasComponent() const
     {
-        return m_World->m_Registry.HasComponent<T>(m_RegistryID);
+        return m_World->m_Registry->HasComponent<T>(m_RegistryID);
     }
 
     template <typename T>
     void Entity::RemoveComponent() const
     {
-        m_World->m_Registry.RemoveComponent<T>(m_RegistryID);
+        m_World->m_Registry->RemoveComponent<T>(m_RegistryID);
     }
 }

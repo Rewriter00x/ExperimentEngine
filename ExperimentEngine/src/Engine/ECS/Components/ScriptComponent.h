@@ -7,7 +7,7 @@
 namespace Exp
 {
     //c
-    struct ScriptComponent
+    struct ScriptComponent : public ComponentBase
     {
         //p draw, save
         ScriptInfo SelectedScript;
@@ -16,11 +16,11 @@ namespace Exp
 
         ScriptComponent() = default;
 
-        void Create(Entity_ID entityID, World* world)
+        void Create()
         {
             EXP_ASSERT(!Script);
 
-            Script = CreateScriptByName(SelectedScript.Name, entityID, world);
+            Script = CreateScriptByName(SelectedScript.Name, GetEntity().GetID(), &GetWorld());
             SelectedScript.Properties->InitScript(Script);
             Script->Start();
         }

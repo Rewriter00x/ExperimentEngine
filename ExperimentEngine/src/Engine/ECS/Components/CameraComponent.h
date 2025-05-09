@@ -1,9 +1,11 @@
 #pragma once
 
+#include "Engine/Render/Camera.h"
+
 namespace Exp
 {
     //c
-    struct CameraComponent
+    struct CameraComponent : public ComponentBase
     {
         glm::mat4 Projection = glm::mat4(1.f);
         
@@ -23,6 +25,9 @@ namespace Exp
         CameraComponent(float fov, float aspectRatio, float near, float far);
         
         inline const glm::mat4& GetProjection() const { return Projection; }
+        inline glm::mat4 GetView() const { return glm::inverse(GetEntity().GetTransform()); }
+        
+        inline Camera GetCamera() const { return Camera(Projection, GetView()); }
         
         inline void SetAspectRatio(float aspectRatio) { AspectRatio = aspectRatio; RecalculateProjection(); }
         

@@ -1,10 +1,10 @@
 #pragma once
 
-#include "ComponentRegistry.h"
-
 namespace Exp
 {
     class Entity;
+    class ComponentRegistry;
+    struct EntityParams;
 }
 
 namespace Exp
@@ -17,6 +17,7 @@ namespace Exp
         Shared<World> Duplicate() const;
         
         Entity& CreateEntity(const std::string& name = "", UUID uuid = UUID());
+        Entity& CreateEntity(const EntityParams& params);
         void DestroyEntity(const Entity& entity);
 
         inline Entity& GetEntity(Entity_ID id) { return m_Entities[entityToIndex.at(id)]; }
@@ -40,7 +41,7 @@ namespace Exp
         
         std::vector<Entity> m_Entities;
         std::unordered_map<Entity_ID, size_t> entityToIndex;
-        ComponentRegistry m_Registry;
+        Unique<ComponentRegistry> m_Registry;
 
         friend class Entity;
         

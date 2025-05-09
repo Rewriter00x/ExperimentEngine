@@ -1,10 +1,14 @@
-﻿#pragma once
+#pragma once
+
+#include "Components/ComponentBase.h"
 
 namespace Exp
 {
-    using Entity_ID = size_t;
-    using ComponentType_ID = std::type_index;
-    
+    class World;
+}
+
+namespace Exp
+{
     class ComponentRegistry
     {
     public:
@@ -16,7 +20,7 @@ namespace Exp
         std::vector<Entity_ID> GetAllEntities() const;
     
         template<typename T, typename... Args>
-        T& AddComponent(Entity_ID e, Args&&... args);
+        T& AddComponent(Entity_ID e, World* world, Args&&... args);
 
         template<typename T>
         void RemoveComponent(Entity_ID e);
@@ -73,14 +77,20 @@ namespace Exp
 namespace Exp
 {
     template<typename T, typename... Args>
-    T& ComponentRegistry::AddComponent(Entity_ID e, Args&&... args)
+    T& ComponentRegistry::AddComponent(Entity_ID e, World* world, Args&&... args)
     {
         TypeContainer<T>* container = GetTypeContainer<T>();
         const size_t index = container->data.size();
         container->entityToIndex[e] = index;
         container->data.emplace_back(std::forward<Args>(args)...);
         m_EntityComponents[e].insert(GetComponentTypeID<T>());
-        return container->data[index];
+        T& comp = container->data[index];
+        if constexpr (std::is_base_of<ComponentBase, T>::value)
+        {
+            comp.m_EntityID = e;
+            comp.m_World = world;
+        }
+        return comp;
     }
 
     template <typename T>
