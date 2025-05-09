@@ -9,6 +9,18 @@
 
 namespace Exp
 {
+#if defined(EXP_WINDOWS)
+    static const char* s_NewFileShortcut = "Ctrl+N";
+    static const char* s_OpenFileShortcut = "Ctrl+O";
+    static const char* s_SaveFileShortcut = "Ctrl+S";
+    static const char* s_SaveAsFileShortcut = "Ctrl+Shift+S";
+#elif defined(EXP_MACOS)
+    static const char* s_NewFileShortcut = "Cmd+N";
+    static const char* s_OpenFileShortcut = "Cmd+O";
+    static const char* s_SaveFileShortcut = "Cmd+S";
+    static const char* s_SaveAsFileShortcut = "Cmd+Shift+S";
+#endif
+
     EditorModule::EditorModule()
         : m_EngineContentBrowser("Engine Resources", g_EngineResourcesDirectory)
         , m_EditorContentBrowser("Editor Resources", g_EditorResourcesDirectory)
@@ -40,6 +52,11 @@ namespace Exp
             const std::string imguiDefaultPath = (g_EditorResourcesDirectory / "Ini" / "imgui_default.ini").string();
             ImGui::LoadIniSettingsFromDisk(imguiDefaultPath.c_str());
         }
+#if defined(EXP_WINDOWS)
+
+#elif defined(EXP_MACOS)
+
+#endif
     }
 
     void EditorModule::OnUpdate(float deltaSeconds)
@@ -108,22 +125,22 @@ namespace Exp
         {
             if (ImGui::BeginMenu("File"))
             {
-                if (ImGui::MenuItem("New", "Ctrl+N"))
+                if (ImGui::MenuItem("New", s_NewFileShortcut))
                 {
                     NewWorld();
                 }
 
-                if (ImGui::MenuItem("Open", "Ctrl+O"))
+                if (ImGui::MenuItem("Open", s_OpenFileShortcut))
                 {
                     OpenWorld();
                 }
                 
-                if (ImGui::MenuItem("Save", "Ctrl+S"))
+                if (ImGui::MenuItem("Save", s_SaveFileShortcut))
                 {
                     SaveWorld();
                 }
 
-                if (ImGui::MenuItem("Save As", "Ctrl+Shift+S"))
+                if (ImGui::MenuItem("Save As", s_SaveAsFileShortcut))
                 {
                     SaveWorldAs();
                 }
@@ -341,7 +358,12 @@ namespace Exp
 
     bool EditorModule::OnKeyPressed(const KeyPressedEvent& e)
     {
+#if defined(EXP_WINDOWS)
         const bool control = Input::IsKeyPressed(KeyCode::LeftControl) || Input::IsKeyPressed(KeyCode::RightControl);
+#elif defined(EXP_MACOS)
+        const bool control = Input::IsKeyPressed(KeyCode::LeftSuper) || Input::IsKeyPressed(KeyCode::RightSuper);
+#endif
+        
         const bool shift = Input::IsKeyPressed(KeyCode::LeftShift) || Input::IsKeyPressed(KeyCode::RightShift);
         
         switch (e.GetKeyCode())
