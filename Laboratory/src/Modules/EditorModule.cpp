@@ -52,11 +52,6 @@ namespace Exp
             const std::string imguiDefaultPath = (g_EditorResourcesDirectory / "Ini" / "imgui_default.ini").string();
             ImGui::LoadIniSettingsFromDisk(imguiDefaultPath.c_str());
         }
-#if defined(EXP_WINDOWS)
-
-#elif defined(EXP_MACOS)
-
-#endif
     }
 
     void EditorModule::OnUpdate(float deltaSeconds)
