@@ -56,7 +56,11 @@ namespace Exp
 
     void EditorModule::OnUpdate(float deltaSeconds)
     {
+#if defined(EXP_WINDOWS)
         const bool control = Input::IsKeyPressed(KeyCode::LeftControl) || Input::IsKeyPressed(KeyCode::RightControl);
+#elif defined(EXP_MACOS)
+        const bool control = Input::IsKeyPressed(KeyCode::LeftSuper) || Input::IsKeyPressed(KeyCode::RightSuper);
+#endif
         m_EditorCamera.SetShouldCaptureKey(m_ViewportFocused && !control);
         m_EditorCamera.SetShouldCaptureMouse(m_ViewportHovered);
         
