@@ -179,6 +179,7 @@ namespace Exp
         m_Outliner.OnImGuiRender();
         m_EngineContentBrowser.OnImGuiRender();
         m_EditorContentBrowser.OnImGuiRender();
+        m_ConfigPanel.OnImGuirender();
     }
 
     void EditorModule::OnNewWorld(const Shared<World>& world)

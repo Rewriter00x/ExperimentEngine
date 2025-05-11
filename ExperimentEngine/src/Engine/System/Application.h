@@ -23,6 +23,9 @@ namespace Exp
 		
 		inline const ModuleManager& GetModuleManager() const { return m_ModuleManager; }
 		inline ModuleManager& GetModuleManager() { return m_ModuleManager; }
+        
+        inline const ConfigManager& GetConfigManager() const { return m_ConfigManager; }
+        inline ConfigManager& GetConfigManager() { return m_ConfigManager; }
 
 		inline static Application& Get() { return *s_Instance; }
 
@@ -38,6 +41,7 @@ namespace Exp
 		inline static Application* s_Instance = nullptr;
 
 		ModuleManager m_ModuleManager;
+        ConfigManager m_ConfigManager;
 
 		EventDispatcher m_EventDispatcher;
 

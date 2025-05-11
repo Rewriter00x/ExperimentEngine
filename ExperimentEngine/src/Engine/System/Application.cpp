@@ -7,6 +7,8 @@
 #include "Platform/PlatformDependenciesInitializer.h"
 #include "Platform/PlatformUtils.h"
 
+#include "Config/DefaultConfig.h"
+
 namespace Exp
 {
 	static bool DispatchEventForObject(const Event& e, const void* obj, const std::unordered_map<const void*, EventDispatcher::EventFn>* map)
@@ -34,6 +36,8 @@ namespace Exp
 		ExpImGui::Init();
 
 		m_LastFrameTime = PlatformUtils::GetTime();
+        
+        m_ConfigManager.AddConfig<DefaultConfig>("ExperimentEngine/Resources/Ini/DefaultConfig.expi");
 
 		ADD_EVENT_LISTENER(this, WindowClose, OnWindowClosed);
 		ADD_EVENT_LISTENER(this, WindowResize, OnWindowResized);

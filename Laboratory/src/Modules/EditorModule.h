@@ -1,8 +1,10 @@
 #pragma once
 
 #include "ExperimentEngine.h"
+
 #include "Panels/OutlinerPanel.h"
 #include "Panels/ContentBrowserPanel.h"
+#include "Panels/ConfigPanel.h"
 
 #include "Engine/Render/EditorCamera.h"
 #include "Engine/Render/RenderData/Framebuffer.h"
@@ -48,6 +50,7 @@ namespace Exp
         OutlinerPanel m_Outliner;
         ContentBrowserPanel m_EngineContentBrowser;
         ContentBrowserPanel m_EditorContentBrowser;
+        ConfigPanel m_ConfigPanel;
 
         Shared<World> m_ActiveWorld, m_EditorWorld;
         std::filesystem::path m_ActiveWorldPath;
