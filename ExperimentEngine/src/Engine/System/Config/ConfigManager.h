@@ -21,10 +21,10 @@ namespace Exp
         }
         
         template<typename T>
-        T& GetConfig() { return *m_TypeToConfig.at(typeid(T)).Config.get(); }
+        T& GetConfig() { return * (T*) m_TypeToConfig.at(typeid(T)).Config.get(); }
         
         template<typename T>
-        const T& GetConfig() const { return *m_TypeToConfig.at(typeid(T)).Config.get(); }
+        const T& GetConfig() const { return * (T*) m_TypeToConfig.at(typeid(T)).Config.get(); }
         
         template<typename T>
         void SaveConfig() const { SaveConfig(typeid(T)); }
