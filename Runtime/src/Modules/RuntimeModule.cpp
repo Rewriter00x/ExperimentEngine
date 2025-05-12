@@ -12,7 +12,7 @@ namespace Exp
         
         m_ActiveWorld = MakeShared<World>();
         
-        if (std::filesystem::exists(defaultWorldPath))
+        if (!defaultWorldPath.empty())
         {
             Serializer::Deserialize(m_ActiveWorld, defaultWorldPath);
         }

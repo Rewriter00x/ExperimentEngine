@@ -53,7 +53,41 @@ def gen_prop_draw(prop):
         if (ImGui::ColorEdit4(\"{split_name(prop.name)}\", glm::value_ptr(component.{prop.name}))) {{ {onEdit} }}"""
     elif prop.type == "Shared<Texture>":
         return f"""
-        if (ImGui::Button(\"{prop.name}\")) {{ {onEdit} }}"""
+        {{
+            const std::string fullPathString = component.{prop.name} ? component.{prop.name}->GetFilepath() : \"\";
+            const std::string pathString = fullPathString.empty() ? "" : std::filesystem::relative(fullPathString, g_RootDirectory).generic_string();
+            std::string path = pathString;
+            ImGui::InputText(\"{split_name(prop.name)}\", path.data(), path.capacity() + 1, ImGuiInputTextFlags_ReadOnly);
+        
+            if (ImGui::BeginDragDropTarget())
+            {{
+                if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(ExpImGui::g_ImGuiContent_TextureFile))
+                {{
+                    const char* pathData = static_cast<const char*>(payload->Data);
+                    std::filesystem::path acceptedPath(pathData);
+                    path = std::filesystem::relative(acceptedPath, g_RootDirectory).generic_string();
+                }}
+                ImGui::EndDragDropTarget();
+            }}
+        
+            if (ImGui::Button("Reset"))
+            {{
+                path = "";
+            }}
+        
+            if (path != pathString)
+            {{
+                if (path.empty())
+                {{
+                    component.{prop.name} = nullptr;
+                }}
+                else
+                {{
+                    component.{prop.name} = AssetManager::GetTexture(g_RootDirectory / path);
+                }}
+                {onEdit}
+            }}
+        }}"""
     elif prop.type == "std::string":
         return f"""
         if (ImGui::InputText("{prop.name}", component.{prop.name}.data(), component.{prop.name}.capacity() + 1, ImGuiInputTextFlags_CallbackResize, ExpImGui::InputTextCallback, &component.{prop.name})) {{ {onEdit} }}"""

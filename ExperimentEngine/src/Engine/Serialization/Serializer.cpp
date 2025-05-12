@@ -51,10 +51,12 @@ namespace Exp::Serializer
 
     bool Deserialize(Shared<World>& world, const std::filesystem::path& path)
     {
+        std::filesystem::path absolutePath = path.is_absolute() ? path : g_RootDirectory / path;
+		
         YAML::Node data;
         try
         {
-            data = YAML::LoadFile(path.string());
+            data = YAML::LoadFile(absolutePath.string());
         }
         catch (const YAML::ParserException& e)
         {

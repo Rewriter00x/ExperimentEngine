@@ -9,6 +9,11 @@
 
 namespace Exp::ExpImGui
 {
+	const char* g_ImGuiContent_SomeFile = "IMGUI_CONTENT_SOMEFILE";
+	const char* g_ImGuiContent_IniFile = "IMGUI_CONTENT_INIFILE";
+	const char* g_ImGuiContent_WorldFile = "IMGUI_CONTENT_WORLDFILE";
+	const char* g_ImGuiContent_TextureFile = "IMGUI_CONTENT_TEXTUREFILE";
+
 	static std::string s_IniPathString;
 	
 	void Init()
@@ -116,4 +121,25 @@ namespace Exp::ExpImGui
 		}
 		return 0;
 	}
+
+	const char* GetImGuiContentType(const std::filesystem::path& filepath)
+	{
+		const std::string extension = filepath.extension().string();
+		if (extension == ".expw")
+		{
+			return g_ImGuiContent_WorldFile;
+		}
+		if (extension == ".expi")
+		{
+			return g_ImGuiContent_IniFile;
+		}
+		if (extension == ".png" || extension == ".jpg" || extension == ".jpeg")
+		{
+			return g_ImGuiContent_TextureFile;
+		}
+		
+		const std::string fileString = filepath.string();
+		EXP_LOG(Warning, "Returning ImGuiContent_SomeFile for %s", fileString.c_str());
+		return g_ImGuiContent_SomeFile;
+    }
 }

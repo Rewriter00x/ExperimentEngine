@@ -171,6 +171,16 @@ namespace Exp
         const uint32 textureID = m_Framebuffer->GetAttachmentRendererID(0);
         ImGui::Image(textureID, viewportPanelSize, { 0.f, 1.f }, { 1.f, 0.f });
         
+        if (ImGui::BeginDragDropTarget())
+        {
+            if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(ExpImGui::g_ImGuiContent_WorldFile))
+            {
+                const char* pathData = static_cast<const char*>(payload->Data);
+                OpenWorld(pathData);
+            }
+            ImGui::EndDragDropTarget();
+        }
+        
         ImGui::End();
         ImGui::PopStyleVar();
         

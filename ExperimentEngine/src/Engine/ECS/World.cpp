@@ -88,6 +88,7 @@ namespace Exp
 
     void World::Start()
     {
+        EXP_LOG(Log, "World %s starting", m_Name.c_str());
         for (ScriptComponent& sc : m_Registry->GetComponents<ScriptComponent>())
         {
             sc.Create();
@@ -100,6 +101,7 @@ namespace Exp
         {
             sc.Destroy();
         }
+        EXP_LOG(Log, "World %s ending", m_Name.c_str());
     }
 
     void World::OnUpdate(float deltaSeconds)

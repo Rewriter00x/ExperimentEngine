@@ -6,7 +6,7 @@ namespace Exp
 {
     struct DefaultConfig : public ConfigBase
     {
-        std::filesystem::path DefaultWorldPath = g_RootDirectory;
+        std::filesystem::path DefaultWorldPath;
         
         virtual void Draw() override;
         virtual void Serialize(YAML::Emitter& out) const override;

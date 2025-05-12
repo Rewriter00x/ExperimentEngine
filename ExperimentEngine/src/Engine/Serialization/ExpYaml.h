@@ -64,7 +64,7 @@ namespace YAML
             const std::string path = node.as<std::string>();
             if (!path.empty())
             {
-                rhs = Exp::AssetManager::GetTexture(g_RootDirectory / path);
+                rhs = Exp::AssetManager::GetTexture(path);
             }
             return true;
         }

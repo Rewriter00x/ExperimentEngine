@@ -4,13 +4,16 @@
 #include "stb_image.h"
 #include "Engine/Render/RenderData/Texture.h"
 
-std::filesystem::path g_RootDirectory;
-std::filesystem::path g_OutputDirectory;
-std::filesystem::path g_EngineResourcesDirectory;
-std::filesystem::path g_EditorResourcesDirectory;
-
-std::filesystem::path g_OutputLogDirectory;
-std::filesystem::path g_OutputIniDirectory;
+namespace Exp
+{
+    std::filesystem::path g_RootDirectory;
+    std::filesystem::path g_OutputDirectory;
+    std::filesystem::path g_EngineResourcesDirectory;
+    std::filesystem::path g_EditorResourcesDirectory;
+    
+    std::filesystem::path g_OutputLogDirectory;
+    std::filesystem::path g_OutputIniDirectory;
+}
 
 namespace Exp::AssetManager
 {
@@ -114,26 +117,28 @@ namespace Exp::AssetManager
 
 	const Shared<Texture>& GetTexture(const std::filesystem::path& filepath)
 	{
-		const auto it = s_CachedTextures.find(filepath);
+		const std::filesystem::path absolutePath = filepath.is_absolute() ? filepath : g_RootDirectory / filepath;
+		const auto it = s_CachedTextures.find(absolutePath);
 		if (it != s_CachedTextures.end())
 		{
 			return it->second;
 		}
 
-		s_CachedTextures[filepath] = MakeShared<Texture>(filepath);
-		return s_CachedTextures[filepath];
+		s_CachedTextures[absolutePath] = MakeShared<Texture>(absolutePath);
+		return s_CachedTextures[absolutePath];
 	}
 
 	void FreeTexture(const std::filesystem::path& filepath)
 	{
-		const auto it = s_CachedTextures.find(filepath);
+		const std::filesystem::path absolutePath = filepath.is_absolute() ? filepath : g_RootDirectory / filepath;
+		const auto it = s_CachedTextures.find(absolutePath);
 		if (it != s_CachedTextures.end())
 		{
 			s_CachedTextures.erase(it);
 		}
 		else
 		{
-			EXP_LOG(Warning, "Trying to release unloaded texture %s", filepath.string().c_str());
+			EXP_LOG(Warning, "Trying to release unloaded texture %s", absolutePath.string().c_str());
 		}
 	}
 }

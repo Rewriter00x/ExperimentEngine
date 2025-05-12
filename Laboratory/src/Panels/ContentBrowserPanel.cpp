@@ -1,4 +1,4 @@
-﻿#include "ContentBrowserPanel.h"
+#include "ContentBrowserPanel.h"
 
 #include "imgui.h"
 #include "Engine/ImGui/ExpImGui.h"
@@ -52,6 +52,14 @@ namespace Exp
         {
             const ImTextureID iconID = item.IsDirectory ? m_DirectoryIcon->GetRendererID() : m_FileIcon->GetRendererID();
             ImGui::ImageButton(item.Name.c_str(), iconID, { thumbnailSize, thumbnailSize }, { 0.f, 1.f }, { 1.f, 0.f });
+            
+            if (ImGui::BeginDragDropSource())
+            {
+                const std::filesystem::path path = (m_CurrentDir / item.Name);
+                std::string pathString = path.generic_string();
+                ImGui::SetDragDropPayload(ExpImGui::GetImGuiContentType(path), pathString.c_str(), (pathString.size() + 1) * sizeof(char), ImGuiCond_Once);
+                ImGui::EndDragDropSource();
+            }
 
             if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
             {
