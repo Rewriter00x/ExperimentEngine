@@ -32,7 +32,11 @@ namespace Exp
 		glfwSetWindowUserPointer(m_NativeWindow, this);
 		
 		int32 width, height;
+#if defined(EXP_WINDOWS)
 		glfwGetWindowSize(m_NativeWindow, &width, &height);
+#elif defined(EXP_MACOS)
+		glfwGetFramebufferSize(m_NativeWindow, &width, &height);
+#endif
 		m_WindowProps.Width = width;
 		m_WindowProps.Height = height;
 		Application::Get().DispatchEvent(WindowResizeEvent(width, height));
@@ -74,8 +78,13 @@ namespace Exp
 				const WindowCloseEvent event;
 				Application::Get().DispatchEvent(event);
 			});
-
+		
+		
+#if defined(EXP_WINDOWS)
 		glfwSetWindowSizeCallback(m_NativeWindow, [](GLFWwindow* window, int width, int height)
+#elif defined(EXP_MACOS)
+		glfwSetFramebufferSizeCallback(m_NativeWindow, [](GLFWwindow* window, int width, int height)
+#endif
 			{
 				ExpGLFWWindow* expWindow = static_cast<ExpGLFWWindow*>(glfwGetWindowUserPointer(window));
 				expWindow->m_WindowProps.Width = width;
