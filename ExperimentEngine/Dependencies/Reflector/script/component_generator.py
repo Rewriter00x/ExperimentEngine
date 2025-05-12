@@ -54,7 +54,7 @@ def gen_prop_draw(prop):
     elif prop.type == "Shared<Texture>":
         return f"""
         {{
-            const std::string fullPathString = component.{prop.name} ? component.{prop.name}->GetFilepath() : \"\";
+            const std::string fullPathString = (component.{prop.name} ? component.{prop.name}->GetFilepath() : \"\").generic_string();
             const std::string pathString = fullPathString.empty() ? "" : std::filesystem::relative(fullPathString, g_RootDirectory).generic_string();
             std::string path = pathString;
             ImGui::InputText(\"{split_name(prop.name)}\", path.data(), path.capacity() + 1, ImGuiInputTextFlags_ReadOnly);

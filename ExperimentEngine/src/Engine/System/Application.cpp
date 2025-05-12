@@ -29,6 +29,9 @@ namespace Exp
 		
 		EXP_LOG(Log, "Application init");
 
+		ADD_EVENT_LISTENER(this, WindowClose, OnWindowClosed);
+		ADD_EVENT_LISTENER(this, WindowResize, OnWindowResized);
+
 		WindowProps props;
 		props.Title = name.empty() ? "Experiment Engine" : name;
 		m_Window = Window::Create(props);
@@ -38,9 +41,6 @@ namespace Exp
 		m_LastFrameTime = PlatformUtils::GetTime();
         
         m_ConfigManager.AddConfig<DefaultConfig>("ExperimentEngine/Resources/Ini/DefaultConfig.expi");
-
-		ADD_EVENT_LISTENER(this, WindowClose, OnWindowClosed);
-		ADD_EVENT_LISTENER(this, WindowResize, OnWindowResized);
 	}
 
 	Application::~Application()

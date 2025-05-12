@@ -30,6 +30,12 @@ namespace Exp
 		Renderer::Init();
 
 		glfwSetWindowUserPointer(m_NativeWindow, this);
+		
+		int32 width, height;
+		glfwGetWindowSize(m_NativeWindow, &width, &height);
+		m_WindowProps.Width = width;
+		m_WindowProps.Height = height;
+		Application::Get().DispatchEvent(WindowResizeEvent(width, height));
 
         glfwSwapInterval(1); // enable vsync
 
