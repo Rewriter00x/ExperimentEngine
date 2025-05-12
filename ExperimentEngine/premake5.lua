@@ -79,6 +79,8 @@ project "ExperimentEngine"
 			"cd ../",
 			"call GenerateProjectFiles.bat",
 			"msbuild Reflector.sln /p:Configuration=%{cfg.buildcfg}",
+			"cd ../../../",
+			"call GenerateProjectFiles.bat",
 		}
 
 		includedirs (includeList)
@@ -103,6 +105,8 @@ project "ExperimentEngine"
 			"cd ../",
 			"sh GenerateProjectFiles",
 			"xcodebuild -workspace Reflector.xcworkspace -scheme Reflector -configuration %{cfg.buildcfg} -quiet",
+			"cd ../../../",
+			"sh GenerateProjectFiles",
 		}
 
 		externalincludedirs (includeList)
