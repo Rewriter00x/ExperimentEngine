@@ -43,6 +43,9 @@ namespace Exp
         inline void SetRotation(const glm::vec3& rotation) { m_Rotation = rotation; }
         inline void SetScale(const glm::vec3& scale) { m_Scale = scale; }
 
+        void AddMovementInput(const glm::vec3& input, float speed);
+        void AddRotationInput(const glm::vec3& input, float speed);
+
         glm::mat4 GetTransform() const;
 
         template<typename T, typename ... Args>

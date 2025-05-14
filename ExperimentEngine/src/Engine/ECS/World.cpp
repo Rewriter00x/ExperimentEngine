@@ -89,27 +89,18 @@ namespace Exp
     void World::Start()
     {
         EXP_LOG(Log, "World %s starting", m_Name.c_str());
-        for (ScriptComponent& sc : m_Registry->GetComponents<ScriptComponent>())
-        {
-            sc.Create();
-        }
+        StartComponents(*m_Registry.get());
     }
 
     void World::End()
     {
-        for (ScriptComponent& sc : m_Registry->GetComponents<ScriptComponent>())
-        {
-            sc.Destroy();
-        }
+        EndComponents(*m_Registry.get());
         EXP_LOG(Log, "World %s ending", m_Name.c_str());
     }
 
     void World::OnUpdate(float deltaSeconds)
     {
-        for (ScriptComponent& sc : m_Registry->GetComponents<ScriptComponent>())
-        {
-            sc.Update(deltaSeconds);
-        }
+        UpdateComponents(*m_Registry.get(), deltaSeconds);
         
         RenderScene();
     }

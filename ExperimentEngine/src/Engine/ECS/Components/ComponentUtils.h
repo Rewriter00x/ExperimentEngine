@@ -23,6 +23,15 @@ namespace Exp
     template<typename T>
     void DuplicateComponent(Entity& dst, const Entity& src);
 
+    template<typename T>
+    void StartComponents(ComponentRegistry& registry);
+
+    template<typename T>
+    void EndComponents(ComponentRegistry& registry);
+
+    template<typename T>
+    void UpdateComponents(ComponentRegistry& registry, float deltaSeconds);
+
     struct ComponentWrapperBase
     {
         virtual ~ComponentWrapperBase() = default;
@@ -53,4 +62,8 @@ namespace Exp
     };
 
     const std::vector<const ComponentWrapperBase*>& GetAllComponents();
+    
+    void StartComponents(ComponentRegistry& registry);
+    void EndComponents(ComponentRegistry& registry);
+    void UpdateComponents(ComponentRegistry& registry, float deltaSeconds);
 }

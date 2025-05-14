@@ -5,14 +5,14 @@ def parse_comp(line):
 
     parts = line.split()
 
-    return Component(name=parts[1], props=[])
+    return Component(name=parts[1], props=[], flags=[])
 
 def parse_script(line):
     line = line.strip()
 
     parts = line.split()
 
-    return Script(name=parts[1], props=[])
+    return Script(name=parts[1], props=[], flags=[])
 
 def parse_prop_def(line):
     line = line.strip()
@@ -28,7 +28,49 @@ def parse_prop_def(line):
         eq_split = part.split('=')
         if len(eq_split) > 1:
             val = eq_split[1].strip()
-        flags[eq_split[0].strip()] = val
+        flag = eq_split[0].strip()
+        if flag != '':
+            flags[flag] = val
+
+    return flags
+
+def parse_comp_def(line):
+    line = line.strip()
+
+    p_pos = line.find("//c")
+    line = line[p_pos + 4:].strip()
+
+    parts = line.split(',')
+
+    flags = {}
+    for part in parts:
+        val = None
+        eq_split = part.split('=')
+        if len(eq_split) > 1:
+            val = eq_split[1].strip()
+        flag = eq_split[0].strip()
+        if flag != '':
+            flags[flag] = val
+
+    return flags
+
+def parse_script_def(line):
+    line = line.strip()
+
+    p_pos = line.find("//sc")
+    line = line[p_pos + 4:].strip()
+
+    parts = line.split(',')
+
+    flags = {}
+    for part in parts:
+        val = None
+        eq_split = part.split('=')
+        if len(eq_split) > 1:
+            val = eq_split[1].strip()
+        flag = eq_split[0].strip()
+        if flag != '':
+            flags[flag] = val
 
     return flags
 
@@ -67,8 +109,10 @@ def parse_component_file(file):
                 if "//c" in line:
                     if component is not None:
                         components.append(component)
+                    flags = parse_comp_def(line)
                     line = next(iterator, None)
                     component = parse_comp(line)
+                    component = component._replace(flags=flags)
                 elif "//p" in line:
                     flags = parse_prop_def(line)
                     line = next(iterator, None)
@@ -97,8 +141,10 @@ def parse_script_file(file):
                 if "//sc" in line:
                     if script is not None:
                         scripts.append(script)
+                    flags = parse_script_def(line)
                     line = next(iterator, None)
                     script = parse_script(line)
+                    script = script._replace(flags=flags)
                 elif "//p" in line:
                     flags = parse_prop_def(line)
                     line = next(iterator, None)

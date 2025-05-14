@@ -15,6 +15,7 @@ namespace Exp
 	}
 
 	#define ADD_EVENT_LISTENER(obj, type, fn) ::Exp::Application::Get().AddEventListener(obj, EventType::type, WrapEventFunction<type##Event>([obj](auto&&... args) -> decltype(auto) { return obj->fn(std::forward<decltype(args)>(args)...); }))
+	#define REMOVE_EVENT_LISTENER(obj, type) ::Exp::Application::Get().RemoveEventListener(obj, EventType::type)
 
 	class EventDispatcher final
 	{
@@ -26,6 +27,7 @@ namespace Exp
 		~EventDispatcher() = default;
 
 		void AddEventListener(const void* obj, EventType eventType, const EventFn& function);
+		void RemoveEventListener(const void* obj, EventType eventType);
 
 		const std::unordered_map<const void*, EventFn>* GetEventListeners(EventType Type) const;
 

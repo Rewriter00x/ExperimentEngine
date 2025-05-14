@@ -17,6 +17,7 @@ namespace Exp
 		void RequestShutdown();
 
 		inline void AddEventListener(const void* obj, EventType eventType, const EventDispatcher::EventFn& function) { m_EventDispatcher.AddEventListener(obj, eventType, function); }
+		inline void RemoveEventListener(const void* obj, EventType eventType) { m_EventDispatcher.RemoveEventListener(obj, eventType); }
 		void DispatchEvent(const Event& e) const;
 
 		inline const Unique<Window>& GetWindow() const { return m_Window; }

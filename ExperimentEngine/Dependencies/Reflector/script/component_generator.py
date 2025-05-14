@@ -2,7 +2,7 @@ import os
 from data_types import *
 from utils import *
 
-def gen_main_file_data(include_list, init_list, array_init_list):
+def gen_main_file_data(include_list, init_list, array_init_list, start_list, end_list, update_list):
     return f"""
 #include "exppch.h"
 #include "Engine/ECS/Components/ComponentUtils.h"
@@ -16,6 +16,18 @@ namespace Exp
     const std::vector<const ComponentWrapperBase*>& GetAllComponents()
     {{
         return s_AllComponents;
+    }}
+
+    void StartComponents(ComponentRegistry& registry)
+    {{{start_list}
+    }}
+
+    void EndComponents(ComponentRegistry& registry)
+    {{{end_list}
+    }}
+
+    void UpdateComponents(ComponentRegistry& registry, float deltaSeconds)
+    {{{update_list}
     }}
 }}"""
 
@@ -172,6 +184,39 @@ def gen_comp_duplicate(comp_type, duplicate_list):
         {duplicate_list}
     }}"""
 
+def gen_comp_start(comp_type):
+    return f"""
+    template<>
+    void StartComponents<{comp_type}>(ComponentRegistry& registry)
+    {{
+        for ({comp_type}& comp : registry.GetComponents<{comp_type}>())
+        {{
+            comp.Start();
+        }}
+    }}"""
+
+def gen_comp_end(comp_type):
+    return f"""
+    template<>
+    void EndComponents<{comp_type}>(ComponentRegistry& registry)
+    {{
+        for ({comp_type}& comp : registry.GetComponents<{comp_type}>())
+        {{
+            comp.End();
+        }}
+    }}"""
+
+def gen_comp_update(comp_type):
+    return f"""
+    template<>
+    void UpdateComponents<{comp_type}>(ComponentRegistry& registry, float deltaSeconds)
+    {{
+        for ({comp_type}& comp : registry.GetComponents<{comp_type}>())
+        {{
+            comp.OnUpdate(deltaSeconds);
+        }}
+    }}"""
+
 def gen_comp_file(comp):
     comp_file = gen_comp_base(comp.name)
     comp_file += gen_comp_name(comp.name, split_name(comp.name))
@@ -194,6 +239,11 @@ def gen_comp_file(comp):
     comp_file += '\n' + gen_comp_save(comp.name, save_list, load_list)
     comp_file += '\n' + gen_comp_duplicate(comp.name, duplicate_list)
 
+    comp_file += '\n' + gen_comp_start(comp.name)
+    comp_file += '\n' + gen_comp_end(comp.name)
+    if "update" in comp.flags:
+        comp_file += '\n' + gen_comp_update(comp.name)
+
     comp_file += '\n}'
     return comp_file
 
@@ -201,6 +251,9 @@ def gen_main_file(comp_list):
     include_list = ""
     init_list = ""
     array_init_list = ""
+    start_list = ""
+    end_list = ""
+    update_list = ""
     for i, comp in enumerate(comp_list):
         include_list += f"#include \"Engine/ECS/Components/{comp.name}.h\"\n"
         init_list += f"""
@@ -209,7 +262,15 @@ def gen_main_file(comp_list):
             array_init_list += ", "
         array_init_list += '&'+ lower_name(comp.name)
 
-    return gen_main_file_data(include_list, init_list, array_init_list)
+        start_list += f"""
+        StartComponents<{comp.name}>(registry);"""
+        end_list += f"""
+        EndComponents<{comp.name}>(registry);"""
+        if "update" in comp.flags:
+            update_list += f"""
+        UpdateComponents<{comp.name}>(registry, deltaSeconds);"""
+
+    return gen_main_file_data(include_list, init_list, array_init_list, start_list, end_list, update_list)
 
 def gen_component_files(comp_list):
     if not os.path.exists("../src"):

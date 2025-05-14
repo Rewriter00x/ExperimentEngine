@@ -8,6 +8,11 @@ namespace Exp
 		m_Listeners[eventType][obj] = function;
 	}
 
+	void EventDispatcher::RemoveEventListener(const void* obj, EventType eventType)
+	{
+		m_Listeners[eventType].erase(obj);
+	}
+
 	const std::unordered_map<const void*, EventDispatcher::EventFn>* EventDispatcher::GetEventListeners(EventType Type) const
 	{
 		const auto it = m_Listeners.find(Type);

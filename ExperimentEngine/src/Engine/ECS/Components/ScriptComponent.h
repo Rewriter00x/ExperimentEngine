@@ -6,7 +6,7 @@
 
 namespace Exp
 {
-    //c
+    //c update
     struct ScriptComponent : public ComponentBase
     {
         //p draw, save
@@ -16,7 +16,7 @@ namespace Exp
 
         ScriptComponent() = default;
 
-        void Create()
+        virtual void Start() override
         {
             EXP_ASSERT(!Script);
 
@@ -25,7 +25,7 @@ namespace Exp
             Script->Start();
         }
 
-        void Destroy()
+        virtual void End() override
         {
             EXP_ASSERT(Script);
 
@@ -34,7 +34,7 @@ namespace Exp
             Script = nullptr;
         }
 
-        void Update(float deltaSeconds) const
+        virtual void OnUpdate(float deltaSeconds) override
         {
             EXP_ASSERT(Script);
             

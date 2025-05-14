@@ -14,6 +14,17 @@ namespace Exp
     {
     }
 
+    void Entity::AddMovementInput(const glm::vec3& input, float speed)
+    {
+        const glm::vec3 transformedInput = GetRotationQuat() * input;
+        SetPosition(GetPosition() + transformedInput * speed);
+    }
+
+    void Entity::AddRotationInput(const glm::vec3& input, float speed)
+    {
+        SetRotation(GetRotation() + input * speed);
+    }
+
     glm::mat4 Entity::GetTransform() const
     {
         glm::mat4 transform = glm::translate(glm::mat4(1.f), m_Position);
