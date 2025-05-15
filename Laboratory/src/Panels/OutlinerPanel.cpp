@@ -1,6 +1,7 @@
 #include "OutlinerPanel.h"
 
 #include "imgui.h"
+#include "Engine/ECS/Components/CameraComponent.h"
 #include "Engine/ImGui/ExpImGui.h"
 
 namespace Exp
@@ -94,6 +95,33 @@ namespace Exp
             }
         }
 
+        ImGui::End();
+
+        ImGui::Begin("World Settings");
+        const Entity_ID cameraEntityID = m_World->GetCameraEntity();
+        Entity* cameraEntity = cameraEntityID ? &m_World->GetEntity(cameraEntityID) : nullptr;
+
+        const char* preview = cameraEntity ? cameraEntity->GetName().c_str() : "None";
+        if (ImGui::BeginCombo("Camera Entity", preview))
+        {
+            if (ImGui::Selectable("None", !cameraEntityID))
+            {
+                m_World->GetCameraEntity() = 0;
+            }
+            for (const Entity& entity : m_World->GetEntities())
+            {
+                if (entity.HasComponent<CameraComponent>())
+                {
+                    const Entity_ID id = entity.GetID();
+                    if (ImGui::Selectable(entity.GetName().c_str(), id == cameraEntityID))
+                    {
+                        m_World->GetCameraEntity() = id;
+                    }
+                }
+            }
+            ImGui::EndCombo();
+        }
+        
         ImGui::End();
     }
 

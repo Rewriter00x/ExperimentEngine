@@ -42,6 +42,11 @@ namespace Exp::Serializer
             SerializeEntity(out, entity);
         }
         out << YAML::EndSeq;
+        
+        const Entity_ID cameraEntityID = world->GetCameraEntity();
+        const UUID uuid = cameraEntityID ? world->GetEntity(world->GetCameraEntity()).GetUUID() : 0;
+        out << YAML::Key << "Camera Entity" << YAML::Value << uuid;
+        
         out << YAML::EndMap;
 
         std::ofstream fout(path);
@@ -69,6 +74,7 @@ namespace Exp::Serializer
         }
 
         const std::string worldName = data["World"].as<std::string>();
+        const UUID cameraEntityUUID = data["Camera Entity"].as<uint64>();
 
         if (const YAML::Node entities = data["Entities"])
         {
@@ -92,6 +98,11 @@ namespace Exp::Serializer
                     {
                         component->Deserialize(componentData, entity);
                     }
+                }
+
+                if (uuid == cameraEntityUUID)
+                {
+                    world->GetCameraEntity() = entity.GetID();
                 }
             }
         }

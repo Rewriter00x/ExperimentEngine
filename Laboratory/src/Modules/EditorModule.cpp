@@ -1,6 +1,7 @@
 #include "EditorModule.h"
 
 #include "imgui.h"
+#include "Engine/ECS/Components/CameraComponent.h"
 #include "Engine/Render/RenderAPI.h"
 #include "Engine/Render/Renderer.h"
 #include "Engine/Utils/FileDialogs.h"
@@ -61,18 +62,22 @@ namespace Exp
 #elif defined(EXP_MACOS)
         const bool control = Input::IsKeyPressed(KeyCode::LeftSuper) || Input::IsKeyPressed(KeyCode::RightSuper);
 #endif
-        m_EditorCamera.SetShouldCaptureKey(m_ViewportFocused && !control);
-        m_EditorCamera.SetShouldCaptureMouse(m_ViewportHovered);
+        m_EditorCamera.SetShouldCaptureKey(m_WorldState != WorldState::Play && m_ViewportFocused && !control);
+        m_EditorCamera.SetShouldCaptureMouse(m_WorldState != WorldState::Play && m_ViewportHovered);
         
-        m_EditorCamera.OnUpdate(deltaSeconds);
-        
+        if (m_WorldState != WorldState::Play)
+        {
+            m_EditorCamera.OnUpdate(deltaSeconds);
+        }
+
+        const float aspectRatio = m_ViewportSize.x / m_ViewportSize.y;
         const FramebufferSpecification& spec = m_Framebuffer->GetSpecification();
         if (m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f && // zero sized framebuffer is invalid
             (spec.Width != (uint32)m_ViewportSize.x || spec.Height != (uint32)m_ViewportSize.y))
         {
             m_Framebuffer->Resize((uint32)m_ViewportSize.x, (uint32)m_ViewportSize.y);
 
-            m_EditorCamera.SetAspectRatio(m_ViewportSize.x / m_ViewportSize.y);
+            m_EditorCamera.SetAspectRatio(aspectRatio);
         }
 
         m_Framebuffer->Bind();
@@ -87,7 +92,23 @@ namespace Exp
                 break;
                 
             case WorldState::Play:
-                Renderer::BeginBatch(m_EditorCamera); // TODO get camera from world
+                if (const Entity_ID cameraEntityID = m_ActiveWorld->GetCameraEntity())
+                {
+                    Entity& cameraEntity = m_ActiveWorld->GetEntity(cameraEntityID);
+                    CameraComponent& cameraComponent = cameraEntity.GetComponent<CameraComponent>();
+                    if (cameraComponent.AspectRatio != aspectRatio)
+                    {
+                        cameraComponent.SetAspectRatio(aspectRatio);
+                    }
+                    Renderer::BeginBatch(cameraEntity.GetComponent<CameraComponent>().GetCamera());
+                }
+                else
+                {
+                    Camera camera;
+                    camera.SetPosition({ 0.f, 0.f, 10.f });
+                    Renderer::BeginBatch(camera);
+                }
+                
                 if (!m_WorldPaused)
                 {
                     m_ActiveWorld->OnUpdate(deltaSeconds);

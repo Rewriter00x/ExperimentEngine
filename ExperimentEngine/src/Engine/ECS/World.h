@@ -30,6 +30,9 @@ namespace Exp
         inline std::string& GetName() { return m_Name; }
         inline const std::string& GetName() const { return m_Name; }
 
+        inline Entity_ID& GetCameraEntity() { return m_CameraEntityID; }
+        inline const Entity_ID& GetCameraEntity() const { return m_CameraEntityID; }
+
         void Start();
         void End();
 
@@ -39,6 +42,7 @@ namespace Exp
 
     private:
         std::string m_Name;
+        Entity_ID m_CameraEntityID = 0;
         
         std::vector<Entity> m_Entities;
         std::unordered_map<Entity_ID, size_t> entityToIndex;
