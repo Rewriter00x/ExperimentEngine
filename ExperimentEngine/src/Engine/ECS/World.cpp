@@ -17,7 +17,11 @@ namespace Exp
     Shared<World> World::Duplicate() const
     {
         Shared<World> Res = MakeShared<World>("PIE " + m_Name);
-        const UUID cameraEntityUUID = m_CameraEntityID ? GetEntity(m_CameraEntityID).GetUUID() : 0;
+        UUID cameraEntityUUID = 0;
+        if (m_CameraEntityID)
+        {
+            cameraEntityUUID = GetEntity(m_CameraEntityID).GetUUID();
+        }
         for (const Entity& entity : m_Entities)
         {
             EntityParams params;

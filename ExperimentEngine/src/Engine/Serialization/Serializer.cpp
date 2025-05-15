@@ -43,8 +43,11 @@ namespace Exp::Serializer
         }
         out << YAML::EndSeq;
         
-        const Entity_ID cameraEntityID = world->GetCameraEntity();
-        const UUID uuid = cameraEntityID ? world->GetEntity(world->GetCameraEntity()).GetUUID() : 0;
+        UUID uuid = 0;
+        if (const Entity_ID cameraEntityID = world->GetCameraEntity())
+        {
+            uuid = world->GetEntity(world->GetCameraEntity()).GetUUID();
+        }
         out << YAML::Key << "Camera Entity" << YAML::Value << uuid;
         
         out << YAML::EndMap;
