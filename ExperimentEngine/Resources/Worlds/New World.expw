@@ -36,4 +36,14 @@ Entities:
       Near: 0.01
       Far: 1000
       AspectRatio: 1.7777778
+  - UUID: 8485031599068312395
+    Name: Player
+    Position: [0, -3, 0]
+    Rotation: [0, 0, 0]
+    Scale: [1, 1, 1]
+    Player Input Component:
+      MoveSpeed: 10
+    Sprite Component:
+      Color: [1, 1, 1, 1]
+      SpriteTexture: ""
 Camera Entity: 16270847530263362290
