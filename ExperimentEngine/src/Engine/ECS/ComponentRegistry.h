@@ -67,7 +67,7 @@ namespace Exp
         template <typename T>
         const TypeContainer<T>* GetTypeContainer() const;
 
-        std::unordered_map<ComponentType_ID, std::unique_ptr<TypeContainerBase>> m_TypeToContainerMap;
+        mutable std::unordered_map<ComponentType_ID, std::unique_ptr<TypeContainerBase>> m_TypeToContainerMap;
         std::unordered_map<Entity_ID, std::unordered_set<ComponentType_ID>> m_EntityComponents;
         Entity_ID m_NextEntityID = 1;
         
@@ -85,11 +85,8 @@ namespace Exp
         container->data.emplace_back(std::forward<Args>(args)...);
         m_EntityComponents[e].insert(GetComponentTypeID<T>());
         T& comp = container->data[index];
-        if constexpr (std::is_base_of<ComponentBase, T>::value)
-        {
-            comp.m_EntityID = e;
-            comp.m_World = world;
-        }
+        comp.m_EntityID = e;
+        comp.m_World = world;
         return comp;
     }
 
@@ -121,7 +118,12 @@ namespace Exp
     bool ComponentRegistry::HasComponent(Entity_ID e) const
     {
         const std::type_index type = typeid(T);
-        const std::unordered_set<std::type_index>& set = m_EntityComponents.at(e);
+        const auto it = m_EntityComponents.find(e);
+        if (it == m_EntityComponents.end())
+        {
+            return false;
+        }
+        const std::unordered_set<std::type_index>& set = it->second;
         return set.find(type) != set.end();
     }
 
@@ -184,6 +186,10 @@ namespace Exp
     const ComponentRegistry::TypeContainer<T>* ComponentRegistry::GetTypeContainer() const
     {
         const std::type_index type = typeid(T);
+        if (m_TypeToContainerMap.find(type) == m_TypeToContainerMap.end())
+        {
+            m_TypeToContainerMap[type] = std::make_unique<TypeContainer<T>>();
+        }
         const TypeContainerBase* containerBase = m_TypeToContainerMap.at(type).get();
         return static_cast<const TypeContainer<T>*>(containerBase);
     }

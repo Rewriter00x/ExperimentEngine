@@ -60,9 +60,9 @@
 #include "Engine/System/Window.h"
 
 #include "Engine/ECS/ECSTypes.h"
+#include "Engine/ECS/Components/ComponentBase.h"
 #include "Engine/ECS/World.h"
 #include "Engine/ECS/Entity.h"
 #include "Engine/ECS/Components/ComponentUtils.h"
-#include "Engine/ECS/Components/ComponentBase.h"
 
 #include "Engine/Serialization/Serializer.h"

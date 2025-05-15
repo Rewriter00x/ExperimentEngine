@@ -11,7 +11,6 @@ namespace Exp
 {
     World::World(const std::string& name)
         : m_Name(name.empty() ? "New World" : name)
-        , m_Registry(MakeUnique<ComponentRegistry>())
     {
     }
 
@@ -43,7 +42,7 @@ namespace Exp
 
     Entity& World::CreateEntity(const std::string& name, UUID uuid)
     {
-        const Entity_ID id = m_Registry->NewEntity();
+        const Entity_ID id = m_Registry.NewEntity();
         EntityParams params;
         params.RegistryID = id;
         params.World = this;
@@ -56,7 +55,7 @@ namespace Exp
     Entity& World::CreateEntity(const EntityParams& params)
     {
         EntityParams newParams = params;
-        const Entity_ID id = m_Registry->NewEntity();
+        const Entity_ID id = m_Registry.NewEntity();
         newParams.RegistryID = id;
         newParams.World = this;
         entityToIndex[id] = m_Entities.size();
@@ -82,32 +81,32 @@ namespace Exp
             }
         }
         
-        m_Registry->DeleteEntity(destroyID);
+        m_Registry.DeleteEntity(destroyID);
         m_Entities.pop_back();
     }
 
     void World::Start()
     {
         EXP_LOG(Log, "World %s starting", m_Name.c_str());
-        StartComponents(*m_Registry.get());
+        StartComponents(m_Registry);
     }
 
     void World::End()
     {
-        EndComponents(*m_Registry.get());
+        EndComponents(m_Registry);
         EXP_LOG(Log, "World %s ending", m_Name.c_str());
     }
 
     void World::OnUpdate(float deltaSeconds)
     {
-        UpdateComponents(*m_Registry.get(), deltaSeconds);
+        UpdateComponents(m_Registry, deltaSeconds);
         
         RenderScene();
     }
 
     void World::RenderScene() const
     {
-        for (const SpriteComponent& sc : m_Registry->GetComponents<SpriteComponent>())
+        for (const SpriteComponent& sc : m_Registry.GetComponents<SpriteComponent>())
         {
             Renderer::DrawQuad({ sc.GetEntity().GetTransform(), sc.Color, sc.SpriteTexture });
         }

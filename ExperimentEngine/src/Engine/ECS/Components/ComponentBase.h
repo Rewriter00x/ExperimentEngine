@@ -12,8 +12,8 @@ namespace Exp
     {
         virtual ~ComponentBase() = default;
         
-        Entity& GetEntity() { return m_World->GetEntity(m_EntityID); }
-        const Entity& GetEntity() const { return m_World->GetEntity(m_EntityID); }
+        Entity& GetEntity();
+        const Entity& GetEntity() const;
 
         World& GetWorld() { return *m_World; }
         const World& GetWorld() const { return *m_World; }

@@ -1,9 +1,10 @@
 #pragma once
 
+#include "ComponentRegistry.h"
+
 namespace Exp
 {
     class Entity;
-    class ComponentRegistry;
     struct EntityParams;
 }
 
@@ -41,7 +42,7 @@ namespace Exp
         
         std::vector<Entity> m_Entities;
         std::unordered_map<Entity_ID, size_t> entityToIndex;
-        Unique<ComponentRegistry> m_Registry;
+        ComponentRegistry m_Registry;
 
         friend class Entity;
         
