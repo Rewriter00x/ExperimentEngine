@@ -1,0 +1,47 @@
+World: New World
+Entities:
+  - UUID: 6736545379868920140
+    Name: "Background\x00\x00\x00\x00\x00"
+    Position: [0, 0, -0.1]
+    Rotation: [0, 0, 0]
+    Scale: [18, 14, 1]
+    Sprite Component:
+      Color: [1, 1, 1, 1]
+      SpriteTexture: ExperimentEngine/Resources/Textures/SpaceBackground.png
+  - UUID: 10195607023801850841
+    Name: Comet1
+    Position: [5.2, 1.6, 0]
+    Rotation: [0, 0, 0]
+    Scale: [2, 2, 1]
+    Script Component:
+      SelectedScript:
+        Name: Test Script
+        Properties:
+          RotationPerSec: 45
+    Sprite Component:
+      Color: [1, 1, 1, 1]
+      SpriteTexture: ExperimentEngine/Resources/Textures/CometToRotate.png
+  - UUID: 12207079332186717250
+    Name: Comet2
+    Position: [-5.7, 0, 0]
+    Rotation: [0, 180, 0]
+    Scale: [2, 2, 1]
+    Script Component:
+      SelectedScript:
+        Name: Test Script
+        Properties:
+          RotationPerSec: -60
+    Sprite Component:
+      Color: [1, 0.7337278, 0.6923077, 1]
+      SpriteTexture: ExperimentEngine/Resources/Textures/CometToRotate.png
+  - UUID: 5736996845112107270
+    Name: "PlayerShip\x00\x00\x00\x00\x00"
+    Position: [0, 0, 0.1]
+    Rotation: [0, 0, 0]
+    Scale: [1, 1, 1]
+    Player Input Component:
+      MoveSpeed: 5
+    Sprite Component:
+      Color: [1, 1, 1, 1]
+      SpriteTexture: ExperimentEngine/Resources/Textures/SpaceShip.png
+Camera Entity: 0
