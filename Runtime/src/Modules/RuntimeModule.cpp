@@ -40,6 +40,7 @@ namespace Exp
         {
             Camera camera;
             camera.SetPosition({ 0.f, 0.f, 10.f });
+            camera.SetAspectRatio(aspectRatio);
             Renderer::BeginBatch(camera);
         }
         

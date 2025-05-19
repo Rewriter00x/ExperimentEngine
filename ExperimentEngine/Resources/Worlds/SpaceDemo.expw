@@ -44,4 +44,14 @@ Entities:
     Sprite Component:
       Color: [1, 1, 1, 1]
       SpriteTexture: ExperimentEngine/Resources/Textures/SpaceShip.png
-Camera Entity: 0
+  - UUID: 6527343494636640127
+    Name: Camera
+    Position: [0, 0, 10]
+    Rotation: [0, 0, 0]
+    Scale: [1, 1, 1]
+    Camera Component:
+      FOV: 45
+      Near: 0.01
+      Far: 1000
+      AspectRatio: 1.7777778
+Camera Entity: 6527343494636640127
