@@ -180,6 +180,8 @@ def gen_script_save(script_type, save_list, load_list):
     return f"""
     void {script_type}_Properties::Serialize(YAML::Emitter& out) const
     {{
+        using namespace Serializer;
+
         ScriptPropertiesBase::Serialize(out);
         
         out << YAML::BeginMap;{save_list}
@@ -196,7 +198,7 @@ def gen_script_duplicate(script_type, duplicate_list):
     return f"""
     Unique<ScriptPropertiesBase> {script_type}_Properties::Duplicate() const
     {{
-        Unique<TestScript_Properties> Res = MakeUnique<TestScript_Properties>();{duplicate_list}
+        Unique<{script_type}_Properties> Res = MakeUnique<{script_type}_Properties>();{duplicate_list}
         return Res;
     }}"""
 
